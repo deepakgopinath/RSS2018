@@ -1,0 +1,224 @@
+Dec 6th 2017:
+
+1. Revisit the formulation and test for conceptual accuracy. 
+	Read about Fisher information more. Read about Miller et al.s work. Look into what kind of simulation results they presented. Can EID of a control mode characterize the "disambiguation" capability of the system, indeed. What does "sensitivity" of entropy to u_h signify. When computing numerical Hessians, the uh vector is perturbed mildly along different dimensions. But in reality if it is a 1D interface, those perturbed u_h are not defined. Does this mean that Fisher information is not defined properly at that point. 
+
+
+2. Test Numerical Fisher and try out different parameters settings etc. Why is the output in many cases not close to intuition. If it is not it is useless. Why does it deviate quite a bit from the symbolic results when simple forms of confidence functions are used. 
+	a. Use finite difference methods - DONE
+	b. Use automatic differentiation and quantify the differences - DONE Numerical is fine. For simple functions very close to each other. 
+	c. Try out dft based approach and simulate for entire workspace - DONE. Compared to conf and noisy bayes, dft is cpautring the intuition the closest. 
+	d: try out more goal configurations. - Sanity checks were performed for "known goal configurations" and results were intuitive. 
+	e. Try out E-optimality instead of D-optimality - MAYBE?
+	f. Peruse the actual Fisher information values - Gotta do this?
+ 3. Implement Dk algorithm in MATLAB for comparative purposes. Fisher information based ideas should be at least as good as the heuristic approach in their practical usage. 
+
+4. Should entropy be replaced by Dk. The virtual sensor measures "D_k". OR a combination of entropy and Dk?
+
+5. Extend the NumFisher formulation into Python. Use full 6D. This should be straight forward. The "simulation code" is already in place. 
+	USe C++ for speed? Probably? 
+	Look into autodiff libraries in C++. Can tensorflow be used for just the autodiff operation - NOT NEEDED. Stick with 
+	Either use numdifftools in python. Or implement the Matlab code 
+
+What kind of mathematical guarantees does this have?
+
+Simulation results? We can compare the different inference engines. But that is now helpful for evaluting th disambiguation mteric?
+The other thought would be to evaluate how intuitive the algorithm is. But this could be evaluated only if we test on a different set of goal configurations
+
+Compare other metrics? 
+
+Pure Entropy, Heuristic and Fisher? 
+Todd' paper considered a 1D scenario. 2D scenario. Showed how the "trajectory evolved". How the EID evolved. 
+
+ReadMiller's TRO
+
+Simulation based results:
+
+Different goal configurations: 
+Robot moving towards the goal in the disambiguating mode. 
+	Details: From any starting point the robot will starting moving towards a specifeid goal. 
+	At every time step the probabilities will get updated and the disambiguated mode will be computed. 
+		Should there be blending? Or can that be inferred from the rise in confidence associated with the goal? The human might control the robot in different ways when there is blending or not. 
+	Continue motion in the disambiguated mode. And so on and so forth. For simulation purposes we CAN do it at every timestep. But for the real robot, we might have to do some metamodeling (GP) type techniques so that we "interpolate" between known positions. 
+	We can do this for a variety of metrics? 
+		Disamb: ENT, FI, DK, FRAC_POT? - DONe
+		Intent: CONF, DFT, BAYES? - DONE
+		Current Input Features: DIST, DIRECTEDNESS, ROT AGREEMENT (ONLY IN rotation space) - CAN BE DONE. PASS AN ARGUMENT WHICH SELECTIVELY ADD FEATURES TO THE INFERENCE ENGINE!
+		Space of Simulations: R2, SE2, R3, SE3. (Visualizarion for SE3 might be tricky). attach a frame to the body and have it rotate. 
+		Interface mappings: 1D, 2D etc. - DONE
+
+A. MAKE SURE THE "RANGES OF WORKSPACE" ARE SIMILAR TO A REGULAR ROBOT WORKSPACE - DONE
+B. MAKE SURE THAT THE "SIMULATED UH IS ALSO WITHIN THE RANGE" - DONE
+	Determine direction towards the random gaol in the mode. Then scale it with a magnitude that is appropriate  - DONE
+C. IS THE SIMULATED HUMAN ALWAYS GOING TO PRODUCE MAXIMUM UH VELOCITY. SHOULD THERE BE SIMULATION FOR A TIMID HUMAN AND AN AGGRESSIVE HUMAN? SAMPLE FROM A TIMID/ AGGRESSIVE DISTRIBUTION - DECIDED AGAINST. DONE. 
+
+Code to write: 
+	1. Need to setup the simulation pipeline. Create different folder for each one of the space of simulations - dONE
+	2. Need Rotation simulation. Should be very easy for 2D. For 3D there is some code that can be used - DONE
+	3. COde to represent the robot properly (especially in the rotation case. Attach a frame to the robot and the goals to denote the current position and orientation and the goal position and orientations - DONE
+	4. Need Dk implemented in MATLAB for comparison. Port from python to MATLAB. Should be easy. But will take some time - DONE
+	5. Maybe have a compute_projections separate from compute entropy? Coz, projections is always needed for any type of disamb - DONE
+
+
+
+TODO:
+
+1. Implement Dk in MATLAB - DONE
+2. Bayesian Inference for different spaces? Tuning the likelihood? DFT for SE3. Reimplent stuff from python. 
+	R2 - YES,
+	R3 - YES,
+	SE2 - YES,
+	SE3 - TODO - AS angles between translational vectors and angles between the rotational axis vectors. 
+3. Don't change anything about the "simulated" human - DONE, MAYBE ADDED SOME NOIsE TO UH
+4. Turn each simulation script into a function that would return all necessary data? Alpha's, mode switches, pg, entropy, FI, num goals, cm - TODO IMporTANT. 
+
+
+ 
+
+ISSUES WITH SE6. NumHessian not working. FIXED. The threshold for curr_input in dft should be lower
+
+1. Implement end condition. Avoid chatter. TODO
+	End condition check, to see if it reached goal
+	Chatter can happen away from the goal as when, it gets stuck in one of the dimensions and the mode never switches 
+
+2. Implment Dk - Can be done fairly starightforward - DONE
+3. Implement Bayes ideas for SE3/SE2 - DONE
+4. Fix curr_input rotation component in SE2. The contribution from the rotation seems like a binary contribution. DONE
+5. Baseline using Biggest potential mode. DONE
+
+Try implementing C*? 
+	Action space - possible max velo motions in current mode. and mode switch dependent on interface. Some interfaces can only do cyclical. 
+	Needs discretization of space. What does this mean in SE6?
+Concrete Ideas:
+
+
+
+Dec 25th 2017:
+
+1. Setup data analysis pipeline - Identify what all analysis I want to do and write scripts that would do it on the simulated data. 
+	1. When does alpha kick in? _ INTIAIL ALPHA - DONE ()
+	2. What percentage of time alpha is above 0. 
+	3. Does it reach goal or not? - DOES IT GET STUCK AT SOME OTHER PLACE?
+	4. Compleition time. If reached goal, when does it reach goal?
+	5. How much time does the inference actually identifies the true goal?
+	6. What times are the inferences
+
+
+2. Turn each simulation script into a function that would return all necessary data? Alpha's, mode switches, pg, entropy, FI, num goals, cm - DONE
+
+
+
+THoughts:
+
+1. FRactional potential based idea is the human being efficient with mode switches - DONE 
+2. Use disambiguating scheme in the beginning part of a trial. Once the intent is clarified switch to fractional potential scheme. 
+%initial will help the robot. The robot will help the use - MAYBE. Discussion material. 
+
+
+1. Fix max fractional potential for SE3. How to compute remaining potential in each dimension DONE
+   In terms of rpy angles with respect to R to get to G. 
+   In terms of alignment of the angle-axis the current rotation axis and original axis - dONE 
+
+
+TODO For MICO SIMULATON:
+
+1. Implement numerical differentiation in C++ ? Or learn how to use numdifftools. 
+2. Set up the pipeline to trigger the simulation properly. 
+
+
+DEc 31 2017:
+
+1. Understanding statistical testing. Differences between multiple groups. 
+
+
+******************************2018 thoughts*********************************
+
+Jan 2 2016:
+
+1. Start writing. Try to set up the introduction and related work. 
+2. Finish data analysis pipeline. 
+
+Other ideas:
+
+1. Capturing human dynamics(?) using Koopman or LSTM systems? 
+2. Mode scheduling? Can this be used to "solve" for the optimal way to solve a task given the dynamics (human) and the constraints (mode constraints). 
+3. Keep track of the histogram of control commands issued. Use that to determine the p(uh) when computing the integral over the control subspaces. This can be done only when using the real robot in simulation or hardware. Should this happen in a separate node. 
+
+Other notes:
+
+1. Symbolic differentiation is almost going to be thrown out of the window for anything beyond a simple heuristic based intent inference scheme. 
+2. The result is SUPER sensitive to minor changes in the position. This is not a great feature. It should be robust. 
+
+
+
+READING:
+
+1. Read the references from Miller's paper. Understand thoroughly if the reappropriation of parameter estimation techniques using Fisher Information applicable to mode switching domain. 
+
+
+
+******************************************************************
+******************************************************************
+******************************************************************
+******************************************************************
+
+
+PAPER STRUCTURE FOR RSS 2018:
+
+What is the paper about?
+
+This paper introduces two different information theoretic measures for intent disambiguation for an assistive robotic arm. Entropy and Fisher Information based metrics are used to characterize the disambiguation capabilities of a control mode. 
+
+purpose of simulation study:
+We perform a thorough evaluation of the various components that affects the shared control system. We wnate to investiagte how well the system is able to infer intent, how operating in the disambiguation mode helps in activating assistance "earlier" and more accurately during task execution. 
+
+Total time taken would be reduced as a result of fas
+
+
+ABSTRACT:
+
+INTRODUCTION:
+Shared control benefit from more accurate intent inference. A scheme for intent disambiguation is therefore useful. We propose two different schemes of intent disambiguation grounded in information theoretic principles. The first approach compares the projected entropy of the goal distribution along different modes. The second approach relies on the Fisher information of the entropy of the goal distribution. The latter approach relies on the senstivity of entropy changes to motions in different control modes. We present experimental evaliuation in which investiagte the impact of different components of a shared control system (choice of intent inference mechanism, choice of disambiguation, task relevant features that contribute to inference). 
+Compares how early assistance kicks in, how long does the assistance stay active duing the course of task execution. 
+
+RELATED WORK:
+
+SHARED CONTROL
+NEED FOR INFERENCE.
+MODE SWITCHING SCHEMES
+
+INTENT CLARIFICATION
+FISHER INFO BASED INFORMATION ACQUISITION. 
+
+INTENT INFERENCE SCHEMES. 
+
+MATHEMATICAL FORMALISM:
+	CHARACTERIZATION OF CONTROL MODES AS SUBSETS OF CONTROL SPACES.
+	DISAMBIGUATION SCHEMES
+		ENTROPY BASED DISAMBIGUATION
+		FISHER INFORMATION BASED DISAMBIGUATION
+		HEURISTIC BASED DISAMBIGUATION,
+	INTENT INFERENCE MECHANISMS
+		DFT-BASED INTENT INFERENCE SCHEME (MATH BASED...)
+		BAYESIAN INFERENCE SCHEMES (MATH BASED...)
+		HEURISTIC METHODS:
+
+	SHARED CONTROL SCHEME:
+
+EXPERIMENTAL EVALUATION:
+	DIFFERENT SIMULATION ENVIRONMENTS. 
+		1. R2
+		2. SE2
+		3. R3
+		4. SE3
+	Common features: Random number of goals and goal positions. Random robot position. Autonomy based on potential field in the corresponding space. Simulated human followes a strategy which goes directly towrads the goal in the current mode. 
+
+	Mode switching schemes are activated every n time steps. 
+	Baseline mode switching scheme is based on maximal remaining fractional potential in each control mode. 
+	Entropy based disambiguation
+	Fisher Info based disambiguation
+	Heuristic based disambiguation
+
+	For the disambiguation schemes, the "assistance " towards the CORRECT goal gets triggered EARLIER than pure maximal fractional potential scheme. 
+	For disambiguation schemes, the total time for which the assistance is present is greater. 
+	Disambiguation schemes are more useful in the earlier parts of the trial. Once the intent becomes clear, opting for a fractikonal potential approach might get you more gains. 

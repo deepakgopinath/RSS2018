@@ -1,0 +1,18 @@
+clear all; clc; close all;
+
+N = 100; %number of simulations
+max_ng = 6;
+vars = {'alpha_', 'curr_goal_', 'optimal_modes_', 'pgs_', 'traj_'};
+types = {'POT', 'ENT', 'FI', 'DISAMB'};
+%for R2 case
+for i=1:N
+    %define global variables
+   SimulateTraj_R2_With_Blending;
+   filename = strcat('DATAR2', num2str(i), );
+   for j=1:length(vars)
+        for k=1:length(types)
+            save(filename, strcat(vars{j}, types{k}), '-append');
+        end
+   end
+   save(filename, 'ng', 'nd', 'cm', 'num_modes', 'xg', 'xr', '-append')
+end
