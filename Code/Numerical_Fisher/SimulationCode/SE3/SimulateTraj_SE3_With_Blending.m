@@ -79,11 +79,11 @@ random_goal_T = xg_T(:,:, random_goal_index); %homogenous matrix of the random g
 
 %%
 intent_types = {'dft', 'conf', 'bayes'};
-intent_type = intent_types{datasample(length(intent_types), 1)}; % or conf or bayes
+intent_type = intent_types{datasample(1:length(intent_types), 1)}; % or conf or bayes
 
 
 %% BASELINE COMPUTATION
-total_time_steps = 200;  %with delta_t of 0.1, this amounts to 10 seconds. We will assume that "mode switches" don't take time. 
+total_time_steps = 120;  %with delta_t of 0.1, this amounts to 10 seconds. We will assume that "mode switches" don't take time. 
 pgs_POT = zeros(ng, total_time_steps);
 optimal_modes_POT = zeros(total_time_steps-1, 1);
 alpha_POT = zeros(total_time_steps-1, 1);
@@ -225,7 +225,6 @@ pgs_FI(:, 1) = (1/ng)*ones(ng, 1);%uniform probability to start off with. This i
 
 current_optimal_mode_FI_index = 1;
 current_optimal_mode_FI = cm{current_optimal_mode_FI_index};
-mode_comp_timesteps = 10;
 
 for i=1:total_time_steps
     curr_goal_index_FI = datasample(find(pgs_FI(:, i) == max(pgs_FI(:, i))), 1);
@@ -410,7 +409,7 @@ function [ best_mode ] = compute_optimal_mode_POT_SE3(xg_T, xr_T_true)
     global cm nd xr_T;
     Pk = zeros(nd, 1);
     Pcm = zeros(length(cm), 1); %Information density for each mode. 
-    for i=1:nd-3
+    for i=1:nd-3 %only translational dimensions. 
         Pk(i) = abs((xg_T(i, 4) - xr_T(i, 4))/(xg_T(i, 4) - xr_T_true(i, 4)));
     end
     Rg = xg_T(1:3, 1:3); Rr = xr_T(1:3, 1:3); Rr_true = xr_T_true(1:3, 1:3);
@@ -419,7 +418,7 @@ function [ best_mode ] = compute_optimal_mode_POT_SE3(xg_T, xr_T_true)
     %THE FOLLOWING IS SUSPICIOUS. WATCH OUT!!!
     [w,~] = AxisAng3(MatrixLog3(Rdiff_w));
     [w_true, ~] = AxisAng3(MatrixLog3(Rdiff_w_true));
-    Pk(4:end) = w./w_true;
+    Pk(4:end) = w./w_true; %How aligned are the two angle axis vectors? 
     for i=1:length(cm)
         Pcm(i) = sum(Pk(cm{i}));
     end

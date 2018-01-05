@@ -55,7 +55,7 @@ random_goal = xg(:, random_goal_index);
 
 %%
 intent_types = {'dft', 'conf', 'bayes'};
-intent_type = intent_types{datasample(length(intent_types), 1)}; % or conf or bayes
+intent_type = intent_types{datasample(1:length(intent_types), 1)}; % or conf or bayes
 
 %% BASELINE
 total_time_steps = 120; %with delta_t of 0.1, this amounts to 10 seconds. We will assume that "mode switches" don't take time. 
@@ -71,7 +71,7 @@ traj_POT(:, 1) = xr;
 pgs_POT(:, 1) = (1/ng)*ones(ng, 1);%uniform probability to start off with. This is the true pg distribution during the course of the trajectory
 %internally projection
 current_optimal_mode_POT = 1;
-mode_comp_timesteps = 5;
+mode_comp_timesteps = 4;
 
 for i=1:total_time_steps-1
     curr_goal_index_POT = datasample(find(pgs_POT(:, i) == max(pgs_POT(:, i))), 1);

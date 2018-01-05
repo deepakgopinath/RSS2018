@@ -58,10 +58,10 @@ random_goal = xg(:, random_goal_index);
 
 %%
 intent_types = {'dft', 'conf', 'bayes'};
-intent_type = intent_types{datasample(length(intent_types), 1)}; % or conf or bayes
+intent_type = intent_types{datasample(1:length(intent_types), 1)}; % or conf or bayes
 
 %% BASELINE
-total_time_steps = 100; %with delta_t of 0.1, this amounts to 10 seconds. We will assume that "mode switches" don't take time. 
+total_time_steps = 120; %with delta_t of 0.1, this amounts to 10 seconds. We will assume that "mode switches" don't take time. 
 pgs_POT = zeros(ng, total_time_steps);
 optimal_modes_POT = zeros(total_time_steps-1, 1);
 alpha_POT = zeros(total_time_steps-1, 1);
@@ -93,16 +93,20 @@ for i=1:total_time_steps-1
     end
     %gotta determine uh. Assumes human is executes the "straightest
     %possible motion in the current mode towards the specified goal". 
-    uh = generate_full_uh(random_goal, xr);
+    uh = generate_full_uh(random_goal, xr); 
     zero_dim = setdiff(1:nd,current_optimal_mode_POT);
     for jj=1:length(zero_dim)
         uh(zero_dim(jj)) = 0;
     end
     uh = 0.2*(uh./(abs(uh) + realmin));
+    
     ur = generate_autonomy(curr_goal_index_POT); %autonomy command in full 2D space toward what it thinks is the current goal
     alpha_POT(i) = alpha_from_confidence(pgs_POT(curr_goal_index_POT, i)); %linear belnding param
     blend_vel = (1-alpha_POT(i))*uh + alpha_POT(i)*ur; %blended vel
     uh_POT(:, i) = uh; ur_POT(:, i) = ur; blend_vel_POT(:, i) = blend_vel;
+    
+    %forward propragate belief based on one of the three intent inference
+    %mechanisms. 
     if strcmp(intent_type, 'dft')
         pgs_POT(:, i+1) = compute_p_of_g_dft_SE2(uh, xr, pgs_POT(:, i));
     elseif strcmp(intent_type, 'bayes')
@@ -110,8 +114,13 @@ for i=1:total_time_steps-1
     elseif strcmp(intent_type, 'conf')
         pgs_POT(:, i+1) = compute_conf_SE2(uh, xr);
     end
+    
+    %simulate kinematics. 
     xr = sim_kinematics_R3(xr, blend_vel); %forward simulate kinematics with blending. 
+    
+    %update trajectories. 
     traj_POT(:, i+1) = xr;
+    
     optimal_modes_POT(i) = current_optimal_mode_POT_index;
 end
 %% ENTROPY BASED DISAMBIGUATION
@@ -146,7 +155,7 @@ for i=1:total_time_steps-1
             end
         end
     end
-    uh = generate_full_uh(random_goal, xr);
+    uh = generate_full_uh(random_goal, xr); %only 
     zero_dim = setdiff(1:nd,current_optimal_mode_ENT);
     for jj=1:length(zero_dim)
         uh(zero_dim(jj)) = 0;
@@ -362,7 +371,7 @@ function [ best_mode ] = compute_optimal_mode_POT_SE2(xg, xr_true)
     global cm nd xr;
     Pk = zeros(nd, 1);
     Pcm = zeros(length(cm), 1); %Information density for each mode. 
-    for i=1:nd-1
+    for i=1:nd-1 %first two translational dimension
         Pk(i) = abs((xg(i) - xr(i))/(xg(i) - xr_true(i)));
     end
     Pk(3) = abs(wrapToPi(xg(3) - xr(3)))/abs(wrapToPi(xg(3) - xr_true(3)));

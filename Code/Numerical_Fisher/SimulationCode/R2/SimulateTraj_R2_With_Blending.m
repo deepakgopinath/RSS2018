@@ -6,17 +6,17 @@
 xrange = [-0.5, 0.5];
 yrange = [-0.5, 0.5];
 
+%global variables.
 global cm num_modes ng nd xg xr sig delta_t conf_thresh conf_max alpha_max;
 
 %workspace parameters
 max_ng = 6;
-% ng = 4; %num of goals
 ng = datasample(2:max_ng, 1); %spawn random number of goals. Maximum number is 6. At least 
 nd = 2; %num of dimensions. by definition R^2
 cm = {1,2}; %only control mode settings. 
 num_modes = length(cm); %or 1 depending on whether the modes are [x, y] or [{x,y}]
 
-%spawn random goals and random robot positoin
+%spawn random goals and random robot positions
 xg = [rand(1,ng)*range(xrange) + xrange(1); rand(1,ng)*range(yrange) + yrange(1)]; %random goal positions. These will be treated as fixed parameters.
 xr = [rand(1,1)*range(xrange) + xrange(1); rand(1,1)*range(yrange) + yrange(1)];
 xr_true = xr; %store away random position in a variable for reuse.
@@ -32,7 +32,7 @@ conf_max = (1.4/ng);
 alpha_max = 0.7;
 
 %% PLOT GOALS AND CURRENT ROBOT POSITION. 
-
+% 
 % figure;
 % scatter(xg(1,1:ng), xg(2,1:ng), 180, 'k', 'filled'); grid on; hold on;
 % scatter(xr(1), xr(2), 140, 'r', 'filled');
@@ -46,16 +46,16 @@ alpha_max = 0.7;
 %% THE LIST OF GOALS.
 
 % generate random user goal index. change color to magenta. 
-random_goal_index = randsample(ng, 1);
+random_goal_index = randsample(ng, 1); 
 random_goal = xg(:, random_goal_index);
 % scatter(random_goal(1), random_goal(2), 180, 'm', 'filled'); grid on; hold on;
 
 %%
 intent_types = {'dft', 'conf', 'bayes'};
-intent_type = intent_types{datasample(length(intent_types), 1)}; % or conf or bayes
+intent_type = intent_types{datasample(1:length(intent_types), 1)}; % or conf or bayes
 
 %% %% USING MAX POTENTIAL AS BASE LINE
-total_time_steps = 80; %with delta_t of 0.1, this amounts to 10 seconds. We will assume that "mode switches" don't take time. 
+total_time_steps = 120; %with delta_t of 0.1, this amounts to 10 seconds. We will assume that "mode switches" don't take time. 
 %variables to hold simulation data for MAX POTENTIAL
 pgs_POT = zeros(ng, total_time_steps); %goal probabilities
 optimal_modes_POT = zeros(total_time_steps-1, 1); %optimal modes. 
@@ -70,6 +70,8 @@ pgs_POT(:, 1) = (1/ng)*ones(ng, 1);%uniform probability to start off with. This 
 %internally projection
 current_optimal_mode_POT = 1;
 mode_comp_timesteps = 4; %time step gap between optimal mode computation. 
+
+hist_length = 15;
 
 for i=1:total_time_steps-1
     %compute the optimal mode. store it away. 
@@ -104,6 +106,7 @@ for i=1:total_time_steps-1
         pgs_POT(:, i+1) = compute_p_of_g_dft_R2(uh, xr, pgs_POT(:, i));
     elseif strcmp(intent_type, 'bayes')
         pgs_POT(:, i+1) = compute_bayes_R2(uh, xr, pgs_POT(:, i));
+%         pgs_POT(:, i+1) = compute_bayes_n_R2(uh_POT(:, max(1, i-hist_length+1):i), xr, pgs_POT(:,i));
     elseif strcmp(intent_type, 'conf')
         pgs_POT(:, i+1) = compute_conf_R2(uh, xr);
     end
@@ -162,6 +165,7 @@ for i=1:total_time_steps-1
         pgs_ENT(:, i+1) = compute_p_of_g_dft_R2(uh, xr, pgs_ENT(:, i));
     elseif strcmp(intent_type, 'bayes')
         pgs_ENT(:, i+1) = compute_bayes_R2(uh, xr, pgs_ENT(:, i));
+%         pgs_ENT(:, i+1) = compute_bayes_n_R2(uh_ENT(:, max(1, i-hist_length+1):i), xr, pgs_ENT(:,i));
     elseif strcmp(intent_type, 'conf')
         pgs_ENT(:, i+1) = compute_conf_R2(uh, xr);
     end
@@ -217,6 +221,7 @@ for i=1:total_time_steps-1
         pgs_FI(:, i+1) = compute_p_of_g_dft_R2(uh, xr, pgs_FI(:, i));
     elseif strcmp(intent_type, 'bayes')
         pgs_FI(:, i+1) = compute_bayes_R2(uh, xr, pgs_FI(:, i));
+%         pgs_FI(:, i+1) = compute_bayes_n_R2(uh_FI(:, max(1, i-hist_length+1):i), xr, pgs_FI(:,i));
     elseif strcmp(intent_type, 'conf')
         pgs_FI(:, i+1) = compute_conf_R2(uh, xr);
     end
@@ -270,6 +275,7 @@ for i=1:total_time_steps-1
         pgs_DISAMB(:, i+1) = compute_p_of_g_dft_R2(uh, xr, pgs_DISAMB(:, i));
     elseif strcmp(intent_type, 'bayes')
         pgs_DISAMB(:, i+1) = compute_bayes_R2(uh, xr, pgs_DISAMB(:, i));
+%         pgs_DISAMB(:, i+1) = compute_bayes_n_R2(uh_DISAMB(:, max(1, i-hist_length+1):i), xr, pgs_DISAMB(:,i));
     elseif strcmp(intent_type, 'conf')
         pgs_DISAMB(:, i+1) = compute_conf_R2(uh, xr);
     end
@@ -284,8 +290,8 @@ end
 % scatter(traj_ENT(1, :)', traj_ENT(2, :)', 'r', 'filled');
 % scatter(traj_FI(1, :)', traj_FI(2, :)', 'b', 'filled');
 % scatter(traj_DISAMB(1, :)', traj_DISAMB(2, :)', 'g', 'filled');
-
-%% PLOT PROBABILITIES AND THE DISAMB MODES. 
+% 
+% %% PLOT PROBABILITIES AND THE DISAMB MODES. 
 % plot_script;
 % plot_goal_match;
 

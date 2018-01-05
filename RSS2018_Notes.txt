@@ -96,12 +96,12 @@ Concrete Ideas:
 Dec 25th 2017:
 
 1. Setup data analysis pipeline - Identify what all analysis I want to do and write scripts that would do it on the simulated data. 
-	1. When does alpha kick in? _ INTIAIL ALPHA - DONE ()
-	2. What percentage of time alpha is above 0. 
-	3. Does it reach goal or not? - DOES IT GET STUCK AT SOME OTHER PLACE?
+	1. When does alpha kick in? _ INTIAIL ALPHA - DONE
+	2. What percentage of time alpha is above - DONE
+	3. Does it reach goal or not? - DOES IT GET STUCK AT SOME OTHER PLACE?/ in terms of distance?
 	4. Compleition time. If reached goal, when does it reach goal?
-	5. How much time does the inference actually identifies the true goal?
-	6. What times are the inferences
+	5. How much time does the inference actually identifies the true goal? - DONE
+	6. What times are the inferences? 
 
 
 2. Turn each simulation script into a function that would return all necessary data? Alpha's, mode switches, pg, entropy, FI, num goals, cm - DONE
@@ -133,10 +133,29 @@ DEc 31 2017:
 
 ******************************2018 thoughts*********************************
 
-Jan 2 2016:
+Jan 2 2018:
 
 1. Start writing. Try to set up the introduction and related work. 
-2. Finish data analysis pipeline. 
+2. Finish data analysis pipeline. and ANOVA tests between different groups. Do within group analysis. ?? Kruskal
+
+
+Jan 3 2018:
+
+1. Start implementing simulation pipeline for mico. 
+	1. Write data into matlab files using sio? Easier for analysis. 
+	2. Implement NumHessian and NumJacobian. Or use numdifftools and quantify the differences between MATLAB and python. 
+	3. Start setting up code for mico simulation. Look at the potential field testing setup. Think about data collection. 
+	4. Implement Bayesian. In the intent inference node. Set up service to alter. 
+	5. Code to compute best mode using ENT, FI, DISAMB. Can modify the disamb_algo node to take a flag and trigger the appropriate function. 
+	6. Timer to keep track of number of control steps that has passed. 
+	BASICALLY PORT EVERYTHING FROM MATLAB TO PYTHON. 
+
+
+
+2. a. Should I have a flag which will determine what features should DFT, CONF and BAYES be paying attention to? Need a lot more samples 	for enough samples per condition combination. 
+   b. Check Bayesian implementation. How could it be made better. Refer to literature for other implementation. How is this different from POMDP based updates. How to incorporate history. 
+   c. Check MATLAB code for any other errors and possible modifications. 
+
 
 Other ideas:
 
@@ -167,18 +186,25 @@ PAPER STRUCTURE FOR RSS 2018:
 
 What is the paper about?
 
+Intent disammbiguation in information theoretic terms:
+Proposes two different algorithms for intent disambiguation: entropy-based, Fisher information based
+Extensive simulation based investigation of various components that affects intent disambiguation
+Proof-of-concept implementation on a simulation of the robotic arm to show that the system works for real robots as well. 
+
 This paper introduces two different information theoretic measures for intent disambiguation for an assistive robotic arm. Entropy and Fisher Information based metrics are used to characterize the disambiguation capabilities of a control mode. 
 
 purpose of simulation study:
 We perform a thorough evaluation of the various components that affects the shared control system. We wnate to investiagte how well the system is able to infer intent, how operating in the disambiguation mode helps in activating assistance "earlier" and more accurately during task execution. 
 
-Total time taken would be reduced as a result of fas
+Total time taken would be reduced as a result of faster assistance?
 
 
 ABSTRACT:
+Assistive machines 
+Appropriate assistance can be provided only when intent inference is accurate. The benefit of assistance is maximized if the assistance can be provided earlier during task execution. Important to elicit intent clarifying control commands from the user. T Our previous exploratory studies indicated that the success of the disambiguation system depends on a variety of factors and choice of parameters. In order to thorooughly investigate the impact of these choice, we present a simulation results both for point-robots that live in different worlds as well on the simulated robotic arm. We present results 
 
 INTRODUCTION:
-Shared control benefit from more accurate intent inference. A scheme for intent disambiguation is therefore useful. We propose two different schemes of intent disambiguation grounded in information theoretic principles. The first approach compares the projected entropy of the goal distribution along different modes. The second approach relies on the Fisher information of the entropy of the goal distribution. The latter approach relies on the senstivity of entropy changes to motions in different control modes. We present experimental evaliuation in which investiagte the impact of different components of a shared control system (choice of intent inference mechanism, choice of disambiguation, task relevant features that contribute to inference). 
+Shared control robotic systems benefit from more accurate intent inference. A scheme for intent disambiguation is therefore useful. We propose two different schemes of control mode selection to maximize intent disambiguation grounded in information theoretic principles.  The first approach compares the entropy of the projected prbability distribution along different modes. The second approach relies on the Fisher information of the entropy of the goal distribution. The latter approach relies on the senstivity of entropy changes to motions in different control modes. We present experimental evaliuation in which investiagte the impact of different components of a shared control system (choice of intent inference mechanism, choice of disambiguation, task relevant features that contribute to inference). 
 Compares how early assistance kicks in, how long does the assistance stay active duing the course of task execution. 
 
 RELATED WORK:
@@ -194,31 +220,43 @@ INTENT INFERENCE SCHEMES.
 
 MATHEMATICAL FORMALISM:
 	CHARACTERIZATION OF CONTROL MODES AS SUBSETS OF CONTROL SPACES.
+		FORMALLY USING SET-THEORETIC IDEAS. 
+	MODE SELECTION SCHEMES:
+	MAXIMAL REMAINING POTENTIAL: %FOR TRANSLATIONAL, BASED ON HOW MUCH MORE TO GO/ORIGINAL DISTANCE ALONG EACH DIMENSION. METRIC IS UNITLESS. 
+		BASELINE
 	DISAMBIGUATION SCHEMES
-		ENTROPY BASED DISAMBIGUATION
+		ENTROPY BASED DISAMBIGUATION - 
 		FISHER INFORMATION BASED DISAMBIGUATION
-		HEURISTIC BASED DISAMBIGUATION,
+		HEURISTIC BASED DISAMBIGUATION (CITE PREVIOUS WORK)
 	INTENT INFERENCE MECHANISMS
-		DFT-BASED INTENT INFERENCE SCHEME (MATH BASED...)
+		DFT-BASED INTENT INFERENCE SCHEME (MATH BASED...) 
 		BAYESIAN INFERENCE SCHEMES (MATH BASED...)
-		HEURISTIC METHODS:
+		HEURISTIC METHODS. CONFIDENCE FUNCTION
 
-	SHARED CONTROL SCHEME:
+	SHARED CONTROL SCHEME: One column description. 
 
 EXPERIMENTAL EVALUATION:
-	DIFFERENT SIMULATION ENVIRONMENTS. 
-		1. R2
+	DIFFERENT SIMULATION ENVIRONMENTS.
+		1. R2 
 		2. SE2
 		3. R3
 		4. SE3
 	Common features: Random number of goals and goal positions. Random robot position. Autonomy based on potential field in the corresponding space. Simulated human followes a strategy which goes directly towrads the goal in the current mode. 
 
+	DEMONSTRATION on REAL SYSTEM. 
 	Mode switching schemes are activated every n time steps. 
 	Baseline mode switching scheme is based on maximal remaining fractional potential in each control mode. 
 	Entropy based disambiguation
 	Fisher Info based disambiguation
 	Heuristic based disambiguation
 
+
+	NULL HYPOTHESIS:
+
+	H0: There is no difference in when the assistance gets triggered for various conditions
+
+
+	H0: There is no difference between the fractional percentage time for which assistance is active. 
 	For the disambiguation schemes, the "assistance " towards the CORRECT goal gets triggered EARLIER than pure maximal fractional potential scheme. 
 	For disambiguation schemes, the total time for which the assistance is present is greater. 
 	Disambiguation schemes are more useful in the earlier parts of the trial. Once the intent becomes clear, opting for a fractikonal potential approach might get you more gains. 
