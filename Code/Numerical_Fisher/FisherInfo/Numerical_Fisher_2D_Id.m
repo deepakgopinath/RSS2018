@@ -80,13 +80,15 @@ step_size = (max_ws - min_ws)/num_steps;
 ax_p = (min_ws:step_size:max_ws)' +0.001;
 [X,Y] = meshgrid(ax_p);
 ws_points = [X(:) Y(:)];
-disamb_modes = zeros(size(ws_points, 1), 1);
+disamb_modes_ENT = zeros(size(ws_points, 1), 1);
+disamb_modes_FI = zeros(size(ws_points, 1), 1);
 pg0 = (1/ng)*ones(ng,1);
 % pg0 = [0.4, 0.2, 0.4];
 %%
 for i=1:size(ws_points,1)
     xr = ws_points(i, :)';
-    disamb_modes(i) = compute_optimal_mode_ENT_2D('dft', xr, pg0, '1d');
+    disamb_modes_ENT(i) = compute_optimal_mode_ENT_2D('dft', xr, pg0, '1d');
+    disamb_modes_FI(i) = compute_optimal_mode_FI_2D('dft', xr, pg0, '1d');
 end
 
 %%
@@ -94,10 +96,9 @@ figure;grid on; hold on;
 colors = {[1,0,0], [0,1,0], [0,0,1]};
 
 for i=1:length(colors)
-    scatter(ws_points(disamb_modes == i, 1), ws_points(disamb_modes == i, 2), 70, colors{i}, 'filled'); hold on;
+    scatter(ws_points(disamb_modes_ENT == i, 1), ws_points(disamb_modes_ENT == i, 2), 70, colors{i}, 'filled'); hold on;
 end
 scatter(xg(1,1:ng), xg(2,1:ng), 180, 'k', 'filled');
-
 xrange = [-5.5,5.5]; %set axis limits
 yrange = [-5.5,5.5];
 line(xrange, [0,0], 'Color', 'r'); %draw x and y axes.
@@ -106,6 +107,26 @@ axis([xrange, yrange]);
 legend('Mode 1', 'Mode 2', 'Equivalent');
 axis square;
 xlabel('Spatial X'); ylabel('Spatial Y'); title('Best Disamb Control Modes');
+title('ENTROPY BASED METRIC')
+
+%%
+figure;grid on; hold on;
+colors = {[1,0,0], [0,1,0], [0,0,1]};
+
+for i=1:length(colors)
+    scatter(ws_points(disamb_modes_FI == i, 1), ws_points(disamb_modes_FI == i, 2), 70, colors{i}, 'filled'); hold on;
+end
+scatter(xg(1,1:ng), xg(2,1:ng), 180, 'k', 'filled');
+xrange = [-5.5,5.5]; %set axis limits
+yrange = [-5.5,5.5];
+line(xrange, [0,0], 'Color', 'r'); %draw x and y axes.
+line([0,0], yrange, 'Color', 'g');
+axis([xrange, yrange]);
+legend('Mode 1', 'Mode 2', 'Equivalent');
+axis square;
+xlabel('Spatial X'); ylabel('Spatial Y'); title('Best Disamb Control Modes');
+title('FI BASED METRIC')
+
 
 %%
 function best_val = compute_best_mode(EID_US)

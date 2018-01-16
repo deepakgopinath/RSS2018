@@ -214,7 +214,7 @@ NEED FOR INFERENCE.
 MODE SWITCHING SCHEMES
 
 INTENT CLARIFICATION
-FISHER INFO BASED INFORMATION ACQUISITION. 
+ENTROPY, KL DIVERGENCE AS INFORMATION GAIN
 
 INTENT INFERENCE SCHEMES. 
 
@@ -260,3 +260,21 @@ EXPERIMENTAL EVALUATION:
 	For the disambiguation schemes, the "assistance " towards the CORRECT goal gets triggered EARLIER than pure maximal fractional potential scheme. 
 	For disambiguation schemes, the total time for which the assistance is present is greater. 
 	Disambiguation schemes are more useful in the earlier parts of the trial. Once the intent becomes clear, opting for a fractikonal potential approach might get you more gains. 
+
+
+
+
+
+
+MICO SIMULATION NOTES:
+
+1. Setup the packages. Implement Bayes in the intent inferenc enode. Implement confidence function.
+ 2. Set up packages which can spawn random goals, spawn the necessary potential fields, random robot position (get the robot to that start position)
+
+5. Code to compute best mode using ENT, FI, DISAMB. Can modify the disamb_algo node to take a flag and trigger the appropriate function. 
+	6. Timer to keep track of number of control steps that has passed. 
+
+
+	******
+
+	In Todd's paper the  unknown variable which is the position of the object is TRULY unknown. AND it is a parameter which affects the measurement distribution. 

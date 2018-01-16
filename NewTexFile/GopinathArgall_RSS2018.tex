@@ -22,6 +22,7 @@
 \usepackage{url}
 \usepackage{booktabs}
 \usepackage{pifont}
+\usepackage{algorithm, algorithmic}
 \newcommand{\argmax}{\arg\!\max}
 \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 \pdfinfo{
@@ -93,39 +94,113 @@
 \maketitle
 
 \begin{abstract}
-In this paper, we treat the problem of intent disambiguation in terms of information theoretic principles. The effectiveness of assistive robots is closely related to their ability to infer the users' needs and intentions and provide appropriate types of assistance quickly, confidently and accurately.  We propose two different control mode selection schemes for intent disambiguation using notions of entropy and Fisher information in the context of assistive robotic manipulation. The proposed algorithms characterize the disambiguation capabilities of different control modes by the forward projection of probability distributions over goals and computing the relevant information theoretic measures. Our previous exploratory pilot studies revealed that the success of the disambiguation system depends on a variety of factors and choice of parameters. In order to thoroughly investigate the impact of the choice of various parameters and components, we present extensive simulation results both for point-robots that reside in different spaces as well as on the simulated robotic arm. Our results indicate that with the disambiguation algorithm the robot is able to assist earlier during task execution. Furthermore, the goal inferences are more accurate when operating in the disambiguating modes. 
+In this paper, we tackle the problem of intent disambiguation in terms of information theoretic principles. The effectiveness of assistive robots is closely related to their ability to infer the users' needs and intentions and provide appropriate types of assistance quickly and accurately.  We propose two different control mode selection schemes for intent disambiguation using notions of entropy and Fisher information for an assistive robotic manipulator. The proposed algorithms characterize the disambiguation capabilities of different control modes by the forward projection of probability distributions over goals and computing the relevant information theoretic measures. Our previous exploratory pilot studies revealed that the success of the disambiguation system depends on a variety of factors and choice of parameters. In order to thoroughly investigate the impact of various components, we present results from an extensive simulation-based study both for point-robots that reside in different spaces as well as on the simulated robotic arm. Our results indicate that with the disambiguation algorithm the robot is able to assist earlier during task execution. Furthermore, the goal inferences are more accurate when operating in the disambiguating modes. 
 \end{abstract}
 
 \IEEEpeerreviewmaketitle
 
 \section{Introduction}
-Assistive shared-control machines such as robotic arms and myoelectric prosthesis have the potential to transform the lives of millions of people with motor impairments as a result of spinal cord injuries or brain traumas. These machines can promote independence, enhance the quality of lives and revolutionize the way they interact with society. These machines help to extend the mobility and manipulation capabilities of individuals thereby helping them perform activities of daily living in a more effective manner. 
+Assistive shared-control machines such as robotic arms, smart wheelchairs  and myoelectric prosthesis have the potential to transform the lives of millions of people with motor impairments as a result injuries to the central nervous system. These machines can promote independence, enhance the quality of lives and revolutionize the way they interact with society. They can also help to extend the mobility and manipulation capabilities of individuals thereby helping motor-impaired people perform activities of daily living in a more effective manner. 
 
-The efficacy of assistive machines rely on their ability to infer the users' needs and intentions and is often a bottleneck for providing appropriate assistance quickly, confidently and accurately. Due to the dimensionality mismatch between the high-dimensional robots and the low-dimensional interfaces, the users' are typically constrained to produce control commands that do not reveal the intent more expressively. Therefore, intent inference is a necessary and crucial component to ensure appropriate assistance. Specifically, in assistive robotic manipulation, often the first step of a task is to reach for and grasp discrete objects in the environment. Therefore in this context, intent inference can be cast as a problem of maintaining the probability distribution over all possible discrete goals (objects) in the workspace. 
+An assistive robotic machine is typically controlled using a control interface. These interfaces are low-dimensional, low-bandwidth and discrete, and can operate only in subsets of the entire control space. These subsets are referred to as \textit{control modes}. The efficacy of assistive machines rely on their ability to infer the users' needs and intentions and is often a bottleneck for providing appropriate assistance quickly, confidently and accurately. Due to the dimensionality mismatch between the high-dimensional robots and the low-dimensional interfaces, the users are constrained to produce control commands that do not reveal the intent more expressively. In other words, these control interfaces act like filters that restrict the amount of information regarding intent that passes through. Sparsity and noise in these control commands make the inference task even harder, prompting the need for robust intent inference formalisms. In the context of assistive robotic manipulation, often the first step of a task is to reach for and grasp discrete objects in the environment. Therefore, intent inference can be cast as a problem of maintaining the probability distribution over all possible discrete goals (objects) in the workspace. Intent inference mechanisms typically rely on various environmental cues and task-relevant features such as robot and goal positions, human control commands and biometric measures for estimating the most probably goal. More the number of sensor modalities, it is likely that the inference becomes more accurate. However, due to cost considerations and user acceptance issues, we design our assistance add-ons to be as invisible as possible. Therefore, our system tries to infer intent primarily based on the information contained in the constrained control commands issues to the assistive machine.
 
-Our insight is that the information contained in control command issued in certain control modes is more useful for accurate inference and thereby will help the robot in providing the appropriate kind of assistance. In this work, we rely on information theoretic principles to quantify the information regarding intent disambiguation contained in different control modes and select control modes that maximize intent disambiguation.
+Our insight is that the information contained in control commands issued in certain control modes will clarify human's underlying intent unambiguously and is more useful for the robot to perform accurate intent inference. This, in turn will help the robot to appropriate kinds of assistance more effectively. In this paper, we tackle the problem intent disambiguation using information theoretic principles. More specifically, we rely on information theoretic notions of \textit{entropy} and \textit{Fisher information} characterize and quantify the intent disambiguation capabilities of a control mode. We utilize this characterization of control modes to develop a mode switch assistance paradigm that enhances the robot's intent inference capabilities, by selecting the control mode in which a user-initiated motion will \textit{maximally disambiguate} human intent. The disambiguation layer elicits more \textit{intent expressive} commands from the user by placing the user control in certain control modes.
 
-\section{Related Work}
 
-\section{Mathematical Formalism}
+In Section~\ref{sec:related_work} we present an overview of relevant research in the areas of shared autonomy in assistive robotics, types of shared autonomy assistance paradigms and use of information theoretic tools in information acquisition. Section~\ref{sec:math} presents the set theoretic treatment of control modes mathematical formalism for the intent disambiguation and intent inference. Section~\ref{sec:shared-control} focuses on the implementation details of the shared control system. The study design and experimental methods are discussed in Section~\ref{sec:ed} followed by results in Section~\ref{sec:results}. Discussion and conclusions are presented in Sections~\ref{sec:discussions} and~\ref{sec:conclusions} respectively. 
+
+
+\section{Related Work}\label{sec:related_work}
+
+SHARED CONTROL
+NEED FOR INFERENCE.
+MODE SWITCHING SCHEMES
+
+INTENT CLARIFICATION
+FISHER INFO BASED INFORMATION ACQUISITION. 
+
+\section{Mathematical Formalism}\label{sec:math}
+This section describes the mathematical details of the intent disambiguation algorithm that computes a control mode that can maximally disambiguate between the various goals. Section~\ref{ssec:notation} outlines the mathematical notation used in this paper. Section ~\ref{ssec:disamb} describes the disambiguation algorithm. The mathematical details of the intent inference paradigms is outlined in detail in Section~\ref{ssec:inference}.
+\subsection{Notation}\label{ssec:notation}
+ In assistive robotic manipulation, since the robot is mainly used for reaching toward and grasping of discrete objects in the environment, intent inference is the estimation of the probability distribution over all possible goals (objects) in the environment. The set of all candidate goals is denoted by $\mathcal{G}$ with $n_g = \vert\mathcal{G}\vert$ and let $g^i$ refer to the $i^{th}$ goal with $i \in [1,2,\dots, n_g]$. 
+%A \textit{goal} represents the human's underlying intent. Specifically,
+At any time $t$, the system actively maintains a probability distribution over goals denoted by $\boldsymbol{p}(t)$ such that $\boldsymbol{p}(t) = [p^1(t), p^2(t),\dots, p^{n_g}(t)]^{T}$ where $p^i(t)$ denotes the probability associated with goal $g^i$.  The probability $p^i(t)$ represent the robot's \textit{confidence} that goal $g^i$ is the human's intended goal. 
+
+possibly change this into a categorical distribution. Identify the random variable properly. 
+
+Let $\mathcal{K}$ be the set of all controllable dimensions of the robot and $k^i$ represent the $i^{th}$ control dimension where $i \in [1,2,\dots,n_k]$ with $n_k = \vert\mathcal{K}\vert$. The number of controllable dimensions ($n_k$) depends on the robotic platform used. Let $\boldsymbol{x_r}$ denote the position of the robot's end-effector position with respect to the world frame. The coordinate space to which $\boldsymbol{x_r}$ belongs depends on the robotic platform. For example, a 2D point robot that operates has $\boldsymbol{x_r} \in \mathbb{R}^2$, whereas a 6DOF robotic manipulator has $\boldsymbol{x_r} \in \mathbb{SE}(3)$. Lastly, let $\boldsymbol{u_h} \in \mathbb{R}^{n_k}$ denotes the human control command issued via the control interface and $\boldsymbol{u_r} \in \mathbb{R}^{n_k}$ denote the robot autonomy command. 
+
 \subsection{Set Theoretic Treatment of Control Modes}
-\subsection{Disambiguation Schemes}
-\subsubsection{Fisher Information Based Metric}
-\subsubsection{Entropy-based Metric}
-\subsubsection{Heuristic-based Metric}
 
-\subsection{Intent inference}
+The limitations of the control interfaces necessitate the control space $\mathcal{K}$ to be partitioned into control modes. Let $\mathcal{M}$ denote the set of all control modes with $n_m = \vert\mathcal{M}\vert$. Additionally, let $m^i$ refer to the $i^{th}$ control mode where $i \in [1,2,\dots,n_m]$. Each control mode $m^i$ is a subset of $\mathcal{K}$ such that $\bigcup\limits_{i=1}^{n_m} m^i$ spans all of the controllable dimensions.\footnote{Note that a dimension $k \in \mathcal{K}$ can be an element of multiple control modes.} Let $\boldsymbol{e}^i$ be the standard basis vectors that denote the unit velocity vector along the $i^{th}$ control dimension.\footnote{For the rotational control dimensions, the velocity is specified with respect to the end-effector of the robotic frame.} Furthermore, the user can only operate in one of the $n_m$ control modes at any given time $t$. Therefore, the user can only access smaller subsets of $\mathbb{R}^{n_k}$ via the control interface with $\mathcal{U}_{m^i}$ denoting the subset of $\mathbb{R}^{n_k}$ accessible from control mode $m^i$. Figure 1 represents this in a pictorial fashion for a robot residing in $\mathbb{R}^2$. 
+
+
+
+% The disambiguation formalism developed in Section~\ref{ssec:disamb} is agnostic to the particular form of intent inference. However, the algorithm assumes that $\boldsymbol{p}(t)$ can be forward projected in time by iteratively applying the intent inference algorithm. 
+\subsection{Disambiguation Schemes}\label{ssec:disamb}
+
+The need for intent disambiguation arises from the manner in which the probability distribution over goals evolves as the user controls the robot and performs the task. The evolution of the probability distribution is closely related to the choice of intent inference mechanism as well as the features that contribute to it. If the evolution is sensitive to the user control command, then it is likely that the goal probabilities evolve in different ways as the user operates the robot in different control modes. Our aim is to develop a metric that will estimate the ``disambiguation capability'' of control dimension/mode. The hypothesis is that subsequent user operation of the robot in the control mode with maximum disambiguation capability will ``help'' the robot to perform better intent inference and likely will result in providing appropriate kinds of assistance. 
+
+
+The first step towards the computation of the disambiguation metric $D_m$ is the forward projection of the probability distribution $\boldsymbol{p}(t)$ from current time $t_a$ to $t_b$ such that $t_a < t_b$, Algorithm~\ref{alg1}, lines 3-10.  The exact computation of the projected probability distribution will depend on the underlying intent inference computation---for example, whether it depends on $\boldsymbol{x_r}$ (which can be computed from $\boldsymbol{u}_h$ applied to the robot kinematics model) or $\boldsymbol{u}_h$ (which can be taken as $\boldsymbol{e}^k$). All parameters and features which affect the computation of $\boldsymbol{p}(t)$ are denoted as $\boldsymbol{\Theta}$. For the purposes of forward projection of probabilities and the computation of the disambiguation metric $D_m$ for each control mode $m \in \mathcal{M}$ we only consider the direction of the control command. We assume that the human always generates control commands of maximum magnitude when operating in a control mode. For a given control mode $m$, we consider $2^{\mathcal{U}_{m}}$ possible control commands. The probabilities are forward projected for each of the possible control commands and a weighted average of all disambiguation metric computations is used to characterize the control mode $m$. In the following sub-sections we present two different methods to compute the disambiguation metric. 
+
+\begin{algorithm}[t]
+	\caption{Calculate $\boldsymbol{p}(t_b)$, $\boldsymbol{p}(t_c)$}
+	\label{alg1}
+	\begin{algorithmic}[1]
+		\REQUIRE $\boldsymbol{p}(t_a), \boldsymbol{x}_r(t_a), \Delta t, t_a < t_b, \boldsymbol{\Theta}$
+		\FOR{$m=1\dots n_m$}
+		\STATE Initialize $D_m = 0$, $t = t_a$
+		
+		\WHILE{$t \leq t_b$}
+		\STATE $\boldsymbol{p}_k(t + \Delta t) \leftarrow \text{UpdateIntent}(\boldsymbol{p}_k(t), \boldsymbol{u}_h; \boldsymbol{\Theta})$
+		\STATE $\boldsymbol{x}_r(t + \Delta t) \leftarrow \text{SimulateKinematics}(\boldsymbol{x}_r(t), \boldsymbol{u}_h)$
+		\IF{$t = t_b$} \STATE {$Compute \; D_m$} 
+		\ENDIF
+		\STATE $t \leftarrow t + \Delta t$
+		\ENDWHILE
+		
+		\ENDFOR
+		
+	\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Entropy Based Disambiguation Metric}
+The entropy of the probability distribution is reflective of the average information content of a stochastic source of data. For a discrete random variable $X$ with possible values $\{x_1, x_2,\dots x_n\}$ with probability mass distribution denoted by $p(X)$, the Shannon entropy is defined as 
+
+\begin{equation*}
+H(X) = -\Sigma_{i = 1}^{n} P(x_i)log_{2}P(x_i)
+\end{equation*}
+
+Lower entropy indicates higher certainty in the value of the random variable and vice-versa. Therefore, entropy of the projected probability distribution, $\boldsymbol{p}(t_b)$, can be used as a measure of how confident the system is in its prediction of human intent. That is, entropy can be used a measure of disambiguation. Lower the entropy better the disambiguation due to higher certainty in the human's intended goal. The entropy of the probability distribution is affected by the same factors that determine the time evolution of the probability distribution. 
+Therefore, 
+\begin{equation}
+D_m = \Sigma_{i=1}^{2^{\vert\mathcal{U}_{m}\vert}} \boldsymbol{p}(t_b)
+\end{equation}
+
+
+
+\subsubsection{KL-Divergence based Metric}
+KL divergence is used as a measure of information gain between two distributions. Widely used in the context of Bayesian inference, KL divergence measures the information gain when the prior is updated to the posterior in the light of new evidence. In the context of disambiguation we can treat the projected probability distributions as the posterior and dostribution at time t to be the prior. KL divergence can then be used to caracterize the information gain capabilities of each control mode. 
+
+Include figure. 
+%\subsubsection{Fisher Information Based Metric}
+%What is Fisher information
+%Treat entropy as a Gaussain random variable. The noise in the entropy estimate can be due to the fact that the true intent gets distorted in the control interface. 
+%\subsubsection{Heuristic-based Metric}
+
+\subsection{Intent inference}\label{ssec:inference}
 \subsubsection{Dynamic Field Theory}
 \subsubsection{Bayesian Inference}
 \subsubsection{Confidence Functions}
 
-\subsection{Shared Control}
+\section{Shared Control}\label{sec:shared-control}
 
-\section{Experimental Evaluation}
+\section{Experimental Evaluation}\label{sec:ed}
 
-\section{Results}
-\section{Discussion}
-\section{Conclusion}
+\section{Results}\label{sec:results}
+\section{Discussion}\label{sec:discussions}
+\section{Conclusion}\label{sec:conclusions}
 \section{References}
 
 

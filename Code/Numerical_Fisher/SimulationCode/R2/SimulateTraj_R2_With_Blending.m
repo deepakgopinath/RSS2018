@@ -1,4 +1,4 @@
-% clear all; close all; clc;
+clear all; close all; clc;
 
 %% SPAWN GOAL CONFIGURATION AND ROBOT POSITION. RANDOMLY IN THE WORKSPACE. 
 
@@ -27,20 +27,20 @@ sig = 0.01; %For Fisher information
 delta_t = 0.1; %For compute projections. 
 
 %arbitrartion function parameters - Fixed parameters for shared control. 
-conf_thresh = (1.2/ng);
-conf_max = (1.4/ng);
+conf_thresh = (1.05/ng);
+conf_max = (1.2/ng);
 alpha_max = 0.7;
 
 %% PLOT GOALS AND CURRENT ROBOT POSITION. 
 % 
-% figure;
-% scatter(xg(1,1:ng), xg(2,1:ng), 180, 'k', 'filled'); grid on; hold on;
-% scatter(xr(1), xr(2), 140, 'r', 'filled');
-% offset = [-0.1, 0.1];
-% line(xrange+offset, [0,0], 'Color', 'r'); %draw x and y axes.
-% line([0,0], yrange+offset, 'Color', 'g');
-% axis([xrange + offset, yrange + offset]);
-% axis square;
+figure;
+scatter(xg(1,1:ng), xg(2,1:ng), 180, 'k', 'filled'); grid on; hold on;
+scatter(xr(1), xr(2), 140, 'r', 'filled');
+offset = [-0.1, 0.1];
+line(xrange+offset, [0,0], 'Color', 'r'); %draw x and y axes.
+line([0,0], yrange+offset, 'Color', 'g');
+axis([xrange + offset, yrange + offset]);
+axis square;
 
 %% START SIMULATING A HUMAN CONTROLLING THE ROBOT FROM THE CURRENT POSITION ALWAYS IN THE DISAMBIGUATING MODE, TOWARDS A RANDOMLY PICKED GOAL FROM 
 %% THE LIST OF GOALS.
@@ -48,7 +48,7 @@ alpha_max = 0.7;
 % generate random user goal index. change color to magenta. 
 random_goal_index = randsample(ng, 1); 
 random_goal = xg(:, random_goal_index);
-% scatter(random_goal(1), random_goal(2), 180, 'm', 'filled'); grid on; hold on;
+scatter(random_goal(1), random_goal(2), 180, 'm', 'filled'); grid on; hold on;
 
 %%
 intent_types = {'dft', 'conf', 'bayes'};
@@ -68,13 +68,20 @@ traj_POT = zeros(nd, total_time_steps); %trajectory
 traj_POT(:, 1) = xr; %initialize first data point of trajetcory
 pgs_POT(:, 1) = (1/ng)*ones(ng, 1);%uniform probability to start off with. This is the true pg distribution during the course of the trajectory
 %internally projection
-current_optimal_mode_POT = 1;
-mode_comp_timesteps = 4; %time step gap between optimal mode computation. 
+current_optimal_mode_POT_index = 1;
+current_optimal_mode_POT = cm{current_optimal_mode_POT_index};
 
-hist_length = 15;
+
+mode_comp_timesteps = 4; %time step gap between optimal mode computation. 
+exit_threshold = 0.02;
+hist_length = 15; %for Bayes filter. not used. 
 
 for i=1:total_time_steps-1
     %compute the optimal mode. store it away. 
+    if norm(traj_POT(:, i) - random_goal)/norm(traj_POT(:, 1)- random_goal) < exit_threshold
+        fprintf('Within 10 percent of the original separation from goal. Stopping simulation\n');
+        break;
+    end
     curr_goal_index_POT = datasample(find(pgs_POT(:, i) == max(pgs_POT(:, i))), 1);
     curr_goal_POT(i) = curr_goal_index_POT;
     if mod(i-1, mode_comp_timesteps) == 0
@@ -131,9 +138,14 @@ traj_ENT = zeros(nd, total_time_steps);
 traj_ENT(:, 1) = xr;
 pgs_ENT(:, 1) = (1/ng)*ones(ng, 1);%uniform probability to start off with. This is the true pg distribution during the course of the trajectory
 %internally projection
-current_optimal_mode_ENT = 1;
+current_optimal_mode_ENT_index = 1;
+current_optimal_mode_ENT = cm{current_optimal_mode_ENT_index};
 
 for i=1:total_time_steps-1
+    if norm(traj_ENT(:, i) - random_goal)/norm(traj_ENT(:, 1)- random_goal) < exit_threshold
+        fprintf('Within 10 percent of the original separation from goal. Stopping simulation\n');
+        break;
+    end
     %compute the optimal mode. store it away. 
     curr_goal_index_ENT = datasample(find(pgs_ENT(:, i) == max(pgs_ENT(:, i))), 1);
     curr_goal_ENT(i) = curr_goal_index_ENT;
@@ -175,60 +187,124 @@ for i=1:total_time_steps-1
     optimal_modes_ENT(i) = current_optimal_mode_ENT;
 end
 
+%% USING KL DIVERGENCE
+fprintf("SIMULATION USING KL DIVERGENCE INFORMATION \n");
 
-%% USING FI
-fprintf("SIMULATION USING FISHER INFORMATION \n");
-xr = xr_true;
-pgs_FI = zeros(ng, total_time_steps);
-optimal_modes_FI = zeros(total_time_steps-1, 1);
-alpha_FI = zeros(total_time_steps-1, 1);
-uh_FI = zeros(nd, total_time_steps-1);
-ur_FI = zeros(nd, total_time_steps-1);
-blend_vel_FI = zeros(nd, total_time_steps-1);
-curr_goal_FI = zeros(total_time_steps-1, 1);
-traj_FI = zeros(nd, total_time_steps);
-traj_FI(:, 1) = xr;
-pgs_FI(:, 1) = (1/ng)*ones(ng, 1);
-current_optimal_mode_FI = 1;
+xr = xr_true; %reset the robot position to starting position
+pgs_KL = zeros(ng, total_time_steps);
+optimal_modes_KL = zeros(total_time_steps-1, 1);
+alpha_KL = zeros(total_time_steps-1, 1);
+uh_KL = zeros(nd, total_time_steps-1);
+ur_KL = zeros(nd, total_time_steps-1);
+blend_vel_KL = zeros(nd, total_time_steps-1);
+curr_goal_KL = zeros(total_time_steps-1, 1);
+traj_KL = zeros(nd, total_time_steps);
+traj_KL(:, 1) = xr;
+pgs_KL(:, 1) = (1/ng)*ones(ng, 1);%uniform probability to start off with. This is the true pg distribution during the course of the trajectory
+%internally projection
+current_optimal_mode_KL_index = 1;
+current_optimal_mode_KL = cm{current_optimal_mode_KL_index};
+
 for i=1:total_time_steps-1
-    %obtain current goal.
-    curr_goal_index_FI = datasample(find(pgs_FI(:, i) == max(pgs_FI(:, i))), 1);
-    curr_goal_FI(i) =  curr_goal_index_FI;
+    if norm(traj_KL(:, i) - random_goal)/norm(traj_KL(:, 1)- random_goal) < exit_threshold
+        fprintf('Within 10 percent of the original separation from goal. Stopping simulation\n');
+        break;
+    end
     %compute the optimal mode. store it away. 
+    curr_goal_index_KL = datasample(find(pgs_KL(:, i) == max(pgs_KL(:, i))), 1);
+    curr_goal_KL(i) = curr_goal_index_KL;
     if mod(i-1, mode_comp_timesteps) == 0
-        current_optimal_mode_FI_index = compute_optimal_mode_FI_R2(intent_type, xr, pgs_FI(:, i)); 
-        if length(current_optimal_mode_FI_index) > 1 %when there are equivalent modes. 
-            current_optimal_mode_FI = cm{current_optimal_mode_FI_index(1)}; %pick the first one. 
-            current_optimal_mode_FI_index = current_optimal_mode_FI_index(1); %update the index. 
+        current_optimal_mode_KL_index = compute_optimal_mode_KL_R2(intent_type, xr, pgs_KL(:, i)); 
+        if length(current_optimal_mode_KL_index) > 1 %when there are equivalent modes. 
+            current_optimal_mode_KL = cm{current_optimal_mode_KL_index(1)}; %pick the first one. 
+            current_optimal_mode_KL_index = current_optimal_mode_KL_index(1); %update the index. 
         else
-            if current_optimal_mode_FI_index ~= -1 %if -1, don't change any mode. keep previous node. So no need to update
-                current_optimal_mode_FI = cm{current_optimal_mode_FI_index}; 
+            if current_optimal_mode_KL_index ~= -1 %if -1, don't change any mode. keep previous node. So no need to update
+                current_optimal_mode_KL = cm{current_optimal_mode_KL_index}; 
             end
         end
     end
-    %gotta determine uh. 
+    %gotta determine uh. Assumes human is executes the "straightest
+    %possible motion in the current mode towards the specified goal". 
     uh = generate_full_uh(random_goal, xr);
-    zero_dim = setdiff(1:nd,current_optimal_mode_FI);
+    zero_dim = setdiff(1:nd,current_optimal_mode_KL);
     for jj=1:length(zero_dim)
         uh(zero_dim(jj)) = 0;
     end
-    uh = 0.2*(uh/(norm(uh) + realmin));
-    ur = generate_autonomy(curr_goal_index_FI); %autonomy command in full 2D space
-    alpha_FI(i) = alpha_from_confidence(pgs_FI(curr_goal_index_FI, i)); %linear belnding param
-    blend_vel = (1-alpha_FI(i))*uh + alpha_FI(i)*ur; %blended vel
-    uh_FI(:, i) = uh; ur_FI(:, i) = ur; blend_vel_FI(:, i) = blend_vel;
+    uh = 0.2*(uh./(abs(uh) + realmin));
+    ur = generate_autonomy(curr_goal_index_KL); %autonomy command in full 2D space
+    alpha_KL(i) = alpha_from_confidence(pgs_KL(curr_goal_index_KL, i)); %linear belnding param
+    blend_vel = (1-alpha_KL(i))*uh + alpha_KL(i)*ur; %blended vel
+    uh_KL(:, i) = uh; ur_KL(:, i) = ur; blend_vel_KL(:, i) = blend_vel;
+
     if strcmp(intent_type, 'dft')
-        pgs_FI(:, i+1) = compute_p_of_g_dft_R2(uh, xr, pgs_FI(:, i));
+        pgs_KL(:, i+1) = compute_p_of_g_dft_R2(uh, xr, pgs_KL(:, i));
     elseif strcmp(intent_type, 'bayes')
-        pgs_FI(:, i+1) = compute_bayes_R2(uh, xr, pgs_FI(:, i));
-%         pgs_FI(:, i+1) = compute_bayes_n_R2(uh_FI(:, max(1, i-hist_length+1):i), xr, pgs_FI(:,i));
+        pgs_KL(:, i+1) = compute_bayes_R2(uh, xr, pgs_KL(:, i));
+%         pgs_KL(:, i+1) = compute_bayes_n_R2(uh_KL(:, max(1, i-hist_length+1):i), xr, pgs_KL(:,i));
     elseif strcmp(intent_type, 'conf')
-        pgs_FI(:, i+1) = compute_conf_R2(uh, xr);
+        pgs_KL(:, i+1) = compute_conf_R2(uh, xr);
     end
+    
     xr = sim_kinematics_R2(xr, blend_vel); %forward simulate kinematics with blending. 
-    traj_FI(:, i+1) = xr;
-    optimal_modes_FI(i) = current_optimal_mode_FI;
+    traj_KL(:, i+1) = xr;
+    optimal_modes_KL(i) = current_optimal_mode_KL_index;
 end
+
+
+%% USING FI
+% fprintf("SIMULATION USING FISHER INFORMATION \n");
+% xr = xr_true;
+% pgs_FI = zeros(ng, total_time_steps);
+% optimal_modes_FI = zeros(total_time_steps-1, 1);
+% alpha_FI = zeros(total_time_steps-1, 1);
+% uh_FI = zeros(nd, total_time_steps-1);
+% ur_FI = zeros(nd, total_time_steps-1);
+% blend_vel_FI = zeros(nd, total_time_steps-1);
+% curr_goal_FI = zeros(total_time_steps-1, 1);
+% traj_FI = zeros(nd, total_time_steps);
+% traj_FI(:, 1) = xr;
+% pgs_FI(:, 1) = (1/ng)*ones(ng, 1);
+% current_optimal_mode_FI = 1;
+% for i=1:total_time_steps-1
+%     %obtain current goal.
+%     curr_goal_index_FI = datasample(find(pgs_FI(:, i) == max(pgs_FI(:, i))), 1);
+%     curr_goal_FI(i) =  curr_goal_index_FI;
+%     %compute the optimal mode. store it away. 
+%     if mod(i-1, mode_comp_timesteps) == 0
+%         current_optimal_mode_FI_index = compute_optimal_mode_FI_R2(intent_type, xr, pgs_FI(:, i)); 
+%         if length(current_optimal_mode_FI_index) > 1 %when there are equivalent modes. 
+%             current_optimal_mode_FI = cm{current_optimal_mode_FI_index(1)}; %pick the first one. 
+%             current_optimal_mode_FI_index = current_optimal_mode_FI_index(1); %update the index. 
+%         else
+%             if current_optimal_mode_FI_index ~= -1 %if -1, don't change any mode. keep previous node. So no need to update
+%                 current_optimal_mode_FI = cm{current_optimal_mode_FI_index}; 
+%             end
+%         end
+%     end
+%     %gotta determine uh. 
+%     uh = generate_full_uh(random_goal, xr);
+%     zero_dim = setdiff(1:nd,current_optimal_mode_FI);
+%     for jj=1:length(zero_dim)
+%         uh(zero_dim(jj)) = 0;
+%     end
+%     uh = 0.2*(uh/(norm(uh) + realmin));
+%     ur = generate_autonomy(curr_goal_index_FI); %autonomy command in full 2D space
+%     alpha_FI(i) = alpha_from_confidence(pgs_FI(curr_goal_index_FI, i)); %linear belnding param
+%     blend_vel = (1-alpha_FI(i))*uh + alpha_FI(i)*ur; %blended vel
+%     uh_FI(:, i) = uh; ur_FI(:, i) = ur; blend_vel_FI(:, i) = blend_vel;
+%     if strcmp(intent_type, 'dft')
+%         pgs_FI(:, i+1) = compute_p_of_g_dft_R2(uh, xr, pgs_FI(:, i));
+%     elseif strcmp(intent_type, 'bayes')
+%         pgs_FI(:, i+1) = compute_bayes_R2(uh, xr, pgs_FI(:, i));
+% %         pgs_FI(:, i+1) = compute_bayes_n_R2(uh_FI(:, max(1, i-hist_length+1):i), xr, pgs_FI(:,i));
+%     elseif strcmp(intent_type, 'conf')
+%         pgs_FI(:, i+1) = compute_conf_R2(uh, xr);
+%     end
+%     xr = sim_kinematics_R2(xr, blend_vel); %forward simulate kinematics with blending. 
+%     traj_FI(:, i+1) = xr;
+%     optimal_modes_FI(i) = current_optimal_mode_FI;
+% end
 %% DISAMB METRIC BASED
 fprintf("SIMULATION USING DISAMB METRIC \n");
 xr = xr_true;
@@ -248,6 +324,10 @@ current_optimal_mode_DISAMB_index = 1;
 current_optimal_mode_DISAMB = cm{current_optimal_mode_DISAMB_index};
 
 for i=1:total_time_steps-1
+    if norm(traj_DISAMB(:, i) - random_goal)/norm(traj_DISAMB(:, 1)- random_goal) < exit_threshold
+        fprintf('Within 10 percent of the original separation from goal. Stopping simulation\n');
+        break;
+    end
     curr_goal_index_DISAMB = datasample(find(pgs_DISAMB(:, i) == max(pgs_DISAMB(:, i))), 1);
     curr_goal_DISAMB(i) = curr_goal_index_DISAMB;
     if mod(i-1, mode_comp_timesteps) == 0
@@ -284,16 +364,17 @@ for i=1:total_time_steps-1
     optimal_modes_DISAMB(i) = current_optimal_mode_DISAMB_index; 
 end
 
-%%
-% hold on; 
-% scatter(traj_POT(1, :)', traj_POT(2, :)', 'k', 'filled');
-% scatter(traj_ENT(1, :)', traj_ENT(2, :)', 'r', 'filled');
+%
+hold on; 
+scatter(traj_POT(1, :)', traj_POT(2, :)', 'k', 'filled');
+scatter(traj_ENT(1, :)', traj_ENT(2, :)', 'r', 'filled');
+scatter(traj_KL(1, :)', traj_KL(2, :)', 'b', 'filled');
 % scatter(traj_FI(1, :)', traj_FI(2, :)', 'b', 'filled');
-% scatter(traj_DISAMB(1, :)', traj_DISAMB(2, :)', 'g', 'filled');
-% 
-% %% PLOT PROBABILITIES AND THE DISAMB MODES. 
-% plot_script;
-% plot_goal_match;
+scatter(traj_DISAMB(1, :)', traj_DISAMB(2, :)', 'g', 'filled');
+
+%% PLOT PROBABILITIES AND THE DISAMB MODES. 
+plot_script;
+plot_goal_match;
 
 %% generate u_h
 function uh = generate_full_uh(xg, xr) %full unnomralized uh

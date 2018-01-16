@@ -1,7 +1,7 @@
 clear all; clc; close all;
 % close all;
 %%
-global num_modes ng nd xg xr sig;
+global num_modes ng nd xg xr sig delta_t;
 ng = 2;
 nd = 3;
 num_modes = 3;
@@ -29,6 +29,8 @@ xr =[-0.083077724768694, %robot pos at traj time stamp 501;
 % xr = [0,0,0]';
 uh = [-1,0,0]';
 sig = 0.01;
+sig = 0.01;
+delta_t = 0.1;
 % 1.0e+08 *
 % 
 %    1.615703233093601
@@ -96,12 +98,13 @@ ax_p = (min_ws:step_size:max_ws)' +0.001;
 [X,Y,Z] = meshgrid(ax_p);
 ws_points = [X(:) Y(:) Z(:)];
 disamb_modes = zeros(size(ws_points, 1), 1);
-
+pg0 = (1/ng)*ones(ng,1);
 %%
 for i=1:size(ws_points,1)
     xr = ws_points(i, :)';
     EID_US = compute_FIM;
-    disamb_modes(i) = compute_best_mode(EID_US);
+%     disamb_modes(i) = compute_best_mode(EID_US);
+    disamb_modes(i) = compute_optimal_mode_FI_3D('dft', xr, pg0, '1d');
 end
 
 %%

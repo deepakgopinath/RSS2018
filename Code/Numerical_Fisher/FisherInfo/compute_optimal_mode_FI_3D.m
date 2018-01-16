@@ -5,17 +5,17 @@ function [ best_mode ] = compute_optimal_mode_FI_3D(intent_type, curr_x, pg, int
 global sig;
 % compute_p_of_g, pg, xr,
 if strcmp(interface_type, '1d')
-        uh_U1 = [1, 0, 0; -1, 0, 0]';
+        uh_U1 = 0.2*[1, 0, 0; -1, 0, 0]';
         c1 = (1/sig^2)*(NumHessian(@compute_entropy, uh_U1(:,1), intent_type, curr_x, pg));
         c2 = (1/sig^2)*(NumHessian(@compute_entropy, uh_U1(:,2), intent_type, curr_x, pg));
         PHI_U1 = 0.5*c1 + 0.5*c2;
 
-        uh_U2 = [0, 1, 0; 0, -1, 0]';
+        uh_U2 = 0.2*[0, 1, 0; 0, -1, 0]';
         c1 = (1/sig^2)*(NumHessian(@compute_entropy, uh_U2(:,1), intent_type, curr_x, pg));
         c2 = (1/sig^2)*(NumHessian(@compute_entropy, uh_U2(:,2), intent_type, curr_x, pg));
         PHI_U2 = 0.5*c1 + 0.5*c2;
 
-        uh_U3 = [0, 0, 1; 0, 0, -1]';
+        uh_U3 = 0.2*[0, 0, 1; 0, 0, -1]';
         c1 = (1/sig^2)*(NumHessian(@compute_entropy, uh_U3(:,1), intent_type, curr_x, pg));
         c2 = (1/sig^2)*(NumHessian(@compute_entropy, uh_U3(:,2), intent_type, curr_x, pg));
         PHI_U3 = 0.5*c1 + 0.5*c2;

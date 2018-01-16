@@ -3,7 +3,7 @@ function [ posterior ] = compute_bayes( uh, xr, prior )
 %   Detailed explanation goes here
     global ng
     ll = likelihood_func(uh, xr);
-    prior = prior + 0.01*rand(ng, 1); %to avoid collapse of posterior. 
+    prior = prior + 0.001*rand(ng, 1); %to avoid collapse of posterior. 
     prior = prior/sum(prior);
     posterior = ll.*prior;
     posterior = posterior/sum(posterior); %make sure that the posterior is always normalized. 
@@ -27,11 +27,12 @@ end
 
 function [q] = p_of_u_given_g(uh, dir_vec) %assumes that the uh that is expected to see for a goal is the one which is directly pointing at it. 
 %     q = prob(uh(1) - dir_vec(1))*prob(uh(2) - dir_vec(2))*prob(uh(3) - dir_vec(3)); %p(ux, uy, uz) = p(ux)p(uy)p(uz);
-    ang = acos(dot(uh, dir_vec));
+    ang = acos(round(dot(uh, dir_vec), 5));
     q = prob(ang);
 end
 
-function p = prob(a) %zero mean gaussian, 
-    sigma = pi/2; %for the time being use this std dev
+function p = prob(a) %zero mean gaussian,  % MAKE this into von Misner
+    sigma = 1.5*pi; %for the time being use this std dev
     p = (1/sqrt(2*pi*sigma^2))*exp((-1/2.0)*(a^2/sigma^2));
+    
 end

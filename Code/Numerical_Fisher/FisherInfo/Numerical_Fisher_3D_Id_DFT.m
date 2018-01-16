@@ -146,7 +146,7 @@ view([32,16]);
 
 min_ws = -5;
 max_ws = 5;
-num_steps = 8;
+num_steps = 5;
 step_size = (max_ws - min_ws)/num_steps;
 ax_p = (min_ws:step_size:max_ws)' +0.001;
 [X,Y,Z] = meshgrid(ax_p);
@@ -167,7 +167,7 @@ scatter3(xg(1,1:ng), xg(2,1:ng), xg(3,1:ng), 580, 'k', 'filled');
 % xrange = [-1,1]; %set axis limits
 % yrange = [-1,1];
 % zrange = [-1,1];
-sf = 2;
+sf = 1.5;
 xrange = sf*[-5,5]; %set axis limits
 yrange = sf*[-5,5];
 zrange = sf*[-5,5];
@@ -175,7 +175,7 @@ line(xrange, [0,0], [0,0], 'Color', 'r', 'LineWidth', 3.5); %draw x and y axes.
 line([0,0], yrange, [0,0], 'Color', 'g','LineWidth', 5.5);
 line([0,0], [0,0], zrange, 'Color', 'b','LineWidth', 3.5);
 axis([xrange, yrange, zrange]);
-axis square;xlabel('X'); ylabel('Y'); zlabel('Z');
+axis square;xlabel('\bf X'); ylabel('\bf Y'); zlabel('\bf Z');
 view([32,16]);
 grid on; hold on;
 scatter3(ws_points(disamb_modes == 1, 1), ws_points(disamb_modes == 1, 2),  ws_points(disamb_modes == 1, 3), 70, 'r', 'filled');

@@ -53,11 +53,20 @@ traj = zeros(3, length(T));
 traj(:, 1) = xr;
 %%
 %%SIMULATE DYNAMICS AND COMPUTE P(g).
-pgs = zeros(ng, length(T));
-pgs(:, 1) = (1/ng)*ones(ng,1); %init pg
+pgs_DFT = zeros(ng, length(T));
+pgs_DFT(:, 1) = (1/ng)*ones(ng,1); %init pg
+
+pgs_BAYES = zeros(ng, length(T));
+pgs_BAYES(:, 1) = (1/ng)*ones(ng,1); %init pg
+
+pgs_CONF = zeros(ng, length(T));
+pgs_CONF(:, 1) = (1/ng)*ones(ng,1); %init pg
+
+
 optimal_assistance_t = 10;
 optimal_assistance_ind = find(t <= optimal_assistance_t);
 optimal_assistance_ind = optimal_assistance_ind(end);
+hist_length = 1;
 for i=1:length(T)-1
     if i == optimal_assistance_ind
         %trigger the FI based optimal mode computation. 
@@ -72,23 +81,24 @@ for i=1:length(T)-1
     end
     uh = u(:, i);
     traj(:, i+1) = sim_dyn(traj(:, i), uh); %sim_dyn intenrally updates global robot state
-    pgs(:, i+1) = compute_p_of_g_dft(uh, traj(:,i), pgs(:, i));
-%     pgs(:, i+1) = compute_conf(uh, traj(:,i));
-%     pgs(:, i+1) = compute_bayes(uh, traj(:, i), pgs(:, i));
+    pgs_DFT(:, i+1) = compute_p_of_g_dft(uh, traj(:,i), pgs_DFT(:, i));
+    pgs_CONF(:, i+1) = compute_conf(uh, traj(:,i));
+    pgs_BAYES(:, i+1) = compute_bayes(uh, traj(:, i), pgs_BAYES(:, i));
+%     pgs(:, i+1) = compute_bayes_n_R3(u(:, max(1, i-hist_length+1):i), traj(:, i), pgs(:,i));
     xr = traj(:, i+1); 
     
 end
 
 %%
-figure;
-step_size = 10;
+subplot(2,2,1);
+step_size = 20;
 scatter3(traj(1, 1:step_size:end),traj(2, 1:step_size:end),traj(3, 1:step_size:end), 'b', 'filled'); hold on;
-scatter3(traj(1, 1),traj(2, 1),traj(3, 1), 100, 'r', 'filled');
-scatter3(traj(1, end),traj(2, end),traj(3, end),100, 'g', 'filled' );
-% scatter3(traj(1, optimal_assistance_ind),traj(2, optimal_assistance_ind),traj(3, optimal_assistance_ind),100, 'g', 'filled' );
-scatter3(xg(1,1:ng), xg(2,1:ng), xg(3,1:ng), 250, 'k', 'filled'); grid on; hold on;
 
-xlabel('\bf X'); ylabel('\bf Y'); zlabel('\bf Z');
+% scatter3(traj(1, optimal_assistance_ind),traj(2, optimal_assistance_ind),traj(3, optimal_assistance_ind),100, 'g', 'filled' );
+scatter3(xg(1,1), xg(2,1), xg(3,1), 450, 'k', 'filled'); grid on; hold on;
+scatter3(xg(1,2), xg(2,2), xg(3,2), 450, 'm', 'filled'); grid on; hold on;
+
+xlabel('\bf X (m)'); ylabel('\bf Y (m)'); zlabel('\bf Z (m)');
 xrange = 0.4*[-2,2]; %set axis limits
 yrange = 0.4*[-2,2];
 zrange = 0.4*[-2,2];
@@ -96,12 +106,15 @@ line(xrange, [0,0], [0,0], 'Color', 'k', 'LineWidth', 1.5); %draw x and y axes.
 line([0,0], yrange, [0,0], 'Color', 'k','LineWidth', 1.5);
 line([0,0], [0,0], zrange, 'Color', 'k','LineWidth', 1.5);
 axis([xrange, yrange, zrange]);
-axis square;
+scatter3(traj(1, 1),traj(2, 1),traj(3, 1), 100, 'r', 'filled');
+scatter3(traj(1, end),traj(2, end),traj(3, end),100, 'g', 'filled' );
+% legend({'Start', 'End'});
+% axis square;
 view([-222,31]);
 
 %%
 %plot control signal
-figure;
+subplot(2,2,2);
 plot(u(1,:)/max(u(1,:)), 'r', 'LineWidth',1.5); hold on; 
 plot(u(2,:)/max(u(2,:)), 'g', 'LineWidth',1.5);
 plot(u(3,:)/max(u(2,:)), 'b', 'LineWidth',1.5);
@@ -111,13 +124,41 @@ ylabel('\bf Velocity m/s');
 
 %%
 %plot pg
-figure;
+%%
+%%
+subplot(2,2,3);
 colors = {'k', 'm', 'y'};
 for i=1:ng
-    plot(pgs(i, :), colors{i}, 'LineWidth', 1.5); hold on;
+    plot(pgs_CONF(i, :), colors{i}, 'LineWidth', 1.5); hold on;
+end
+grid on;
+xlabel('\bf Time Steps');
+ylabel('\bf P(g)');
+legend({'Goal L', 'Goal R'});
+title('Probability Evolution - CONF');
+ylim([0.0,1.0]);
+% %%
+% subplot(1,3,2);
+% colors = {'k', 'm', 'y'};
+% for i=1:ng
+%     plot(pgs_BAYES(i, :), colors{i}, 'LineWidth', 1.5); hold on;
+% end
+% grid on;
+% xlabel('\bf Time Steps');
+% ylabel('\bf P(g)');
+% legend({'Goal L', 'Goal R'});
+% title('Probability Evolution - BAYES');
+% ylim([0.0,1.0]);
+
+%%
+subplot(2,2,4);
+colors = {'k', 'm', 'y'};
+for i=1:ng
+    plot(pgs_DFT(i, :), colors{i}, 'LineWidth', 1.5); hold on;
 end
 grid on;
 xlabel('\bf Time Steps');
 ylabel('\bf P(g)');
 legend({'Goal L', 'Goal R'});
 title('Probability Evolution - DFT');
+ylim([0.0,1.0]);

@@ -12,7 +12,7 @@ function [pg] = compute_p_of_g_dft_R2( uh, xr, pg )
     lambda = 0*ones(ng,ng);
     lambda(1: ng+1: ng*ng) = 0;
     lambda = 1*eye(ng) + lambda;
-    dpgdt = (-1/tau)*eye(ng)*pg ++ (h/tau)*ones(ng,1) + lambda*sigmoid(curr_pg); %ODE - Dynamics neural field. 
+    dpgdt = (-1/tau)*eye(ng)*pg + (h/tau)*ones(ng,1) + lambda*sigmoid(curr_pg); %ODE - Dynamics neural field. 
     pg = pg + dpgdt*delta_t; %Euler integration;
     pg(pg <=0) = realmin;
     pg = pg/sum(pg); %normalize, so that the inidividual values are alwyas between 0 and 1. 

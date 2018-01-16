@@ -74,6 +74,6 @@ end
 
 %%
 function p = prob(a) %zero mean gaussian, 
-    sigma = pi/2; %for the time being use this std dev
+    sigma = 1.5*pi; %for the time being use this std dev
     p = (1/sqrt(2*pi*sigma^2))*exp((-1/2.0)*(a^2/sigma^2));
 end

@@ -2,7 +2,7 @@ function [pg] = compute_p_of_g_dft( uh, xr, pg )
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
     global ng delta_t;
-    tau = 5;
+    tau = 3.8;
     h = 1/ng;
     %%%%%%%%%%%%%%%%
     %only for ad mode
@@ -11,7 +11,7 @@ function [pg] = compute_p_of_g_dft( uh, xr, pg )
     curr_pg = compute_curr_input(uh, xr);
     lambda = 0*ones(ng,ng);
     lambda(1: ng+1: ng*ng) = 0;
-    lambda = 1*eye(ng) + lambda;
+    lambda = 2*eye(ng) + lambda;
     dpgdt = (-1/tau)*eye(ng)*pg + (h/tau)*ones(ng,1) + lambda*sigmoid(curr_pg); %ODE - Dynamics neural field. 
     pg = pg + dpgdt*delta_t; %Euler integration;
     pg(pg <=0) = realmin;

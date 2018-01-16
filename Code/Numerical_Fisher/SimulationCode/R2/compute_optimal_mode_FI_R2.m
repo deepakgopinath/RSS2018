@@ -1,4 +1,4 @@
-function [ best_mode ] = compute_optimal_mode_FI_R2(intent_type, xr_T, pg)
+function [ best_mode, EID_AR ] = compute_optimal_mode_FI_R2(intent_type, xr_T, pg)
 %UNTITLED6 Summary of this function goes here
 %   Detailed explanation goes here
 % global delta_t;
