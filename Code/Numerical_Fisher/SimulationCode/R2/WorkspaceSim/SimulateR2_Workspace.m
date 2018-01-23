@@ -55,7 +55,7 @@ ws_points = [X(:) Y(:)];
 disamb_modes_ENT = zeros(size(ws_points, 1), 1);
 disamb_modes_KL = zeros(size(ws_points, 1), 1);
 pg0 = (1/ng)*ones(ng,1); %at every workspace point the starting probability distribution is uniform. 
-pg0 = rand(ng, 1); pg0 = pg0/sum(pg0);
+% pg0 = rand(ng, 1); pg0 = pg0/sum(pg0);
 current_optimal_mode_ENT = cm{datasample(1:num_modes, 1)};
 current_optimal_mode_KL = cm{datasample(1:num_modes, 1)};
 %%

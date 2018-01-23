@@ -33,7 +33,7 @@ alpha_max = 0.7;
 
 %% PLOT GOALS AND CURRENT ROBOT POSITION. 
 % 
-figure;
+% figure;
 scatter(xg(1,1:ng), xg(2,1:ng), 180, 'k', 'filled'); grid on; hold on;
 scatter(xr(1), xr(2), 140, 'r', 'filled');
 offset = [-0.1, 0.1];
@@ -48,11 +48,13 @@ axis square;
 % generate random user goal index. change color to magenta. 
 random_goal_index = randsample(ng, 1); 
 random_goal = xg(:, random_goal_index);
+%%
 scatter(random_goal(1), random_goal(2), 180, 'm', 'filled'); grid on; hold on;
 
 %%
 intent_types = {'dft', 'conf', 'bayes'};
 intent_type = intent_types{datasample(1:length(intent_types), 1)}; % or conf or bayes
+intnent_type = 'dft';
 
 %% %% USING MAX POTENTIAL AS BASE LINE
 total_time_steps = 120; %with delta_t of 0.1, this amounts to 10 seconds. We will assume that "mode switches" don't take time. 
@@ -373,8 +375,8 @@ scatter(traj_KL(1, :)', traj_KL(2, :)', 'b', 'filled');
 scatter(traj_DISAMB(1, :)', traj_DISAMB(2, :)', 'g', 'filled');
 
 %% PLOT PROBABILITIES AND THE DISAMB MODES. 
-plot_script;
-plot_goal_match;
+% plot_script;
+% plot_goal_match;
 
 %% generate u_h
 function uh = generate_full_uh(xg, xr) %full unnomralized uh

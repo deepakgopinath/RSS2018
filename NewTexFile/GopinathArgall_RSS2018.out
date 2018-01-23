@@ -5,14 +5,25 @@
 \BOOKMARK [2][-]{subsection.3.2}{Set Theoretic Treatment of Control Modes}{section.3}% 5
 \BOOKMARK [2][-]{subsection.3.3}{Disambiguation Schemes}{section.3}% 6
 \BOOKMARK [3][-]{subsubsection.3.3.1}{Entropy Based Disambiguation Metric}{subsection.3.3}% 7
-\BOOKMARK [3][-]{subsubsection.3.3.2}{KL-Divergence based Metric}{subsection.3.3}% 8
+\BOOKMARK [3][-]{subsubsection.3.3.2}{KL-Divergence Based Metric}{subsection.3.3}% 8
 \BOOKMARK [2][-]{subsection.3.4}{Intent inference}{section.3}% 9
-\BOOKMARK [3][-]{subsubsection.3.4.1}{Dynamic Field Theory}{subsection.3.4}% 10
-\BOOKMARK [3][-]{subsubsection.3.4.2}{Bayesian Inference}{subsection.3.4}% 11
-\BOOKMARK [3][-]{subsubsection.3.4.3}{Confidence Functions}{subsection.3.4}% 12
+\BOOKMARK [3][-]{subsubsection.3.4.1}{Heuristic Approaches}{subsection.3.4}% 10
+\BOOKMARK [3][-]{subsubsection.3.4.2}{Bayesian Approaches}{subsection.3.4}% 11
+\BOOKMARK [3][-]{subsubsection.3.4.3}{Dynamic Neural Field Based Approaches}{subsection.3.4}% 12
 \BOOKMARK [1][-]{section.4}{Shared Control}{}% 13
-\BOOKMARK [1][-]{section.5}{Experimental Evaluation}{}% 14
-\BOOKMARK [1][-]{section.6}{Results}{}% 15
-\BOOKMARK [1][-]{section.7}{Discussion}{}% 16
-\BOOKMARK [1][-]{section.8}{Conclusion}{}% 17
-\BOOKMARK [1][-]{section.9}{References}{}% 18
+\BOOKMARK [2][-]{subsection.4.1}{Blending Paradigm}{section.4}% 14
+\BOOKMARK [2][-]{subsection.4.2}{Maximum Potential Mode Switch Assistance}{section.4}% 15
+\BOOKMARK [1][-]{section.5}{Experimental Evaluation}{}% 16
+\BOOKMARK [2][-]{subsection.5.1}{Point Robot Simulation Setup}{section.5}% 17
+\BOOKMARK [3][-]{subsubsection.5.1.1}{Robot Workspace}{subsection.5.1}% 18
+\BOOKMARK [3][-]{subsubsection.5.1.2}{Mode Switch Schemes}{subsection.5.1}% 19
+\BOOKMARK [3][-]{subsubsection.5.1.3}{Simulated bold0mu mumu urururururur and bold0mu mumu uhuhuhuhuhuh}{subsection.5.1}% 20
+\BOOKMARK [3][-]{subsubsection.5.1.4}{Metrics}{subsection.5.1}% 21
+\BOOKMARK [3][-]{subsubsection.5.1.5}{Simulation Protocol}{subsection.5.1}% 22
+\BOOKMARK [2][-]{subsection.5.2}{MICO Robot Simulation Setup}{section.5}% 23
+\BOOKMARK [1][-]{section.6}{Results}{}% 24
+\BOOKMARK [2][-]{subsection.6.1}{Initial Onset of Assistance}{section.6}% 25
+\BOOKMARK [2][-]{subsection.6.2}{Amount of Total Assistance}{section.6}% 26
+\BOOKMARK [2][-]{subsection.6.3}{Inference Accuracy}{section.6}% 27
+\BOOKMARK [1][-]{section.7}{Discussion}{}% 28
+\BOOKMARK [1][-]{section.8}{Conclusion}{}% 29

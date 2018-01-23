@@ -236,7 +236,7 @@ pgs_KL(:, 1) = (1/ng)*ones(ng, 1);%uniform probability to start off with. This i
 current_optimal_mode_KL_index = 1;
 current_optimal_mode_KL = cm{current_optimal_mode_KL_index};
 
-for i=1:total_time_steps
+for i=1:total_time_steps-1
     if compute_dist_to_goal(random_goal_T, xr_T_true)
         fprintf('Within 10 percent of the original separation from goal. Stopping simulation\n');
         break;
@@ -365,7 +365,7 @@ current_optimal_mode_DISAMB_index = 1;
 current_optimal_mode_DISAMB = cm{current_optimal_mode_DISAMB_index};
 mode_comp_timesteps = 4;
 
-for i=1:total_time_steps
+for i=1:total_time_steps-1
     if compute_dist_to_goal(random_goal_T, xr_T_true)
         fprintf('Within 10 percent of the original separation from goal. Stopping simulation\n');
         break;

@@ -254,9 +254,10 @@ EXPERIMENTAL EVALUATION:
 	NULL HYPOTHESIS:
 
 	H0: There is no difference in when the assistance gets triggered for various conditions
-
-
 	H0: There is no difference between the fractional percentage time for which assistance is active. 
+
+
+
 	For the disambiguation schemes, the "assistance " towards the CORRECT goal gets triggered EARLIER than pure maximal fractional potential scheme. 
 	For disambiguation schemes, the total time for which the assistance is present is greater. 
 	Disambiguation schemes are more useful in the earlier parts of the trial. Once the intent becomes clear, opting for a fractikonal potential approach might get you more gains. 
@@ -278,3 +279,61 @@ MICO SIMULATION NOTES:
 	******
 
 	In Todd's paper the  unknown variable which is the position of the object is TRULY unknown. AND it is a parameter which affects the measurement distribution. 
+
+	Measurement variable which is a Gaussian random variable is a function of the unknown parameter/variable!! There is a separate probability distribution for the unknown parameter that is being maintained and updated via Bayes rule. The position of the sensor 'x' is being treated as a fixed parameter in the computation of the Fisher information. 
+
+
+
+	What is pitch reagrding why we [perform] complex robot simulations!
+
+	Initial thought: To show that EVEN on a real robot the same kinds of results hold. Why is th
+
+
+	How about we replicate the expeirment study. 
+
+	2-3 different goal scenes. 
+	2-3 different home positions
+
+	With and without refers to using POT or KL. Standard ways of switching. Every 5 or 8 seconds. Use the data. and perform same kind of analyse For how many users?
+
+	Maybe. Can I do this by hand? possibly?
+
+	Need to create a fake joy stick node which would publish uh
+
+
+
+
+
+	Discussion:
+
+	Improve model of uh. Relaxed assumption. Sparsity, maginutude variations, suboptimal policies. 
+	Improve the nonlinearity function
+	Learn kinematic model of the robot from data. DNN, Koopman apporaches for more accurate forward projections. 
+	Simulations results indicate that this could possibly help people.Validate in real study
+	Second order information. Fisher information. Active Learning. 
+	 
+
+	Here is what I thought of:
+
+
+	I think that just showing that the algorithm works on a real robot simulation is trivial and comparison between real robot in SE(3) and point-robot in SE(3) is missing the point. 
+	If we want to look into the utility value and power of disambiguation, we have to be able to compare the performance when disambiguation is active to a scenario when it is not. 
+
+	Rather than following the same protocol we have for the MATLAB simulation which involves spawning new goal configurations for every and evaluating different mode switch assistance schemes on them, how about we try to simulate a real human study. The rationale is this will be time efficient, cost efficient and provides a good sneak peek into how useful it might be for a real human subject. 
+
+	In order to do that, just like how we do it for our studies, we will predefine the tasks, maybe a simple reaching and a complex reaching task. We will have 3-4 home positions defined. Just like how I had a trial script for the actual study, I will have a trial script for this study as well which will specify, the home position, starting mode, mode switch type (KL or baseline), which is human's intended goal etc. 
+
+	We will have autonomy and blending running for every trial. 
+
+	The key difference is going to be this. W
+
+	e will have a simulated human. For our MATLAb simulations, u_h was generated using a very simple rule in which the user tried to go to the intended goal in the straightest possible path, conditioned on the current control mode at maximum speed. We can relax that assumption to capture variations in users. We can have some randomness added to the direction and magnitude and can make the signal sparser. The parameters that control the randomness will be different for different simulated humans, thereby capturing variations such as aggressiveness/timidity and continuous/intermittent that are present in different individuals. 
+
+	When it comes to mode switching, in a real human study, the user gets to switch whenever s/he wants. But in this case, we will have the mode switch algorithm triggered at regular intervals, say every 5 seconds. We will have a timeout of maybe 40-45 seconds for task completion. And we can repeat it. We will have two mode switch types: baseline (which is equivalent to the user not using the disambiguation algorithm) and disambiguation. For a trial marked 'baseline', only the baseline mode switch scheme will be utilized and similarly for disambiguation. 
+
+	I am hoping that I will be able to write a bash script that can run the "study" launch files and at the end of the trial, kill them all and put them all in a loop. 
+
+	By doing this, we can posibly shed some light on how useful disambiguation switching schemes would be for predicting intent earlier, accurately and confidently in a real scenario with real humans. 
+
+
+
