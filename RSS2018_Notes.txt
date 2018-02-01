@@ -325,7 +325,7 @@ MICO SIMULATION NOTES:
 
 	We will have autonomy and blending running for every trial. 
 
-	The key difference is going to be this. W
+	The ekoy difference is going to be this. W
 
 	e will have a simulated human. For our MATLAb simulations, u_h was generated using a very simple rule in which the user tried to go to the intended goal in the straightest possible path, conditioned on the current control mode at maximum speed. We can relax that assumption to capture variations in users. We can have some randomness added to the direction and magnitude and can make the signal sparser. The parameters that control the randomness will be different for different simulated humans, thereby capturing variations such as aggressiveness/timidity and continuous/intermittent that are present in different individuals. 
 
@@ -337,3 +337,46 @@ MICO SIMULATION NOTES:
 
 
 
+
+
+
+implement local function for potential based mode switching. Should be possible using just the tf info. Implement the same function in MATLAB - DONE (made some fixes)
+
+Intorduce more variation to the user command - DONE
+
+Start fixing text as well. 
+
+CODE TODO:
+
+1. Add set mode function in the sim_joy node. Need before every trial - dONE
+2. Generate Dropout rate and Ampmean parameters for the 32 subjects - CAN BE DONE EASILY
+3. Add subscriber to the start_trial message. This message will be published from the terminal by hand - DONE
+4. Create a publisher for what the current goal inference is. Add it to blend node thread. That way timing would be close to each other. 
+- TODO
+5. For each mode switch computation: send a signal which indicates the start and stop - TODO To subtract the time taken to do the computation from the actual movement time (MAYBE)
+
+reset
+How to run the simulated studies. 
+
+1. Make sure the blended signal is nonzero only when the user_vel is non zero - NOT NECESSARY
+
+
+Bring robot to home position
+Run velocity controllers. Run the node. Set blend node params
+Run the bag file. 
+Set initial mode. 
+Send start signal. The sim_joy node can subscribe to it and set a flag which will let the nonzero uservel through. 
+ 
+When 'e' signal is seen (either from pfield, or due to timeout), quit bag file. quit node. Restart 
+
+
+Manually kill the bag file. 
+
+To record. /alpha, /goal_probabilities, /current_goal publisher. 
+
+
+THINGS TO DO TODAY:
+
+RECORD AT LEAST 5 more subjects. 
+Convert available data into mat files. Run prelim analysis and plots for the paper. 
+. Finish restructuring the paper. Send draft by tomorrow 10am. 

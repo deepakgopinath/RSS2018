@@ -1,6 +1,6 @@
 clear all; clc; close all;
 %%
-N = 10000;
+N = 100;
 rs_array = zeros(N, 1); ds_array = zeros(N, 1);
 max_ng = 6;
 for i=1:N

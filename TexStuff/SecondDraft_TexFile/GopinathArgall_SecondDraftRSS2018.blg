@@ -1,0 +1,51 @@
+This is BibTeX, Version 0.99d (TeX Live 2013/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: GopinathArgall_SecondDraftRSS2018.aux
+The style file: plainnat.bst
+Database file #1: references.bib
+Repeated entry---line 60 of file references.bib
+ : @inproceedings{pilarski2012dynamic
+ :                                   ,
+I'm skipping whatever remains of this entry
+You've used 23 entries,
+            2773 wiz_defined-function locations,
+            724 strings with 9710 characters,
+and the built_in function-call counts, 12055 in all, are:
+= -- 1056
+> -- 764
+< -- 17
++ -- 258
+- -- 234
+* -- 961
+:= -- 1810
+add.period$ -- 73
+call.type$ -- 23
+change.case$ -- 145
+chr.to.int$ -- 22
+cite$ -- 46
+duplicate$ -- 561
+empty$ -- 966
+format.name$ -- 270
+if$ -- 2567
+int.to.chr$ -- 2
+int.to.str$ -- 1
+missing$ -- 24
+newline$ -- 123
+num.names$ -- 92
+pop$ -- 324
+preamble$ -- 1
+purify$ -- 123
+quote$ -- 0
+skip$ -- 436
+stack$ -- 0
+substring$ -- 403
+swap$ -- 93
+text.length$ -- 7
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 248
+warning$ -- 0
+while$ -- 104
+width$ -- 0
+write$ -- 301
+(There was 1 error message)
