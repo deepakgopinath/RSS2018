@@ -98,14 +98,14 @@ for kk=1:3
     end
     if kk==1
 %     bh1 = boxplot([v1,v2], 'whisker', 50);
-        bh1 = boxplot(v1, 'positions', y1,'whisker', 50,'Widths', 0.3);set(bh1(:,1),'linewidth',2);
-        bh2 = boxplot(v3, 'positions', y2,'whisker', 50,'Widths', 0.3);set(bh2(:,1),'linewidth',2);
+        bh1 = boxplot(v3, 'positions', y1,'whisker', 50,'Widths', 0.3);set(bh1(:,1),'linewidth',2);
+        bh2 = boxplot(v1, 'positions', y2,'whisker', 50,'Widths', 0.3);set(bh2(:,1),'linewidth',2);
     elseif kk==2
-        bh3 = boxplot(v1, 'positions', y1,'whisker', 50,'Widths', 0.3);set(bh3(:,1),'linewidth',2);
-        bh4 = boxplot(v3, 'positions', y2,'whisker', 50,'Widths', 0.3);set(bh4(:,1),'linewidth',2);
+        bh3 = boxplot(v3, 'positions', y1,'whisker', 50,'Widths', 0.3);set(bh3(:,1),'linewidth',2);
+        bh4 = boxplot(v1, 'positions', y2,'whisker', 50,'Widths', 0.3);set(bh4(:,1),'linewidth',2);
     else
-        bh5 = boxplot(v1, 'positions', y1,'whisker', 50,'Widths', 0.3);set(bh5(:,1),'linewidth',2);
-        bh6 = boxplot(v3, 'positions', y2,'whisker', 50,'Widths', 0.3);set(bh6(:,1),'linewidth',2);
+        bh5 = boxplot(v3, 'positions', y1,'whisker', 50,'Widths', 0.3);set(bh5(:,1),'linewidth',2);
+        bh6 = boxplot(v1, 'positions', y2,'whisker', 50,'Widths', 0.3);set(bh6(:,1),'linewidth',2);
     end
     axis([0,3,0,ylims(kk)]);
     grid on;
@@ -114,14 +114,14 @@ for kk=1:3
         title('\bf \fontsize{8} Total Assistance');
         set(gca,'fontWeight','bold','Xtick',1:1:2);
 %         set(gca,'DefaultTextInterpreter', 'tex')
-        set(gca, 'XTickLabel', {'KLD','POT'});
+        set(gca, 'XTickLabel', {'GRD','KL'});
         ylabel('\bf \fontsize{8} Normalized Time');
     elseif kk==2
         set(gca, 'fontWeight', 'normal',  'YTick', 0:0.2:1.0);
         title('\bf \fontsize{8} Percentage Correct Inference');
 %         set(gca,'DefaultTextInterpreter', 'tex')
         set(gca,'fontWeight','bold','Xtick',1:1:2);
-        set(gca, 'XTickLabel', {'KLD','POT'});
+        set(gca, 'XTickLabel', {'GRD','KL'});
         ylabel('\bf \fontsize{8} Normalized Time');
     else
         set(gca, 'fontWeight', 'normal',  'YTick', 0:0.2:1.0);

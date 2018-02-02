@@ -6,29 +6,29 @@
 \BOOKMARK [1][-]{section.4}{Intent Disambiguation}{}% 6
 \BOOKMARK [2][-]{subsection.4.1}{Need For Intent Disambiguation}{section.4}% 7
 \BOOKMARK [2][-]{subsection.4.2}{Forward Projection of bold0mu mumu pppppp\(t\)}{section.4}% 8
-\BOOKMARK [2][-]{subsection.4.3}{Entropy Based Disambiguation Metric}{section.4}% 9
-\BOOKMARK [2][-]{subsection.4.4}{KL divergence Based Metric}{section.4}% 10
+\BOOKMARK [2][-]{subsection.4.3}{Entropy Disambiguation Metric}{section.4}% 9
+\BOOKMARK [2][-]{subsection.4.4}{KL Divergence Disambiguation}{section.4}% 10
 \BOOKMARK [2][-]{subsection.4.5}{Intent inference}{section.4}% 11
 \BOOKMARK [3][-]{subsubsection.4.5.1}{Heuristic Approaches}{subsection.4.5}% 12
 \BOOKMARK [3][-]{subsubsection.4.5.2}{Bayesian Approaches}{subsection.4.5}% 13
-\BOOKMARK [3][-]{subsubsection.4.5.3}{Dynamic Neural Field Based Approaches}{subsection.4.5}% 14
+\BOOKMARK [3][-]{subsubsection.4.5.3}{Dynamic Neural Field Approaches}{subsection.4.5}% 14
 \BOOKMARK [1][-]{section.5}{Experimental Evaluation}{}% 15
 \BOOKMARK [2][-]{subsection.5.1}{Shared Control}{section.5}% 16
 \BOOKMARK [3][-]{subsubsection.5.1.1}{Robot Autonomy}{subsection.5.1}% 17
 \BOOKMARK [3][-]{subsubsection.5.1.2}{Blending Paradigm}{subsection.5.1}% 18
-\BOOKMARK [3][-]{subsubsection.5.1.3}{Baseline Mode Switch Assistance}{subsection.5.1}% 19
+\BOOKMARK [3][-]{subsubsection.5.1.3}{Maximum Potential Mode Switch Assistance}{subsection.5.1}% 19
 \BOOKMARK [2][-]{subsection.5.2}{Point Robot Simulation Setup}{section.5}% 20
 \BOOKMARK [3][-]{subsubsection.5.2.1}{Robot Workspace}{subsection.5.2}% 21
 \BOOKMARK [3][-]{subsubsection.5.2.2}{Mode Switch Schemes}{subsection.5.2}% 22
 \BOOKMARK [3][-]{subsubsection.5.2.3}{Simulated bold0mu mumu urururururur and bold0mu mumu uhuhuhuhuhuh}{subsection.5.2}% 23
 \BOOKMARK [3][-]{subsubsection.5.2.4}{Metrics}{subsection.5.2}% 24
 \BOOKMARK [3][-]{subsubsection.5.2.5}{Simulation Protocol}{subsection.5.2}% 25
-\BOOKMARK [2][-]{subsection.5.3}{MICO Robot Simulation Setup}{section.5}% 26
+\BOOKMARK [2][-]{subsection.5.3}{Robotic Arm Simulation Setup}{section.5}% 26
 \BOOKMARK [1][-]{section.6}{Results}{}% 27
-\BOOKMARK [2][-]{subsection.6.1}{Point-like Robot Simulation}{section.6}% 28
-\BOOKMARK [3][-]{figure.6}{Initial Onset of Assistance}{subsection.6.1}% 29
+\BOOKMARK [2][-]{subsection.6.1}{Point Robot Simulation}{section.6}% 28
+\BOOKMARK [3][-]{figure.5}{Initial Onset of Assistance}{subsection.6.1}% 29
 \BOOKMARK [3][-]{subsubsection.6.1.2}{Amount of Total Assistance}{subsection.6.1}% 30
 \BOOKMARK [3][-]{subsubsection.6.1.3}{Inference Accuracy}{subsection.6.1}% 31
-\BOOKMARK [2][-]{subsection.6.2}{MICO Robot Simulation}{section.6}% 32
+\BOOKMARK [2][-]{subsection.6.2}{Robotic Arm Simulation}{section.6}% 32
 \BOOKMARK [1][-]{section.7}{Discussion}{}% 33
 \BOOKMARK [1][-]{section.8}{Conclusion}{}% 34
