@@ -1,4 +1,4 @@
-\begin{thebibliography}{23}
+\begin{thebibliography}{26}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -32,6 +32,12 @@ Berk Calli, Arjun Singh, Aaron Walsman, Siddhartha Srinivasa, Pieter Abbeel,
   manipulation research.
 \newblock In \emph{Advanced Robotics (ICAR), 2015 International Conference on},
   pages 510--517. IEEE, 2015.
+
+\bibitem[Croft(2003)]{croft2003estimating}
+DKEA Croft.
+\newblock Estimating intent for human-robot interaction.
+\newblock In \emph{IEEE International Conference on Advanced Robotics}, pages
+  810--815. Citeseer, 2003.
 
 \bibitem[Dragan and Srinivasa(2012)]{dragan2012formalizing}
 Anca~D. Dragan and Siddhartha~S. Srinivasa.
@@ -99,6 +105,13 @@ Katharina Muelling, Arun Venkatraman, Jean-Sebastien Valois, John~E Downey,
   interface controlled manipulation.
 \newblock \emph{\textit{Autonomous Robots}}, pages 1--22, 2017.
 
+\bibitem[Nagabandi et~al.(2017)Nagabandi, Kahn, Fearing, and
+  Levine]{nagabandi2017neural}
+Anusha Nagabandi, Gregory Kahn, Ronald~S Fearing, and Sergey Levine.
+\newblock Neural network dynamics for model-based deep reinforcement learning
+  with model-free fine-tuning.
+\newblock \emph{arXiv preprint arXiv:1708.02596}, 2017.
+
 \bibitem[Omitted(Under {R}eview)]{gopinath2017disamb}
 Authors Omitted.
 \newblock Disambiguation of human intent through control space selection.
@@ -133,13 +146,12 @@ Gregor Sch{\"o}ner.
 \newblock \emph{\textit{Cambridge Handbook of Computational Cognitive
   Modeling}}, pages 101--126, 2008.
 
-\bibitem[Sch{\"o}ner et~al.(1995)Sch{\"o}ner, Dose, and
-  Engels]{schoner1995dynamics}
-Gregor Sch{\"o}ner, Michael Dose, and Christoph Engels.
-\newblock Dynamics of behavior: Theory and applications for autonomous robot
-  architectures.
-\newblock \emph{\textit{Robotics and Autonomous Systems}}, 16\penalty0
-  (2-4):\penalty0 213--245, 1995.
+\bibitem[Simpson et~al.(2008)Simpson, Broughton, Gauthier, and
+  Prochazka]{simpson2008tooth}
+Tyler Simpson, Colin Broughton, Michel~JA Gauthier, and Arthur Prochazka.
+\newblock Tooth-click control of a hands-free computer interface.
+\newblock \emph{\textit{IEEE Transactions on Biomedical Engineering}},
+  55\penalty0 (8):\penalty0 2050--2056, 2008.
 
 \bibitem[Taha et~al.(2011)Taha, Mir{\'o}, and Dissanayake]{taha2011pomdp}
 Tarek Taha, Jaime~Valls Mir{\'o}, and Gamini Dissanayake.
@@ -159,5 +171,14 @@ Simon Tong and Daphne Koller.
 \newblock Active learning for parameter estimation in {B}ayesian networks.
 \newblock In \emph{Advances in neural information processing systems}, pages
   647--653, 2001.
+
+\bibitem[Wang et~al.(2013)Wang, M{\"u}lling, Deisenroth, Ben~Amor, Vogt,
+  Sch{\"o}lkopf, and Peters]{wang2013probabilistic}
+Zhikun Wang, Katharina M{\"u}lling, Marc~Peter Deisenroth, Heni Ben~Amor, David
+  Vogt, Bernhard Sch{\"o}lkopf, and Jan Peters.
+\newblock Probabilistic movement modeling for intention inference in
+  human--robot interaction.
+\newblock \emph{\textit{The International Journal of Robotics Research}},
+  32\penalty0 (7):\penalty0 841--858, 2013.
 
 \end{thebibliography}

@@ -4,13 +4,13 @@
 clear all; clc; close all;
 
 %%
-subList = {'H1','H2', 'H3', 'H4', 'H5', 'H6', 'H7', 'H8', 'H9', 'H10', 'H11', 'H12', 'H13', 'H14', 'H15', 'H16'};
+subList = {'H1','H2', 'H3', 'H4', 'H5', 'H6', 'H7', 'H8', 'H9', 'H10', 'H11', 'H12', 'H13', 'H14', 'H15', 'H16', 'H17', 'H18', 'H19', 'H20', 'H21', 'H22'};%, 'H23', 'H24'};
 total_subjects = length(subList);
-trialList = (1:16)';
+trialList = (1:length(subList))';
 interfaces = {'J2', 'HA'};
 tasks = {'RE','PO'}; %REACHING AND POURING. 
 assis = {'pot', 'kld'};
-task_order = {'RE','RE','RE','RE', 'RE', 'PO','RE', 'PO', 'RE', 'RE', 'PO', 'PO', 'RE', 'PO', 'PO', 'PO'};%,'PO','RE','PO','PO','RE'}; %Phase 1 tasks FOR EACH SUBJECTS. 
+task_order = {'RE','RE','RE','RE', 'RE', 'PO','RE', 'PO', 'RE', 'RE', 'PO', 'PO', 'RE', 'PO', 'PO', 'PO', 'PO', 'RE', 'RE', 'PO', 'PO', 'RE', 'RE', 'PO'};%,'PO','RE','PO','PO','RE'}; %Phase 1 tasks FOR EACH SUBJECTS. 
 trials_per_task = 16;
 skip_list = {'H3', 'H4', 'H8', 'H9'};
 load('trial_order_testing_32.mat'); % LOAD THE TRIAL ORDER. THIS IS FOR loadData TO CHECK FOR SOME CRITERION. 
@@ -71,9 +71,14 @@ for i=1:total_subjects
     ph1_trial_list = ph1_trial_mat(:,:,trialId);
     ph2_trial_list = ph2_trial_mat(:,:,trialId);
     
-    if strcmp(user, 'H6') %fix human errors
+    %fix human errors
+    if strcmp(user, 'H6') 
         ph1_trial_list{6, 5} = 2;
     end
+    if strcmp(user, 'H22')
+        ph1_trial_list{9, 4} = 4;
+    end
+    
     
     %index
     j_ph1_ind = find(strcmp(ph1_trial_list(:,2), 'j'));
