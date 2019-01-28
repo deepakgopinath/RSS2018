@@ -1,4 +1,4 @@
-clear all; close all; clc;
+% clear all; close all; clc;
 
 %% SPAWN GOAL CONFIGURATION AND ROBOT POSITION. RANDOMLY IN THE WORKSPACE. 
 
@@ -7,57 +7,71 @@ xrange = [-0.5, 0.5];
 yrange = [-0.5, 0.5];
 
 %global variables.
-global cm num_modes ng nd xg xr sig delta_t conf_thresh conf_max alpha_max;
+global cm num_modes ng nd xg xr sig delta_t conf_thresh conf_max alpha_max sparsity_factor amp_sparsity_factor kappa projection_time;
 
 %workspace parameters
 max_ng = 6;
-ng = datasample(2:max_ng, 1); %spawn random number of goals. Maximum number is 6. At least 
+ng = datasample(3:max_ng, 1); %spawn random number of goals. Maximum number is 6. At least 2
 nd = 2; %num of dimensions. by definition R^2
 cm = {1,2}; %only control mode settings. 
 num_modes = length(cm); %or 1 depending on whether the modes are [x, y] or [{x,y}]
+init_mode_index = datasample(1:num_modes, 1);
+
 
 %spawn random goals and random robot positions
 xg = [rand(1,ng)*range(xrange) + xrange(1); rand(1,ng)*range(yrange) + yrange(1)]; %random goal positions. These will be treated as fixed parameters.
 xr = [rand(1,1)*range(xrange) + xrange(1); rand(1,1)*range(yrange) + yrange(1)];
-xr_true = xr; %store away random position in a variable for reuse.
+xr_true = xr; %store away random  robot position in a variable for reuse.
 
+%human parameters
+sparsity_factor = rand/4; %how often would the human control command be zero.
+amp_sparsity_factor = rand/8; % how often the amplitude wiull be less that maximum. 
+kappa = 20.0; % concentration paarameter for vonMisesFisher distribution
+fprintf('The sparsity and amp factor are %f, %f\n', sparsity_factor, amp_sparsity_factor);
 
-%disambiguation related params
+%disambiguation related params %UNUSED
 sig = 0.01; %For Fisher information
+
+%% Projection paramaters
+projection_time = 4;
 delta_t = 0.1; %For compute projections. 
+
+%% simulation params
+mode_comp_timesteps = 10; %time step gap between optimal mode computation. delta_t*mode_comp_timesteps is the time in seconds
+exit_threshold = 0.02;
+total_time_steps = 120; %with delta_t of 0.1, this amounts to 10 seconds. We will assume that "mode switches" don't take time. 
+
+%%
 
 %arbitrartion function parameters - Fixed parameters for shared control. 
 conf_thresh = (1.05/ng);
-conf_max = (1.2/ng);
+conf_max = (1.1/ng);
 alpha_max = 0.7;
 
 %% PLOT GOALS AND CURRENT ROBOT POSITION. 
 % 
 % figure;
-scatter(xg(1,1:ng), xg(2,1:ng), 180, 'k', 'filled'); grid on; hold on;
-scatter(xr(1), xr(2), 140, 'r', 'filled');
-offset = [-0.1, 0.1];
-line(xrange+offset, [0,0], 'Color', 'r'); %draw x and y axes.
-line([0,0], yrange+offset, 'Color', 'g');
-axis([xrange + offset, yrange + offset]);
-axis square;
+% scatter(xg(1,1:ng), xg(2,1:ng), 180, 'k', 'filled'); grid on; hold on;
+% scatter(xr(1), xr(2), 140, 'r', 'filled');
+% offset = [-0.1, 0.1];
+% line(xrange+offset, [0,0], 'Color', 'r'); %draw x and y axes.
+% line([0,0], yrange+offset, 'Color', 'g');
+% axis([xrange + offset, yrange + offset]);
+% axis square;
 
-%% START SIMULATING A HUMAN CONTROLLING THE ROBOT FROM THE CURRENT POSITION ALWAYS IN THE DISAMBIGUATING MODE, TOWARDS A RANDOMLY PICKED GOAL FROM 
-%% THE LIST OF GOALS.
 
-% generate random user goal index. change color to magenta. 
+%% generate random user goal index. change color to magenta. 
 random_goal_index = randsample(ng, 1); 
 random_goal = xg(:, random_goal_index);
 %%
-scatter(random_goal(1), random_goal(2), 180, 'm', 'filled'); grid on; hold on;
+% scatter(random_goal(1), random_goal(2), 180, 'm', 'filled'); grid on; hold on;
 
-%%
+%% SAMPLE AN INTENT INFERENCE MECHANISM FOR THE CURRENT SIMULATION
 intent_types = {'dft', 'conf', 'bayes'};
 intent_type = intent_types{datasample(1:length(intent_types), 1)}; % or conf or bayes
-intnent_type = 'dft';
+% intent_type = 'dft';
 
 %% %% USING MAX POTENTIAL AS BASE LINE
-total_time_steps = 120; %with delta_t of 0.1, this amounts to 10 seconds. We will assume that "mode switches" don't take time. 
 %variables to hold simulation data for MAX POTENTIAL
 pgs_POT = zeros(ng, total_time_steps); %goal probabilities
 optimal_modes_POT = zeros(total_time_steps-1, 1); %optimal modes. 
@@ -69,13 +83,10 @@ curr_goal_POT = zeros(total_time_steps-1, 1); %current goal inference
 traj_POT = zeros(nd, total_time_steps); %trajectory
 traj_POT(:, 1) = xr; %initialize first data point of trajetcory
 pgs_POT(:, 1) = (1/ng)*ones(ng, 1);%uniform probability to start off with. This is the true pg distribution during the course of the trajectory
-%internally projection
-current_optimal_mode_POT_index = 1;
+
+current_optimal_mode_POT_index = init_mode_index;
 current_optimal_mode_POT = cm{current_optimal_mode_POT_index};
 
-
-mode_comp_timesteps = 4; %time step gap between optimal mode computation. 
-exit_threshold = 0.02;
 hist_length = 15; %for Bayes filter. not used. 
 
 for i=1:total_time_steps-1
@@ -104,9 +115,14 @@ for i=1:total_time_steps-1
     for jj=1:length(zero_dim)
         uh(zero_dim(jj)) = 0;
     end
-    
+    %normalize
+    if norm(uh) > 0.2
+        uh = 0.2*(uh./(norm(uh) + realmin));
+    end
+    if rand < amp_sparsity_factor
+        uh = rand*uh;
+    end
     %human and robot control commands and belnding
-    uh = 0.2*(uh./(abs(uh) + realmin));
     ur = generate_autonomy(curr_goal_index_POT); %pfield autonomy command in full 2D space towards what it thinks is the current goal
     alpha_POT(i) = alpha_from_confidence(pgs_POT(curr_goal_index_POT, i)); %linear belnding param
     blend_vel = (1-alpha_POT(i))*uh + alpha_POT(i)*ur; %blended vel
@@ -140,7 +156,7 @@ traj_ENT = zeros(nd, total_time_steps);
 traj_ENT(:, 1) = xr;
 pgs_ENT(:, 1) = (1/ng)*ones(ng, 1);%uniform probability to start off with. This is the true pg distribution during the course of the trajectory
 %internally projection
-current_optimal_mode_ENT_index = 1;
+current_optimal_mode_ENT_index = init_mode_index;
 current_optimal_mode_ENT = cm{current_optimal_mode_ENT_index};
 
 for i=1:total_time_steps-1
@@ -152,7 +168,7 @@ for i=1:total_time_steps-1
     curr_goal_index_ENT = datasample(find(pgs_ENT(:, i) == max(pgs_ENT(:, i))), 1);
     curr_goal_ENT(i) = curr_goal_index_ENT;
     if mod(i-1, mode_comp_timesteps) == 0
-        current_optimal_mode_ENT_index = compute_optimal_mode_ENT_R2(intent_type, xr, pgs_ENT(:, i)); 
+        current_optimal_mode_ENT_index = compute_optimal_mode_ENT_R2_human_model(intent_type, xr, pgs_ENT(:, i)); 
         if length(current_optimal_mode_ENT_index) > 1 %when there are equivalent modes. 
             current_optimal_mode_ENT = cm{current_optimal_mode_ENT_index(1)}; %pick the first one. 
             current_optimal_mode_ENT_index = current_optimal_mode_ENT_index(1); %update the index. 
@@ -169,7 +185,13 @@ for i=1:total_time_steps-1
     for jj=1:length(zero_dim)
         uh(zero_dim(jj)) = 0;
     end
-    uh = 0.2*(uh./(abs(uh) + realmin));
+%     uh = 0.2*(uh./(abs(uh) + realmin));
+    if norm(uh) > 0.2
+        uh = 0.2*(uh./(norm(uh) + realmin));
+    end
+    if rand < amp_sparsity_factor
+        uh = rand*uh;
+    end
     ur = generate_autonomy(curr_goal_index_ENT); %autonomy command in full 2D space
     alpha_ENT(i) = alpha_from_confidence(pgs_ENT(curr_goal_index_ENT, i)); %linear belnding param
     blend_vel = (1-alpha_ENT(i))*uh + alpha_ENT(i)*ur; %blended vel
@@ -204,7 +226,7 @@ traj_KL = zeros(nd, total_time_steps);
 traj_KL(:, 1) = xr;
 pgs_KL(:, 1) = (1/ng)*ones(ng, 1);%uniform probability to start off with. This is the true pg distribution during the course of the trajectory
 %internally projection
-current_optimal_mode_KL_index = 1;
+current_optimal_mode_KL_index = init_mode_index;
 current_optimal_mode_KL = cm{current_optimal_mode_KL_index};
 
 for i=1:total_time_steps-1
@@ -216,7 +238,7 @@ for i=1:total_time_steps-1
     curr_goal_index_KL = datasample(find(pgs_KL(:, i) == max(pgs_KL(:, i))), 1);
     curr_goal_KL(i) = curr_goal_index_KL;
     if mod(i-1, mode_comp_timesteps) == 0
-        current_optimal_mode_KL_index = compute_optimal_mode_KL_R2(intent_type, xr, pgs_KL(:, i)); 
+        current_optimal_mode_KL_index = compute_optimal_mode_KL_R2_human_model(intent_type, xr, pgs_KL(:, i)); 
         if length(current_optimal_mode_KL_index) > 1 %when there are equivalent modes. 
             current_optimal_mode_KL = cm{current_optimal_mode_KL_index(1)}; %pick the first one. 
             current_optimal_mode_KL_index = current_optimal_mode_KL_index(1); %update the index. 
@@ -233,7 +255,12 @@ for i=1:total_time_steps-1
     for jj=1:length(zero_dim)
         uh(zero_dim(jj)) = 0;
     end
-    uh = 0.2*(uh./(abs(uh) + realmin));
+     if norm(uh) > 0.2
+        uh = 0.2*(uh./(norm(uh) + realmin));
+     end
+    if rand < amp_sparsity_factor
+        uh = rand*uh;
+    end
     ur = generate_autonomy(curr_goal_index_KL); %autonomy command in full 2D space
     alpha_KL(i) = alpha_from_confidence(pgs_KL(curr_goal_index_KL, i)); %linear belnding param
     blend_vel = (1-alpha_KL(i))*uh + alpha_KL(i)*ur; %blended vel
@@ -322,7 +349,7 @@ traj_DISAMB(:, 1) = xr; %(x,y,theta)
 pgs_DISAMB(:, 1) = (1/ng)*ones(ng, 1);%uniform probability to start off with. This is the true pg distribution during the course of the trajectory
 %internally projection
 
-current_optimal_mode_DISAMB_index = 1;
+current_optimal_mode_DISAMB_index = init_mode_index;
 current_optimal_mode_DISAMB = cm{current_optimal_mode_DISAMB_index};
 
 for i=1:total_time_steps-1
@@ -348,7 +375,9 @@ for i=1:total_time_steps-1
     for jj=1:length(zero_dim)
         uh(zero_dim(jj)) = 0;
     end
-    uh = 0.2*(uh./(abs(uh) + realmin));
+     if norm(uh) > 0.2
+        uh = 0.2*(uh./(norm(uh) + realmin));
+    end
     ur = generate_autonomy(curr_goal_index_DISAMB);
     alpha_DISAMB(i) = alpha_from_confidence(pgs_DISAMB(curr_goal_index_DISAMB, i)); %linear belnding param
     blend_vel = (1-alpha_DISAMB(i))*uh + alpha_DISAMB(i)*ur; %blended vel
@@ -366,13 +395,13 @@ for i=1:total_time_steps-1
     optimal_modes_DISAMB(i) = current_optimal_mode_DISAMB_index; 
 end
 
-%
-hold on; 
-scatter(traj_POT(1, :)', traj_POT(2, :)', 'k', 'filled');
-scatter(traj_ENT(1, :)', traj_ENT(2, :)', 'r', 'filled');
-scatter(traj_KL(1, :)', traj_KL(2, :)', 'b', 'filled');
+%% PLOT TRAJECTORIES
+% hold on; 
+% scatter(traj_POT(1, :)', traj_POT(2, :)', 'k', 'filled');
+% scatter(traj_ENT(1, :)', traj_ENT(2, :)', 'r', 'filled');
+% scatter(traj_KL(1, :)', traj_KL(2, :)', 'b', 'filled');
 % scatter(traj_FI(1, :)', traj_FI(2, :)', 'b', 'filled');
-scatter(traj_DISAMB(1, :)', traj_DISAMB(2, :)', 'g', 'filled');
+% scatter(traj_DISAMB(1, :)', traj_DISAMB(2, :)', 'g', 'filled');
 
 %% PLOT PROBABILITIES AND THE DISAMB MODES. 
 % plot_script;
@@ -380,9 +409,14 @@ scatter(traj_DISAMB(1, :)', traj_DISAMB(2, :)', 'g', 'filled');
 
 %% generate u_h
 function uh = generate_full_uh(xg, xr) %full unnomralized uh
-    global nd;
-    uh = xg - xr;
-    uh = uh + normrnd(0, 0.01, nd, 1); %noisy uh. 
+    global nd sparsity_factor kappa;
+    mu = xg - xr;
+    uh = randvonMisesFisherm(nd, 1, kappa, mu);
+    %add sparsity
+    if rand < sparsity_factor
+        uh = zeros(nd, 1);
+    end
+    
 end
 
 %% simple potential field type of autonomy. 

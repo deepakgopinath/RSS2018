@@ -1,67 +1,78 @@
-clear all; close all; clc;
-
-
+% clear all; close all; clc;
 %% SPAWN GOAL CONFIGURATION AND ROBOT POSITION. RANDOMLY IN THE WORKSPACE. 
 
 %Define workspace limits. All in metres. 
 xrange = [-0.5, 0.5];
 yrange = [-0.5, 0.5];
-th_range = [0, 2*pi];
+th_range = [0, 2*pi]; %counter clockwise rotation with 0 as x-axis aligned with left-right directions of the plane. 
 
-global num_modes cm ng nd xg xr sig delta_t conf_thresh conf_max alpha_max;
+global num_modes cm ng nd xg xr sig delta_t conf_thresh conf_max alpha_max sparsity_factor amp_sparsity_factor kappa projection_time;
 max_ng = 6;
-% ng = 4; %num of goals
-ng = datasample(2:max_ng, 1); %spawn random number of goals. Maximum number is 6. At least 
-nd = 3; %num of dimensions. by definition R^3
+ng = datasample(3:max_ng, 1); %spawn random number of goals. Maximum number is 6. At least 
+nd = 3; %num of dimensions. by definition SE2
 cm_options = {{1,2,3}, {[1,2], 3}};
 max_nm = length(cm_options);
 cm = cm_options{datasample(1:max_nm, 1)};
 num_modes = length(cm);
+init_mode_index = datasample(1:num_modes, 1);
 
 xg = [rand(1,ng)*range(xrange) + xrange(1); rand(1,ng)*range(yrange) + yrange(1); rand(1,ng)*range(th_range) + th_range(1)]; %random goal positions. These will be treated as fixed parameters.
 xr = [rand(1,1)*range(xrange) + xrange(1); rand(1,1)*range(yrange) + yrange(1); rand(1,1)*range(th_range) + th_range(1)];
 xr_true = xr;
 
+%human parameters
+sparsity_factor = rand/4.0;
+amp_sparsity_factor = rand/8; % how often the amplitude wiull be less that maximum. 
+kappa = 20.0; % concentration paarameter for vonMisesFisher distribution
+fprintf('The sparsity and amp factor are %f, %f\n', sparsity_factor, amp_sparsity_factor);
+
+%disamb parameters.
 sig = 0.01; %For Fisher information
+%% Projection paramaters
+projection_time = 4;
 delta_t = 0.1; %For compute projections. 
 
-%arbitration function parameters
-conf_thresh = (1.2/ng);
-conf_max = (1.4/ng);
+%% simulation params
+mode_comp_timesteps = 10; %time step gap between optimal mode computation. delta_t*mode_comp_timesteps is the time in seconds
+exit_threshold = 0.02;
+total_time_steps = 120; %with delta_t of 0.1, this amounts to 10 seconds. We will assume that "mode switches" don't take time. 
+
+%% arbitration function parameters
+conf_thresh = (1.05/ng);
+conf_max = (1.1/ng);
 alpha_max = 0.7;
 
 %% plot positions and body rotation axis. 
-figure;
-scatter(xg(1,1:ng), xg(2,1:ng), 230, 'k', 'filled'); grid on; hold on;
-scatter(xr(1), xr(2), 140, 'r', 'filled');
-% for i=1:ng %vectors connecting robot and goals.
-%     quiver(xr(1), xr(2), xg(1,i) - xr(1), xg(2,i) - xr(2), 'LineWidth', 1.5, 'LineStyle', '-.');
+% figure;
+% scatter(xg(1,1:ng), xg(2,1:ng), 230, 'k', 'filled'); grid on; hold on;
+% scatter(xr(1), xr(2), 140, 'r', 'filled');
+% % for i=1:ng %vectors connecting robot and goals.
+% %     quiver(xr(1), xr(2), xg(1,i) - xr(1), xg(2,i) - xr(2), 'LineWidth', 1.5, 'LineStyle', '-.');
+% % end
+% offset = [-0.1, 0.1];
+% line(xrange+offset, [0,0], 'Color', 'r'); %draw x and y axes.
+% line([0,0], yrange+offset, 'Color', 'g');
+% axis([xrange + offset, yrange + offset]);
+% axis square;
+% 
+% % draw orientations:
+% l_axis = 0.05; % length of axis 
+% line([xr(1), xr(1) + l_axis*cos(xr(3))], [xr(2), xr(2) + l_axis*sin(xr(3))], 'Color', 'r', 'LineWidth', 2);
+% line([xr(1), xr(1) - l_axis*sin(xr(3))], [xr(2), xr(2) + l_axis*cos(xr(3))], 'Color', 'g', 'LineWidth', 2);
+% for i=1:ng
+%     line([xg(1, i), xg(1, i) + l_axis*cos(xg(3, i))], [xg(2, i), xg(2, i) + l_axis*sin(xg(3, i))], 'Color', 'r', 'LineWidth', 2);
+%     line([xg(1, i), xg(1, i) - l_axis*sin(xg(3, i))], [xg(2, i), xg(2, i) + l_axis*cos(xg(3, i))], 'Color', 'g', 'LineWidth', 2);
 % end
-offset = [-0.1, 0.1];
-line(xrange+offset, [0,0], 'Color', 'r'); %draw x and y axes.
-line([0,0], yrange+offset, 'Color', 'g');
-axis([xrange + offset, yrange + offset]);
-axis square;
-
-% draw orientations:
-l_axis = 0.05; % length of axis 
-line([xr(1), xr(1) + l_axis*cos(xr(3))], [xr(2), xr(2) + l_axis*sin(xr(3))], 'Color', 'r', 'LineWidth', 2);
-line([xr(1), xr(1) - l_axis*sin(xr(3))], [xr(2), xr(2) + l_axis*cos(xr(3))], 'Color', 'g', 'LineWidth', 2);
-for i=1:ng
-    line([xg(1, i), xg(1, i) + l_axis*cos(xg(3, i))], [xg(2, i), xg(2, i) + l_axis*sin(xg(3, i))], 'Color', 'r', 'LineWidth', 2);
-    line([xg(1, i), xg(1, i) - l_axis*sin(xg(3, i))], [xg(2, i), xg(2, i) + l_axis*cos(xg(3, i))], 'Color', 'g', 'LineWidth', 2);
-end
 %% Generate the random goal towards which the simulated human would move. 
 random_goal_index = randsample(ng, 1);
 random_goal = xg(:, random_goal_index);
-scatter(random_goal(1), random_goal(2), 230, 'm', 'filled'); grid on; hold on;
+% scatter(random_goal(1), random_goal(2), 230, 'm', 'filled'); grid on; hold on;
 
-%%
+%% Sample random intent inference type
 intent_types = {'dft', 'conf', 'bayes'};
 intent_type = intent_types{datasample(1:length(intent_types), 1)}; % or conf or bayes
-
+% intent_type = 'dft';
 %% BASELINE
-total_time_steps = 120; %with delta_t of 0.1, this amounts to 10 seconds. We will assume that "mode switches" don't take time. 
 pgs_POT = zeros(ng, total_time_steps);
 optimal_modes_POT = zeros(total_time_steps-1, 1);
 alpha_POT = zeros(total_time_steps-1, 1);
@@ -73,11 +84,8 @@ traj_POT = zeros(nd, total_time_steps);
 traj_POT(:, 1) = xr;
 pgs_POT(:, 1) = (1/ng)*ones(ng, 1);%uniform probability to start off with. This is the true pg distribution during the course of the trajectory
 %internally projection
-current_optimal_mode_POT_index = 1;
+current_optimal_mode_POT_index = init_mode_index;
 current_optimal_mode_POT = cm{current_optimal_mode_POT_index};
-
-mode_comp_timesteps = 4;
-exit_threshold = 0.02;
 
 for i=1:total_time_steps-1
     if norm(traj_POT(1:2, i) - random_goal(1:2))/norm(traj_POT(1:2, 1)- random_goal(1:2)) < exit_threshold && (traj_POT(3, i) - random_goal(3)) < 0.05 %position is within exit threshold percent and angle is less than 0.05 radians exit
@@ -99,14 +107,20 @@ for i=1:total_time_steps-1
         end
     end
     %gotta determine uh. Assumes human is executes the "straightest
-    %possible motion in the current mode towards the specified goal". 
+    %possible motion in the current mode towards the specified goal". with
+    %some noise
     uh = generate_full_uh(random_goal, xr); 
     zero_dim = setdiff(1:nd,current_optimal_mode_POT);
     for jj=1:length(zero_dim)
         uh(zero_dim(jj)) = 0;
     end
-    uh = 0.2*(uh./(abs(uh) + realmin));
-    
+%     uh = 0.2*(uh./(abs(uh) + realmin));
+    if norm(uh) > 0.2
+        uh = 0.2*(uh./(norm(uh) + realmin));
+    end
+    if rand < amp_sparsity_factor
+        uh = rand*uh;
+    end
     ur = generate_autonomy(curr_goal_index_POT); %autonomy command in full 2D space toward what it thinks is the current goal
     alpha_POT(i) = alpha_from_confidence(pgs_POT(curr_goal_index_POT, i)); %linear belnding param
     blend_vel = (1-alpha_POT(i))*uh + alpha_POT(i)*ur; %blended vel
@@ -145,7 +159,7 @@ traj_ENT(:, 1) = xr; %(x,y,theta)
 pgs_ENT(:, 1) = (1/ng)*ones(ng, 1);%uniform probability to start off with. This is the true pg distribution during the course of the trajectory
 %internally projection
 
-current_optimal_mode_ENT_index = 1;
+current_optimal_mode_ENT_index = init_mode_index;
 current_optimal_mode_ENT = cm{current_optimal_mode_ENT_index};
 
 for i=1:total_time_steps-1
@@ -156,7 +170,7 @@ for i=1:total_time_steps-1
     curr_goal_index_ENT = datasample(find(pgs_ENT(:, i) == max(pgs_ENT(:, i))), 1);
     curr_goal_ENT(i) = curr_goal_index_ENT;
     if mod(i-1, mode_comp_timesteps) == 0
-        current_optimal_mode_ENT_index = compute_optimal_mode_ENT_SE2(intent_type, xr, pgs_ENT(:, i)); 
+        current_optimal_mode_ENT_index = compute_optimal_mode_ENT_SE2_human_model(intent_type, xr, pgs_ENT(:, i)); 
         if length(current_optimal_mode_ENT_index) > 1 %when there are equivalent modes. 
             current_optimal_mode_ENT = cm{current_optimal_mode_ENT_index(1)}; %pick the first one. 
             current_optimal_mode_ENT_index = current_optimal_mode_ENT_index(1); %update the index. 
@@ -171,7 +185,13 @@ for i=1:total_time_steps-1
     for jj=1:length(zero_dim)
         uh(zero_dim(jj)) = 0;
     end
-    uh = 0.2*(uh./(abs(uh) + realmin));
+%     uh = 0.2*(uh./(abs(uh) + realmin));
+    if norm(uh) > 0.2
+        uh = 0.2*(uh./(norm(uh) + realmin));
+    end
+    if rand < amp_sparsity_factor
+        uh = rand*uh;
+    end
     ur = generate_autonomy(curr_goal_index_ENT);
     alpha_ENT(i) = alpha_from_confidence(pgs_ENT(curr_goal_index_ENT, i)); %linear belnding param
     blend_vel = (1-alpha_ENT(i))*uh + alpha_ENT(i)*ur; %blended vel
@@ -202,7 +222,7 @@ traj_KL = zeros(nd, total_time_steps);
 traj_KL(:, 1) = xr;
 pgs_KL(:, 1) = (1/ng)*ones(ng, 1);%uniform probability to start off with. This is the true pg distribution during the course of the trajectory
 %internally projection
-current_optimal_mode_KL_index = 1;
+current_optimal_mode_KL_index = init_mode_index;
 current_optimal_mode_KL = cm{current_optimal_mode_KL_index};
 
 for i=1:total_time_steps-1
@@ -214,7 +234,7 @@ for i=1:total_time_steps-1
     curr_goal_index_KL = datasample(find(pgs_KL(:, i) == max(pgs_KL(:, i))), 1);
     curr_goal_KL(i) = curr_goal_index_KL;
     if mod(i-1, mode_comp_timesteps) == 0
-        current_optimal_mode_KL_index = compute_optimal_mode_KL_SE2(intent_type, xr, pgs_KL(:, i)); 
+        current_optimal_mode_KL_index = compute_optimal_mode_KL_SE2_human_model(intent_type, xr, pgs_KL(:, i)); 
         if length(current_optimal_mode_KL_index) > 1 %when there are equivalent modes. 
             current_optimal_mode_KL = cm{current_optimal_mode_KL_index(1)}; %pick the first one. 
             current_optimal_mode_KL_index = current_optimal_mode_KL_index(1); %update the index. 
@@ -231,7 +251,13 @@ for i=1:total_time_steps-1
     for jj=1:length(zero_dim)
         uh(zero_dim(jj)) = 0;
     end
-    uh = 0.2*(uh./(abs(uh) + realmin));
+%     uh = 0.2*(uh./(abs(uh) + realmin));
+    if norm(uh) > 0.2
+        uh = 0.2*(uh./(norm(uh) + realmin));
+    end
+    if rand < amp_sparsity_factor
+        uh = rand*uh;
+    end
     ur = generate_autonomy(curr_goal_index_KL); %autonomy command in full 2D space
     alpha_KL(i) = alpha_from_confidence(pgs_KL(curr_goal_index_KL, i)); %linear belnding param
     blend_vel = (1-alpha_KL(i))*uh + alpha_KL(i)*ur; %blended vel
@@ -322,7 +348,7 @@ traj_DISAMB(:, 1) = xr; %(x,y,theta)
 pgs_DISAMB(:, 1) = (1/ng)*ones(ng, 1);%uniform probability to start off with. This is the true pg distribution during the course of the trajectory
 %internally projection
 
-current_optimal_mode_DISAMB_index = 1;
+current_optimal_mode_DISAMB_index = init_mode_index;
 current_optimal_mode_DISAMB = cm{current_optimal_mode_DISAMB_index};
 
 for i=1:total_time_steps-1
@@ -348,7 +374,13 @@ for i=1:total_time_steps-1
     for jj=1:length(zero_dim)
         uh(zero_dim(jj)) = 0;
     end
-    uh = 0.2*(uh./(abs(uh) + realmin));
+%     uh = 0.2*(uh./(abs(uh) + realmin));
+    if norm(uh) > 0.2
+        uh = 0.2*(uh./(norm(uh) + realmin));
+    end
+    if rand < amp_sparsity_factor
+        uh = rand*uh;
+    end
     ur = generate_autonomy(curr_goal_index_DISAMB);
     alpha_DISAMB(i) = alpha_from_confidence(pgs_DISAMB(curr_goal_index_DISAMB, i)); %linear belnding param
     blend_vel = (1-alpha_DISAMB(i))*uh + alpha_DISAMB(i)*ur; %blended vel
@@ -366,41 +398,40 @@ for i=1:total_time_steps-1
 end
 
 %%
-hold on; 
-scatter(traj_POT(1, :)', traj_POT(2, :)', 'k', 'filled');
-scatter(traj_ENT(1, :)', traj_ENT(2, :)', 'r', 'filled');
-scatter(traj_KL(1, :)', traj_KL(2, :)', 'b', 'filled');
-% scatter(traj_FI(1, :)', traj_FI(2, :)', 'b', 'filled');
-scatter(traj_DISAMB(1, :)', traj_DISAMB(2, :)', 'g', 'filled');
-skip_step = 5;
-for i=1:skip_step:size(traj_POT, 2)
-    line([traj_POT(1, i), traj_POT(1, i) + l_axis*cos(traj_POT(3, i))], [traj_POT(2, i), traj_POT(2, i) + l_axis*sin(traj_POT(3, i))], 'Color', 'r', 'LineWidth', 2);
-    line([traj_POT(1, i), traj_POT(1, i) - l_axis*sin(traj_POT(3, i))], [traj_POT(2, i), traj_POT(2, i) + l_axis*cos(traj_POT(3, i))], 'Color', 'g', 'LineWidth', 2);
-end
-
-for i=1:skip_step:size(traj_ENT, 2)
-    line([traj_ENT(1, i), traj_ENT(1, i) + l_axis*cos(traj_ENT(3, i))], [traj_ENT(2, i), traj_ENT(2, i) + l_axis*sin(traj_ENT(3, i))], 'Color', 'r', 'LineWidth', 2);
-    line([traj_ENT(1, i), traj_ENT(1, i) - l_axis*sin(traj_ENT(3, i))], [traj_ENT(2, i), traj_ENT(2, i) + l_axis*cos(traj_ENT(3, i))], 'Color', 'g', 'LineWidth', 2);
-end
-
-for i=1:skip_step:size(traj_KL, 2)
-    line([traj_KL(1, i), traj_KL(1, i) + l_axis*cos(traj_KL(3, i))], [traj_KL(2, i), traj_KL(2, i) + l_axis*sin(traj_KL(3, i))], 'Color', 'r', 'LineWidth', 2);
-    line([traj_KL(1, i), traj_KL(1, i) - l_axis*sin(traj_KL(3, i))], [traj_KL(2, i), traj_KL(2, i) + l_axis*cos(traj_KL(3, i))], 'Color', 'g', 'LineWidth', 2);
-end
+% hold on; 
+% scatter(traj_POT(1, :)', traj_POT(2, :)', 'k', 'filled');
+% scatter(traj_ENT(1, :)', traj_ENT(2, :)', 'r', 'filled');
+% scatter(traj_KL(1, :)', traj_KL(2, :)', 'b', 'filled');
+% scatter(traj_DISAMB(1, :)', traj_DISAMB(2, :)', 'g', 'filled');
+% skip_step = 10;
+% for i=1:skip_step:size(traj_POT, 2)
+%     line([traj_POT(1, i), traj_POT(1, i) + l_axis*cos(traj_POT(3, i))], [traj_POT(2, i), traj_POT(2, i) + l_axis*sin(traj_POT(3, i))], 'Color', 'r', 'LineWidth', 2);
+%     line([traj_POT(1, i), traj_POT(1, i) - l_axis*sin(traj_POT(3, i))], [traj_POT(2, i), traj_POT(2, i) + l_axis*cos(traj_POT(3, i))], 'Color', 'g', 'LineWidth', 2);
+% end
+% 
+% for i=1:skip_step:size(traj_ENT, 2)
+%     line([traj_ENT(1, i), traj_ENT(1, i) + l_axis*cos(traj_ENT(3, i))], [traj_ENT(2, i), traj_ENT(2, i) + l_axis*sin(traj_ENT(3, i))], 'Color', 'r', 'LineWidth', 2);
+%     line([traj_ENT(1, i), traj_ENT(1, i) - l_axis*sin(traj_ENT(3, i))], [traj_ENT(2, i), traj_ENT(2, i) + l_axis*cos(traj_ENT(3, i))], 'Color', 'g', 'LineWidth', 2);
+% end
+% 
+% for i=1:skip_step:size(traj_KL, 2)
+%     line([traj_KL(1, i), traj_KL(1, i) + l_axis*cos(traj_KL(3, i))], [traj_KL(2, i), traj_KL(2, i) + l_axis*sin(traj_KL(3, i))], 'Color', 'r', 'LineWidth', 2);
+%     line([traj_KL(1, i), traj_KL(1, i) - l_axis*sin(traj_KL(3, i))], [traj_KL(2, i), traj_KL(2, i) + l_axis*cos(traj_KL(3, i))], 'Color', 'g', 'LineWidth', 2);
+% end
 % 
 % for i=1:skip_step:size(traj_FI, 2)
 %     line([traj_FI(1, i), traj_FI(1, i) + l_axis*cos(traj_FI(3, i))], [traj_FI(2, i), traj_FI(2, i) + l_axis*sin(traj_FI(3, i))], 'Color', 'r', 'LineWidth', 2);
 %     line([traj_FI(1, i), traj_FI(1, i) - l_axis*sin(traj_FI(3, i))], [traj_FI(2, i), traj_FI(2, i) + l_axis*cos(traj_FI(3, i))], 'Color', 'g', 'LineWidth', 2);
 % end
 
-for i=1:skip_step:size(traj_DISAMB, 2)
-    line([traj_DISAMB(1, i), traj_DISAMB(1, i) + l_axis*cos(traj_DISAMB(3, i))], [traj_DISAMB(2, i), traj_DISAMB(2, i) + l_axis*sin(traj_DISAMB(3, i))], 'Color', 'r', 'LineWidth', 2);
-    line([traj_DISAMB(1, i), traj_DISAMB(1, i) - l_axis*sin(traj_DISAMB(3, i))], [traj_DISAMB(2, i), traj_DISAMB(2, i) + l_axis*cos(traj_DISAMB(3, i))], 'Color', 'g', 'LineWidth', 2);
-end
+% for i=1:skip_step:size(traj_DISAMB, 2)
+%     line([traj_DISAMB(1, i), traj_DISAMB(1, i) + l_axis*cos(traj_DISAMB(3, i))], [traj_DISAMB(2, i), traj_DISAMB(2, i) + l_axis*sin(traj_DISAMB(3, i))], 'Color', 'r', 'LineWidth', 2);
+%     line([traj_DISAMB(1, i), traj_DISAMB(1, i) - l_axis*sin(traj_DISAMB(3, i))], [traj_DISAMB(2, i), traj_DISAMB(2, i) + l_axis*cos(traj_DISAMB(3, i))], 'Color', 'g', 'LineWidth', 2);
+% end
 
-% %%
-plot_script;
-plot_goal_match;
+%%
+% plot_script;
+% plot_goal_match;
 
 %%
 function ur = generate_autonomy(goal_index)
@@ -414,13 +445,17 @@ function ur = generate_autonomy(goal_index)
     
 end
 function uh = generate_full_uh(xg, xr) %full unnomralized uh
-    global nd;
-    uh = [0,0,0]'; %initialize with zero
-    uh(1:2) = xg(1:2) - xr(1:2);
-%     uh(1:2) = 0.2*(uh(1:2)./(abs(uh(1:2)) + realmin)); %make the dimensions at max. for translational velocity
+    global nd sparsity_factor kappa;
+    uh =  zeros(nd, 1); %initialize with zero
+%   uh(1:2) = xg(1:2) - xr(1:2);
+    mu = xg(1:2) - xr(1:2);
+    uh(1:2) = randvonMisesFisherm(nd-1, 1, kappa, mu);
     %create rotational component
     uh(3) = generate_rotation(xg(3), xr(3)); %essentially determines whether to tuen clockwise or anti-clockwise
-    uh = uh + normrnd(0, 0.01, nd, 1);
+    %incorporate accidental wrong direction rotation?
+    if rand < sparsity_factor
+        uh = zeros(nd, 1);
+    end
 end
 
 function uh_r =  generate_rotation(xg, xr)

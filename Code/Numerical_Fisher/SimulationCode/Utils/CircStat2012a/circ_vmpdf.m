@@ -38,7 +38,7 @@ end
 if nargin < 2
     thetahat = 0;
 end
-
+sam
 alpha = alpha(:);
 
 % evaluate pdf

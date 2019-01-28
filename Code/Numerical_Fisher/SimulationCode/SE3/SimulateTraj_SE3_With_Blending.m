@@ -1,4 +1,4 @@
-clear all; clc; close all
+% clear all; clc; close all;
 
 %% test to generate random poses for goals and plot them
 % for translational range
@@ -7,29 +7,41 @@ yrange = [-0.5, 0.5];
 zrange = [-0.5, 0.5];
 th_range = [0, 2*pi];
 
-global num_modes cm ng nd xg_pos xg_quat xg_R xg_T xr_pos xr_quat xr_R xr_T sig delta_t conf_thresh conf_max alpha_max;
-% ng = 4; %num of goals
-% nd = 6; %num of dimensions. by definition SE3. 
-% cm = {[1,2],[1,3],[4,5],6}; %{1,2,3}, %{[1,3], 2} %{[2,3], 1};
-% num_modes = length(cm); %
+global num_modes cm ng nd xg_pos xg_quat xg_R xg_T xr_pos xr_quat xr_R xr_T sig delta_t conf_thresh conf_max alpha_max sparsity_factor amp_sparsity_factor kappa projection_time;
 max_ng = 6;
-% ng = 4; %num of goals
-ng = datasample(2:max_ng, 1); %spawn random number of goals. Maximum number is 6. At least 
+ng = datasample(3:max_ng, 1); %spawn random number of goals. Maximum number is 6. At least 
 nd = 6; %num of dimensions. by definition R^3
 cm_options = {{1,2,3,4,5,6}, {[1,2,3], [4,5,6]}, {[1,2],[1,3],[4,5],6}, {[1,2],[1,3],[4,5],[4,6]}};
 max_nm = length(cm_options);
 cm = cm_options{datasample(1:max_nm, 1)};
 num_modes = length(cm);
+init_mode_index = datasample(1:num_modes, 1);
 
 
+%% human parameters
+sparsity_factor = rand/4.0;
+amp_sparsity_factor = rand/8; % how often the amplitude wiull be less that maximum. 
+kappa = 20.0; % concentration paarameter for vonMisesFisher distribution
+fprintf('The sparsity and amp factor are %f, %f\n', sparsity_factor, amp_sparsity_factor);
+%%
 sig = 0.01; %For Fisher information
-delta_t = 0.1; %For compute projections. 
 
-%arbitration function parameters
-conf_thresh = (1.2/ng);
-conf_max = (1.4/ng);
+%%
+%% Projection paramaters
+projection_time = 4;
+delta_t = 0.1; %For compute projections. 
+total_time_steps = 120;  %with delta_t of 0.1, this amounts to 10 seconds. We will assume that "mode switches" don't take time. 
+
+%% simulation params
+mode_comp_timesteps = 10; %time step gap between optimal mode computation. delta_t*mode_comp_timesteps is the time in seconds
+exit_threshold = 0.02;
+
+%% arbitration function parameters
+conf_thresh = (1.05/ng);
+conf_max = (1.1/ng);
 alpha_max = 0.7;
 
+%%
 %random positions for goals and robot
 xg_R = zeros(3,3,ng);
 xg_T = zeros(4,4,ng);
@@ -49,41 +61,37 @@ xr_R = QuatToR(xr_quat);
 xr_T = rt2tr(xr_R, xr_pos);
 xr_T_true = xr_T;
 
-% xg_R(:,:,1) =  [-1, 0, 0; 0 0 1; 0 1 0];
-% xg_T(:,:,1) = rt2tr(xg_R(:,:,1), xg_pos(:, 1));
-
 %% PLOT GOALS AND ROBOT
-figure;
-scatter3(xg_pos(1,1:ng), xg_pos(2,1:ng), xg_pos(3,1:ng), 230, 'k', 'filled'); grid on; hold on;
-xlabel('X'); ylabel('Y'); zlabel('Z');
-scatter3(xr_pos(1), xr_pos(2), xr_pos(3), 200, 'r', 'filled');
-offset = [-0.3, 0.3];
-line(xrange+offset, [0,0], [0,0], 'Color', 'r', 'LineWidth', 1.5); %draw x and y axes.
-line([0,0], yrange+offset, [0,0], 'Color', 'g','LineWidth', 1.5);
-line([0,0], [0,0], zrange+offset, 'Color', 'b','LineWidth', 1.5);
-axis([xrange+offset, yrange+offset, zrange+offset]);
-axis square;
-view([142,31]);
-
-% draw body rotation frames
-l_axis = 0.1;
-trplot(xr_T, 'rgb', true, 'thick', 2.0, 'length', l_axis); hold on;
-for i=1:ng
-    trplot(xg_T(:,:,i), 'rgb', true, 'thick', 2.0, 'length', l_axis);
-end
+% figure;
+% scatter3(xg_pos(1,1:ng), xg_pos(2,1:ng), xg_pos(3,1:ng), 230, 'k', 'filled'); grid on; hold on;
+% xlabel('X'); ylabel('Y'); zlabel('Z');
+% scatter3(xr_pos(1), xr_pos(2), xr_pos(3), 200, 'r', 'filled');
+% offset = [-0.3, 0.3];
+% line(xrange+offset, [0,0], [0,0], 'Color', 'r', 'LineWidth', 1.5); %draw x and y axes.
+% line([0,0], yrange+offset, [0,0], 'Color', 'g','LineWidth', 1.5);
+% line([0,0], [0,0], zrange+offset, 'Color', 'b','LineWidth', 1.5);
+% axis([xrange+offset, yrange+offset, zrange+offset]);
+% axis square;
+% view([142,31]);
+% 
+% % draw body rotation frames
+% l_axis = 0.1;
+% trplot(xr_T, 'rgb', true, 'thick', 2.0, 'length', l_axis); hold on;
+% for i=1:ng
+%     trplot(xg_T(:,:,i), 'rgb', true, 'thick', 2.0, 'length', l_axis);
+% end
 
 %% Generate the random goal towards which the simulated human would move. 
 random_goal_index = randsample(ng, 1); 
 random_goal_T = xg_T(:,:, random_goal_index); %homogenous matrix of the random goal
-scatter3(random_goal_T(1, 4), random_goal_T(2, 4), random_goal_T(3, 4), 230, 'm', 'filled'); grid on; hold on;
+% scatter3(random_goal_T(1, 4), random_goal_T(2, 4), random_goal_T(3, 4), 230, 'm', 'filled'); grid on; hold on;
 
 %%
 intent_types = {'dft', 'conf', 'bayes'};
 intent_type = intent_types{datasample(1:length(intent_types), 1)}; % or conf or bayes
-
+% intent_type = 'dft';
 
 %% BASELINE COMPUTATION
-total_time_steps = 120;  %with delta_t of 0.1, this amounts to 10 seconds. We will assume that "mode switches" don't take time. 
 pgs_POT = zeros(ng, total_time_steps);
 optimal_modes_POT = zeros(total_time_steps-1, 1);
 alpha_POT = zeros(total_time_steps-1, 1);
@@ -95,10 +103,9 @@ traj_POT = cell(total_time_steps, 1);
 traj_POT{1} = xr_T; 
 pgs_POT(:, 1) = (1/ng)*ones(ng, 1);%uniform probability to start off with. This is the true pg distribution during the course of the trajectory
 %internally projection
-current_optimal_mode_POT_index = 1;
+current_optimal_mode_POT_index = init_mode_index;
 current_optimal_mode_POT = cm{current_optimal_mode_POT_index};
 
-mode_comp_timesteps = 4;
 
 for i=1:total_time_steps-1
     if compute_dist_to_goal(random_goal_T, xr_T_true)
@@ -126,10 +133,17 @@ for i=1:total_time_steps-1
     for jj=1:length(zero_dim) %zero out the non-accessible dimensions. 
         uh(zero_dim(jj)) = 0;
     end
-    uh(1:3) = 0.2*(uh(1:3)./(abs(uh(1:3)) + realmin)); %normalize translational velocity
+    if norm(uh(1:3)) > 0.2
+        uh(1:3) = 0.2*(uh(1:3)./(norm(uh(1:3)) + realmin)); %normalize translational velocity
+    end
     [w, ~] = AxisAng3(uh(4:6)); % %normalize rotational velocity. takes care of 0 velocities internally. 
     uh(4:6) = w; %1 rad/s along w axis. 
-    %autonomy
+    if rand < amp_sparsity_factor
+        uh = rand*uh;
+    end
+
+
+    % autonomy
     ur = generate_full_autonomy(xg_T(:,:,curr_goal_index_POT), xr_T);
     alpha_POT(i) = alpha_from_confidence(pgs_POT(curr_goal_index_POT, i));
     blend_vel = (1-alpha_POT(i))*uh + alpha_POT(i)*ur; %blended vel
@@ -167,10 +181,10 @@ traj_ENT{1} = xr_T;
 pgs_ENT(:, 1) = (1/ng)*ones(ng, 1);%uniform probability to start off with. This is the true pg distribution during the course of the trajectory
 %internally projection
 
-current_optimal_mode_ENT_index = 1;
+current_optimal_mode_ENT_index = init_mode_index;
 current_optimal_mode_ENT = cm{current_optimal_mode_ENT_index};
 
-for i=1:total_time_steps
+for i=1:total_time_steps-1
     if compute_dist_to_goal(random_goal_T, xr_T_true)
         fprintf('Within 10 percent of the original separation from goal. Stopping simulation\n');
         break;
@@ -178,7 +192,7 @@ for i=1:total_time_steps
     curr_goal_index_ENT = datasample(find(pgs_ENT(:, i) == max(pgs_ENT(:, i))), 1);
     curr_goal_ENT(i) = curr_goal_index_ENT;
     if mod(i-1, mode_comp_timesteps) == 0
-        current_optimal_mode_ENT_index = compute_optimal_mode_ENT_SE3(intent_type, xr_T, pgs_ENT(:, i)); 
+        current_optimal_mode_ENT_index = compute_optimal_mode_ENT_SE3_human_model(intent_type, xr_T, pgs_ENT(:, i)); 
         if length(current_optimal_mode_ENT_index) > 1 %when there are equivalent modes. 
             current_optimal_mode_ENT = cm{current_optimal_mode_ENT_index(1)}; %pick the first one. 
             current_optimal_mode_ENT_index = current_optimal_mode_ENT_index(1); %update the index. 
@@ -194,9 +208,14 @@ for i=1:total_time_steps
     for jj=1:length(zero_dim) %zero out the non-accessible dimensions. 
         uh(zero_dim(jj)) = 0;
     end
-    uh(1:3) = 0.2*(uh(1:3)./(abs(uh(1:3)) + realmin)); %normalize translational velocity
+    if norm(uh(1:3)) > 0.2
+        uh(1:3) = 0.2*(uh(1:3)./(norm(uh(1:3)) + realmin)); %normalize translational velocity
+    end
     [w, ~] = AxisAng3(uh(4:6)); % %normalize rotational velocity. takes care of 0 velocities internally. 
     uh(4:6) = w; %1 rad/s along w axis. 
+    if rand < amp_sparsity_factor
+        uh = rand*uh;
+    end
     %autonomy
     ur = generate_full_autonomy(xg_T(:,:,curr_goal_index_ENT), xr_T);
     alpha_ENT(i) = alpha_from_confidence(pgs_ENT(curr_goal_index_ENT, i));
@@ -233,7 +252,7 @@ traj_KL{1} = xr_T;
 pgs_KL(:, 1) = (1/ng)*ones(ng, 1);%uniform probability to start off with. This is the true pg distribution during the course of the trajectory
 %internally projection
 
-current_optimal_mode_KL_index = 1;
+current_optimal_mode_KL_index = init_mode_index;
 current_optimal_mode_KL = cm{current_optimal_mode_KL_index};
 
 for i=1:total_time_steps-1
@@ -244,7 +263,7 @@ for i=1:total_time_steps-1
     curr_goal_index_KL = datasample(find(pgs_KL(:, i) == max(pgs_KL(:, i))), 1);
     curr_goal_KL(i) =  curr_goal_index_KL;
     if mod(i-1, mode_comp_timesteps) == 0
-        current_optimal_mode_KL_index = compute_optimal_mode_KL_SE3(intent_type, xr_T, pgs_KL(:, i)); 
+        current_optimal_mode_KL_index = compute_optimal_mode_KL_SE3_human_model(intent_type, xr_T, pgs_KL(:, i)); 
         if length(current_optimal_mode_KL_index) > 1 %when there are equivalent modes. 
             current_optimal_mode_KL = cm{current_optimal_mode_KL_index(1)}; %pick the first one. 
             current_optimal_mode_KL_index = current_optimal_mode_KL_index(1); %update the index. 
@@ -260,9 +279,16 @@ for i=1:total_time_steps-1
     for jj=1:length(zero_dim) %zero out the non-accessible dimensions. 
         uh(zero_dim(jj)) = 0;
     end
-    uh(1:3) = 0.2*(uh(1:3)./(abs(uh(1:3)) + realmin)); %normalize translational velocity
+    if norm(uh(1:3)) > 0.2
+        uh(1:3) = 0.2*(uh(1:3)./(norm(uh(1:3)) + realmin)); %normalize translational velocity
+    end
+    
     [w, ~] = AxisAng3(uh(4:6)); % %normalize rotational velocity. takes care of 0 velocities internally. 
     uh(4:6) = w; %1 rad/s along w axis. 
+    if rand < amp_sparsity_factor
+        uh = rand*uh;
+    end
+    
     ur = generate_full_autonomy(xg_T(:,:,curr_goal_index_KL), xr_T);
     alpha_KL(i) = alpha_from_confidence(pgs_KL(curr_goal_index_KL, i));
     blend_vel = (1-alpha_KL(i))*uh + alpha_KL(i)*ur; %blended vel
@@ -361,9 +387,8 @@ traj_DISAMB{1} = xr_T;
 pgs_DISAMB(:, 1) = (1/ng)*ones(ng, 1);%uniform probability to start off with. This is the true pg distribution during the course of the trajectory
 %internally projection
 
-current_optimal_mode_DISAMB_index = 1;
+current_optimal_mode_DISAMB_index = init_mode_index;
 current_optimal_mode_DISAMB = cm{current_optimal_mode_DISAMB_index};
-mode_comp_timesteps = 4;
 
 for i=1:total_time_steps-1
     if compute_dist_to_goal(random_goal_T, xr_T_true)
@@ -389,9 +414,16 @@ for i=1:total_time_steps-1
     for jj=1:length(zero_dim) %zero out the non-accessible dimensions. 
         uh(zero_dim(jj)) = 0;
     end
-    uh(1:3) = 0.2*(uh(1:3)./(abs(uh(1:3)) + realmin)); %normalize translational velocity
+    if norm(uh(1:3)) > 0.2
+        uh(1:3) = 0.2*(uh(1:3)./(norm(uh(1:3)) + realmin)); %normalize translational velocity
+    end
     [w, ~] = AxisAng3(uh(4:6)); % %normalize rotational velocity. takes care of 0 velocities internally. 
     uh(4:6) = w; %1 rad/s along w axis. 
+    
+    if rand < amp_sparsity_factor
+        uh = rand*uh;
+    end
+
     %autonomy
     ur = generate_full_autonomy(xg_T(:,:,curr_goal_index_DISAMB), xr_T);
     alpha_DISAMB(i) = alpha_from_confidence(pgs_DISAMB(curr_goal_index_DISAMB, i));
@@ -412,37 +444,36 @@ for i=1:total_time_steps-1
 end
 
 %% plot the trajectory with the rotation frame. 
-hold on;
-pause('on');
-skip_step = 5;
+% hold on;
+% pause('on');
+% skip_step = 3;
 
-
-for i=1:skip_step:total_time_steps
-    if isempty(traj_POT{i})
-       break;
-    end
-    curr_x = traj_POT{i}(1:3, 4);
-    scatter3(curr_x(1), curr_x(2), curr_x(3), 'r', 'filled');
-    trplot(traj_POT{i}, 'rgb', true, 'thick', 2.0, 'length', l_axis);
-end
-hold on;
-for i=1:skip_step:total_time_steps
-    if isempty(traj_ENT{i})
-       break;
-    end
-    curr_x = traj_ENT{i}(1:3, 4);
-    scatter3(curr_x(1), curr_x(2), curr_x(3), 'r', 'filled');
-    trplot(traj_ENT{i}, 'rgb', true, 'thick', 2.0, 'length', l_axis);
-end
-hold on;
-for i=1:skip_step:total_time_steps
-    if isempty(traj_KL{i})
-       break;
-    end
-    curr_x = traj_KL{i}(1:3, 4);
-    scatter3(curr_x(1), curr_x(2), curr_x(3), 'b', 'filled');
-    trplot(traj_KL{i}, 'rgb', true, 'thick', 2.0, 'length', l_axis);
-end
+% for i=1:skip_step:total_time_steps
+%     if isempty(traj_POT{i})
+%        break;
+%     end
+%     curr_x = traj_POT{i}(1:3, 4);
+%     scatter3(curr_x(1), curr_x(2), curr_x(3), 'r', 'filled');
+%     trplot(traj_POT{i}, 'rgb', true, 'thick', 2.0, 'length', l_axis);
+% end
+% hold on;
+% for i=1:skip_step:total_time_steps
+%     if isempty(traj_ENT{i})
+%        break;
+%     end
+%     curr_x = traj_ENT{i}(1:3, 4);
+%     scatter3(curr_x(1), curr_x(2), curr_x(3), 'r', 'filled');
+%     trplot(traj_ENT{i}, 'rgb', true, 'thick', 2.0, 'length', l_axis);
+% end
+% hold on;
+% for i=1:skip_step:total_time_steps
+%     if isempty(traj_KL{i})
+%        break;
+%     end
+%     curr_x = traj_KL{i}(1:3, 4);
+%     scatter3(curr_x(1), curr_x(2), curr_x(3), 'b', 'filled');
+%     trplot(traj_KL{i}, 'rgb', true, 'thick', 2.0, 'length', l_axis);
+% end
 % 
 % hold on;
 % for i=1:skip_step:total_time_steps
@@ -451,29 +482,34 @@ end
 %     trplot(traj_FI{i}, 'rgb', true, 'thick', 2.0, 'length', l_axis);
 % end
 
-hold on;
-for i=1:skip_step:total_time_steps
-    if isempty(traj_DISAMB{i})
-       break;
-    end
-    curr_x = traj_DISAMB{i}(1:3, 4);
-    scatter3(curr_x(1), curr_x(2), curr_x(3), 'g', 'filled');
-    trplot(traj_DISAMB{i}, 'rgb', true, 'thick', 2.0, 'length', l_axis);
-end
+% hold on;
+% for i=1:skip_step:total_time_steps
+%     if isempty(traj_DISAMB{i})
+%        break;
+%     end
+%     curr_x = traj_DISAMB{i}(1:3, 4);
+%     scatter3(curr_x(1), curr_x(2), curr_x(3), 'g', 'filled');
+%     trplot(traj_DISAMB{i}, 'rgb', true, 'thick', 2.0, 'length', l_axis);
+% end
 
-plot_script;
-plot_goal_match;
+%% plot script for goal inference and mode switches
+% plot_script;
+% plot_goal_match;
 
 
 %% UTILITY FUNCTIONS
 function uh = generate_full_uh(gT, rT) % %goal 4 by4 (gT), robot 4 by 4. 
-    global nd;
+    global nd kappa sparsity_factor;
     uh = zeros(nd,1);
-    uh(1:3) = gT(1:3, 4) - rT(1:3, 4); 
+    mu_T = gT(1:3, 4) - rT(1:3, 4); 
+    uh(1:3) = randvonMisesFisherm(nd-3, 1, kappa, mu_T); 
     Rg = gT(1:3,1:3);  Rr = rT(1:3, 1:3);
     Rdiff = Rg*(Rr^-1); %with respect world frame, amount to turn toward goal. 
-    uh(4:6) = MatrixLog3(Rdiff); %unnormalized
-    uh = uh + normrnd(0, 0.01, nd, 1);
+    mu_R = MatrixLog3(Rdiff); %unnormalized
+    uh(4:6) = randvonMisesFisherm(nd-3, 1, 2*kappa, mu_R); %more concentrated dispoersion for rotation component
+    if rand  < sparsity_factor
+        uh = zeros(nd, 1);
+    end
 end
 
 function ur = generate_full_autonomy(gT, rT)

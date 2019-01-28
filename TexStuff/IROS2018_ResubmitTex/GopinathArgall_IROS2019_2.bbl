@@ -1,0 +1,184 @@
+\begin{thebibliography}{26}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Atanasov et~al.(2014)Atanasov, Le~Ny, Daniilidis, and
+  Pappas]{atanasov2014information}
+Nikolay Atanasov, Jerome Le~Ny, Kostas Daniilidis, and George~J. Pappas.
+\newblock Information acquisition with sensing robots: Algorithms and error
+  bounds.
+\newblock In \emph{\textit{Proceedings of the IEEE International Conference on
+  Robotics and Automation (ICRA)}}, 2014.
+
+\bibitem[Baker et~al.(2007)Baker, Tenenbaum, and Saxe]{baker2007goal}
+Chris~L. Baker, Joshua~B. Tenenbaum, and Rebecca~R. Saxe.
+\newblock Goal inference as inverse planning.
+\newblock In \emph{\textit{Proceedings of the Cognitive Science Society}},
+  2007.
+
+\bibitem[Baker et~al.(2009)Baker, Saxe, and Tenenbaum]{baker2009action}
+Chris~L. Baker, Rebecca~R. Saxe, and Joshua~B. Tenenbaum.
+\newblock Action understanding as inverse planning.
+\newblock \emph{\textit{Cognition}}, 113\penalty0 (3):\penalty0 329--349, 2009.
+
+\bibitem[Calli et~al.(2015)Calli, Singh, Walsman, Srinivasa, Abbeel, and
+  Dollar]{calli2015ycb}
+Berk Calli, Arjun Singh, Aaron Walsman, Siddhartha Srinivasa, Pieter Abbeel,
+  and Aaron~M Dollar.
+\newblock The {YCB} object and model set: Towards common benchmarks for
+  manipulation research.
+\newblock In \emph{Advanced Robotics (ICAR), 2015 International Conference on},
+  pages 510--517. IEEE, 2015.
+
+\bibitem[Croft(2003)]{croft2003estimating}
+DKEA Croft.
+\newblock Estimating intent for human-robot interaction.
+\newblock In \emph{IEEE International Conference on Advanced Robotics}, pages
+  810--815. Citeseer, 2003.
+
+\bibitem[Dragan and Srinivasa(2012)]{dragan2012formalizing}
+Anca~D. Dragan and Siddhartha~S. Srinivasa.
+\newblock \emph{Formalizing assistive teleoperation}.
+\newblock MIT Press, 2012.
+
+\bibitem[Dragan and Srinivasa(2013)]{dragan2013policy}
+Anca~D. Dragan and Siddhartha~S. Srinivasa.
+\newblock A policy-blending formalism for shared control.
+\newblock \emph{\textit{The International Journal of Robotics Research}},
+  32\penalty0 (7):\penalty0 790--805, 2013.
+
+\bibitem[Gopinath and Argall(2017)]{gopinath2017mode}
+Deepak Gopinath and Brenna Argall.
+\newblock Mode switch assistance to maximize human intent disambiguation.
+\newblock In \emph{\textit{Robotics: Science and Systems}}, 2017.
+
+\bibitem[Herlant et~al.(2016)Herlant, Holladay, and
+  Srinivasa]{herlant2016assistive}
+Laura~V. Herlant, Rachel~M. Holladay, and Siddhartha~S. Srinivasa.
+\newblock Assistive teleoperation of robot arms via automatic time-optimal mode
+  switching.
+\newblock In \emph{\textit{Proceedings of the ACM/IEEE International Conference
+  on Human-Robot Interaction (HRI)}}, 2016.
+
+\bibitem[Khatib(1986)]{khatib1986real}
+Oussama Khatib.
+\newblock Real-time obstacle avoidance for manipulators and mobile robots.
+\newblock \emph{\textit{The International Journal of Robotics Research}},
+  5\penalty0 (1):\penalty0 90--98, 1986.
+
+\bibitem[Kim et~al.(2012)Kim, Hazlett-Knudsen, Culver-Godfrey, Rucks,
+  Cunningham, Portee, Bricout, Wang, and Behal]{kim2012autonomy}
+Dae-Jin Kim, Rebekah Hazlett-Knudsen, Heather Culver-Godfrey, Greta Rucks, Tara
+  Cunningham, David Portee, John Bricout, Zhao Wang, and Aman Behal.
+\newblock How autonomy impacts performance and satisfaction: Results from a
+  study with spinal cord injured subjects using an assistive robot.
+\newblock \emph{\textit{IEEE Transactions on Systems, Man, and Cybernetics-Part
+  A: Systems and Humans}}, 42\penalty0 (1):\penalty0 2--14, 2012.
+
+\bibitem[LaPlante et~al.(1992)]{laplante1992assistive}
+Mitchell~P LaPlante et~al.
+\newblock Assistive technology devices and home accessibility features:
+  prevalence, payment, need, and trends.
+\newblock \emph{\textit{Advance Data from Vital and Health Statistics}}, 1992.
+
+\bibitem[Miller and Murphey(2013)]{miller2013trajectory}
+Lauren~M. Miller and Todd~D. Murphey.
+\newblock Trajectory optimization for continuous ergodic exploration.
+\newblock In \emph{\textit{American Control Conference (ACC)}}, 2013.
+
+\bibitem[Miller et~al.(2016)Miller, Silverman, MacIver, and
+  Murphey]{miller2016ergodic}
+Lauren~M. Miller, Yonatan Silverman, Malcolm~A. MacIver, and Todd~D. Murphey.
+\newblock Ergodic exploration of distributed information.
+\newblock \emph{\textit{IEEE Transactions on Robotics}}, 32\penalty0
+  (1):\penalty0 36--52, 2016.
+
+\bibitem[Muelling et~al.(2017)Muelling, Venkatraman, Valois, Downey, Weiss,
+  Javdani, Hebert, Schwartz, Collinger, and Bagnell]{muelling2017autonomy}
+Katharina Muelling, Arun Venkatraman, Jean-Sebastien Valois, John~E Downey,
+  Jeffrey Weiss, Shervin Javdani, Martial Hebert, Andrew~B Schwartz, Jennifer~L
+  Collinger, and J~Andrew Bagnell.
+\newblock Autonomy infused teleoperation with application to brain computer
+  interface controlled manipulation.
+\newblock \emph{\textit{Autonomous Robots}}, pages 1--22, 2017.
+
+\bibitem[Nagabandi et~al.(2017)Nagabandi, Kahn, Fearing, and
+  Levine]{nagabandi2017neural}
+Anusha Nagabandi, Gregory Kahn, Ronald~S Fearing, and Sergey Levine.
+\newblock Neural network dynamics for model-based deep reinforcement learning
+  with model-free fine-tuning.
+\newblock \emph{arXiv preprint arXiv:1708.02596}, 2017.
+
+\bibitem[Omitted(Under {R}eview)]{gopinath2017disamb}
+Authors Omitted.
+\newblock Disambiguation of human intent through control space selection.
+\newblock \emph{\textit{Autonomous Robots}}, Under {R}eview.
+
+\bibitem[Pilarski et~al.(2012)Pilarski, Dawson, Degris, Carey, and
+  Sutton]{pilarski2012dynamic}
+Patrick~M Pilarski, Michael~R Dawson, Thomas Degris, Jason~P Carey, and
+  Richard~S Sutton.
+\newblock Dynamic switching and real-time machine learning for improved human
+  control of assistive biomedical robots.
+\newblock In \emph{Biomedical Robotics and Biomechatronics (BioRob), 2012 4th
+  IEEE RAS \& EMBS International Conference on}, pages 296--302. IEEE, 2012.
+
+\bibitem[Sadigh et~al.(2016{\natexlab{a}})Sadigh, Sastry, Seshia, and
+  Dragan]{sadigh2016information}
+Dorsa Sadigh, S~Shankar Sastry, Sanjit~A Seshia, and Anca Dragan.
+\newblock Information gathering actions over human internal state.
+\newblock In \emph{\textit{Proceedings of the IEEE/RSJ International Conference
+  on Intelligent Robots and Systems (IROS)}}, pages 66--73. IEEE,
+  2016{\natexlab{a}}.
+
+\bibitem[Sadigh et~al.(2016{\natexlab{b}})Sadigh, Sastry, Seshia, and
+  Dragan]{sadigh2016planning}
+Dorsa Sadigh, Shankar Sastry, Sanjit~A Seshia, and Anca~D Dragan.
+\newblock Planning for autonomous cars that leverage effects on human actions.
+\newblock In \emph{\textit{Robotics: Science and Systems}}, 2016{\natexlab{b}}.
+
+\bibitem[Sch{\"o}ner(2008)]{schoner2008dynamical}
+Gregor Sch{\"o}ner.
+\newblock Dynamical systems approaches to cognition.
+\newblock \emph{\textit{Cambridge Handbook of Computational Cognitive
+  Modeling}}, pages 101--126, 2008.
+
+\bibitem[Simpson et~al.(2008)Simpson, Broughton, Gauthier, and
+  Prochazka]{simpson2008tooth}
+Tyler Simpson, Colin Broughton, Michel~JA Gauthier, and Arthur Prochazka.
+\newblock Tooth-click control of a hands-free computer interface.
+\newblock \emph{\textit{IEEE Transactions on Biomedical Engineering}},
+  55\penalty0 (8):\penalty0 2050--2056, 2008.
+
+\bibitem[Taha et~al.(2011)Taha, Mir{\'o}, and Dissanayake]{taha2011pomdp}
+Tarek Taha, Jaime~Valls Mir{\'o}, and Gamini Dissanayake.
+\newblock A {POMDP} framework for modelling human interaction with assistive
+  robots.
+\newblock In \emph{\textit{Proceedings of the IEEE International Conference on
+  Robotics and Automation (ICRA)}}, pages 544--549. IEEE, 2011.
+
+\bibitem[Tomasello and Carpenter(2007)]{tomasello2007shared}
+Michael Tomasello and Malinda Carpenter.
+\newblock Shared intentionality.
+\newblock \emph{\textit{Developmental Science}}, 10\penalty0 (1):\penalty0
+  121--125, 2007.
+
+\bibitem[Tong and Koller(2001)]{tong2001active}
+Simon Tong and Daphne Koller.
+\newblock Active learning for parameter estimation in {B}ayesian networks.
+\newblock In \emph{Advances in neural information processing systems}, pages
+  647--653, 2001.
+
+\bibitem[Wang et~al.(2013)Wang, M{\"u}lling, Deisenroth, Ben~Amor, Vogt,
+  Sch{\"o}lkopf, and Peters]{wang2013probabilistic}
+Zhikun Wang, Katharina M{\"u}lling, Marc~Peter Deisenroth, Heni Ben~Amor, David
+  Vogt, Bernhard Sch{\"o}lkopf, and Jan Peters.
+\newblock Probabilistic movement modeling for intention inference in
+  human--robot interaction.
+\newblock \emph{\textit{The International Journal of Robotics Research}},
+  32\penalty0 (7):\penalty0 841--858, 2013.
+
+\end{thebibliography}
