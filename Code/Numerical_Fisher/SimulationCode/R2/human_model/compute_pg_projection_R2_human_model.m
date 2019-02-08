@@ -72,7 +72,12 @@ end
 function uh = generate_model_uh(xg, xr) %full unnomralized uh
     global nd kappa;
     mu = xg - xr; %noiseless human velocity model. 
-    uh = randvonMisesFisherm(nd, 1, kappa, mu);
+    if ~any(mu)
+        uh = zeros(nd, 1);
+    else
+        uh = randvonMisesFisherm(nd, 1, kappa, mu);
+    end
+%     uh = randvonMisesFisherm(nd, 1, kappa, mu);
 end
 
 %% simple potential field type of autonomy. 

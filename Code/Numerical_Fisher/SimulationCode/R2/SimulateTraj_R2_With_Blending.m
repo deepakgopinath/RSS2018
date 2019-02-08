@@ -7,7 +7,7 @@ xrange = [-0.5, 0.5];
 yrange = [-0.5, 0.5];
 
 %global variables.
-global cm num_modes ng nd xg xr sig delta_t conf_thresh conf_max alpha_max sparsity_factor amp_sparsity_factor kappa projection_time;
+global cm num_modes ng nd xg xr sig delta_t conf_thresh conf_max num_samples alpha_max sparsity_factor amp_sparsity_factor kappa projection_time;
 
 %workspace parameters
 max_ng = 6;
@@ -24,7 +24,7 @@ xr = [rand(1,1)*range(xrange) + xrange(1); rand(1,1)*range(yrange) + yrange(1)];
 xr_true = xr; %store away random  robot position in a variable for reuse.
 
 %human parameters
-sparsity_factor = rand/4; %how often would the human control command be zero.
+sparsity_factor = rand/8; %how often would the human control command be zero.
 amp_sparsity_factor = rand/8; % how often the amplitude wiull be less that maximum. 
 kappa = 20.0; % concentration paarameter for vonMisesFisher distribution
 fprintf('The sparsity and amp factor are %f, %f\n', sparsity_factor, amp_sparsity_factor);
@@ -34,7 +34,8 @@ sig = 0.01; %For Fisher information
 
 %% Projection paramaters
 projection_time = 4;
-delta_t = 0.1; %For compute projections. 
+delta_t = 0.1; %For compute projections.
+num_samples = 5;
 
 %% simulation params
 mode_comp_timesteps = 10; %time step gap between optimal mode computation. delta_t*mode_comp_timesteps is the time in seconds
@@ -49,7 +50,7 @@ conf_max = (1.1/ng);
 alpha_max = 0.7;
 
 %% PLOT GOALS AND CURRENT ROBOT POSITION. 
-% 
+% % 
 % figure;
 % scatter(xg(1,1:ng), xg(2,1:ng), 180, 'k', 'filled'); grid on; hold on;
 % scatter(xr(1), xr(2), 140, 'r', 'filled');
@@ -69,7 +70,7 @@ random_goal = xg(:, random_goal_index);
 %% SAMPLE AN INTENT INFERENCE MECHANISM FOR THE CURRENT SIMULATION
 intent_types = {'dft', 'conf', 'bayes'};
 intent_type = intent_types{datasample(1:length(intent_types), 1)}; % or conf or bayes
-% intent_type = 'dft';
+% intent_type = 'bayes';
 
 %% %% USING MAX POTENTIAL AS BASE LINE
 %variables to hold simulation data for MAX POTENTIAL
@@ -396,7 +397,7 @@ for i=1:total_time_steps-1
 end
 
 %% PLOT TRAJECTORIES
-% hold on; 
+hold on; 
 % scatter(traj_POT(1, :)', traj_POT(2, :)', 'k', 'filled');
 % scatter(traj_ENT(1, :)', traj_ENT(2, :)', 'r', 'filled');
 % scatter(traj_KL(1, :)', traj_KL(2, :)', 'b', 'filled');
@@ -411,7 +412,12 @@ end
 function uh = generate_full_uh(xg, xr) %full unnomralized uh
     global nd sparsity_factor kappa;
     mu = xg - xr;
-    uh = randvonMisesFisherm(nd, 1, kappa, mu);
+    if ~any(mu)
+        uh = zeros(nd, 1);
+    else
+        uh = randvonMisesFisherm(nd, 1, kappa, mu);
+    end
+   
     %add sparsity
     if rand < sparsity_factor
         uh = zeros(nd, 1);

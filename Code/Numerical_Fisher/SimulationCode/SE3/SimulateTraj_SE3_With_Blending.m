@@ -7,7 +7,7 @@ yrange = [-0.5, 0.5];
 zrange = [-0.5, 0.5];
 th_range = [0, 2*pi];
 
-global num_modes cm ng nd xg_pos xg_quat xg_R xg_T xr_pos xr_quat xr_R xr_T sig delta_t conf_thresh conf_max alpha_max sparsity_factor amp_sparsity_factor kappa projection_time;
+global num_modes cm ng nd xg_pos xg_quat xg_R xg_T xr_pos xr_quat xr_R xr_T sig delta_t num_samples conf_thresh conf_max alpha_max sparsity_factor amp_sparsity_factor kappa projection_time;
 max_ng = 6;
 ng = datasample(3:max_ng, 1); %spawn random number of goals. Maximum number is 6. At least 
 nd = 6; %num of dimensions. by definition R^3
@@ -19,7 +19,7 @@ init_mode_index = datasample(1:num_modes, 1);
 
 
 %% human parameters
-sparsity_factor = rand/4.0;
+sparsity_factor = rand/8;
 amp_sparsity_factor = rand/8; % how often the amplitude wiull be less that maximum. 
 kappa = 20.0; % concentration paarameter for vonMisesFisher distribution
 fprintf('The sparsity and amp factor are %f, %f\n', sparsity_factor, amp_sparsity_factor);
@@ -30,6 +30,7 @@ sig = 0.01; %For Fisher information
 %% Projection paramaters
 projection_time = 4;
 delta_t = 0.1; %For compute projections. 
+num_samples = 5;
 total_time_steps = 120;  %with delta_t of 0.1, this amounts to 10 seconds. We will assume that "mode switches" don't take time. 
 
 %% simulation params
@@ -502,11 +503,20 @@ function uh = generate_full_uh(gT, rT) % %goal 4 by4 (gT), robot 4 by 4.
     global nd kappa sparsity_factor;
     uh = zeros(nd,1);
     mu_T = gT(1:3, 4) - rT(1:3, 4); 
-    uh(1:3) = randvonMisesFisherm(nd-3, 1, kappa, mu_T); 
+    if ~any(mu_T)
+        uh(1:3) = zeros(nd-3, 1);
+    else
+        uh(1:3) = randvonMisesFisherm(nd-3, 1, kappa, mu_T); 
+    end
+    
     Rg = gT(1:3,1:3);  Rr = rT(1:3, 1:3);
     Rdiff = Rg*(Rr^-1); %with respect world frame, amount to turn toward goal. 
     mu_R = MatrixLog3(Rdiff); %unnormalized
-    uh(4:6) = randvonMisesFisherm(nd-3, 1, 2*kappa, mu_R); %more concentrated dispoersion for rotation component
+    if ~any(mu_R)
+        uh(4:6) = zeros(nd-3, 1);
+    else
+        uh(4:6) = randvonMisesFisherm(nd-3, 1, 2*kappa, mu_R); %more concentrated dispoersion for rotation component
+    end
     if rand  < sparsity_factor
         uh = zeros(nd, 1);
     end

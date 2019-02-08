@@ -4,8 +4,8 @@
 \BOOKMARK [2][-]{subsection.3.1}{Probability Distribution Over Goals}{section.3}% 4
 \BOOKMARK [2][-]{subsection.3.2}{Set Theoretic Treatment of Control Modes}{section.3}% 5
 \BOOKMARK [1][-]{section.4}{Intent Disambiguation}{}% 6
-\BOOKMARK [2][-]{subsection.4.1}{Need For Intent Disambiguation}{section.4}% 7
-\BOOKMARK [2][-]{subsection.4.2}{Forward Projection of bold0mu mumu ppfalsepppp\(t\)}{section.4}% 8
+\BOOKMARK [2][-]{subsection.4.1}{Conditional Recursive Bayesian Belief Update}{section.4}% 7
+\BOOKMARK [2][-]{subsection.4.2}{Model-based Projection of bold0mu mumu ppfalsepppp\(t\)}{section.4}% 8
 \BOOKMARK [2][-]{subsection.4.3}{Entropy Disambiguation Metric}{section.4}% 9
 \BOOKMARK [2][-]{subsection.4.4}{KL Divergence Disambiguation}{section.4}% 10
 \BOOKMARK [2][-]{subsection.4.5}{Intent inference}{section.4}% 11

@@ -3,21 +3,22 @@ clear all; close all; clc;
 spaceList = {'R22', 'R33', 'SE2', 'SE3'}; %R2, R3, SE2, SE3
 condList = {'POT', 'ENT', 'KL', 'DISAMB'};
 delta_t = 0.1;
-total_subjects = 5000;
+total_subjects = 800;
 
 %% types of data to be looked at
 
 initial_alpha = -999*ones(total_subjects, length(condList), length(spaceList)); %initialize the alpha time as big negative. If it stays like this it means that the assistance was never triggered. 
 trajectory_time = -999*ones(total_subjects, length(condList), length(spaceList));
-percentage_correct_inference = zeros(total_subjects, length(condList), length(spaceList));
-percentage_alpha = zeros(total_subjects, length(condList), length(spaceList)); %for this the chattering has to be detected and snipped. 
-ng_array = zeros(total_subjects, length(spaceList)); %number of goals for each conditions. 
-intent_type_array = cell(total_subjects, length(spaceList));
-num_mode_switches = zeros(total_subjects, length(condList), length(spaceList));
-
+percentage_correct_inference = -999*ones(total_subjects, length(condList), length(spaceList));
+percentage_alpha = -999*ones(total_subjects, length(condList), length(spaceList)); %for this the chattering has to be detected and snipped. 
+ng_array = -999*ones(total_subjects, length(spaceList)); %number of goals for each conditions. 
+intent_type_array = -999*ones(total_subjects, length(spaceList));
+num_mode_switches = -999*ones(total_subjects, length(condList), length(spaceList));
+trajectory_length = -999*ones(total_subjects, length(condList), length(spaceList));
+intent_type_dict = containers.Map({'dft', 'bayes', 'conf'}, [1,2,3]);
 %%
 for i=1:length(spaceList)
-    dirname = strcat('NEW_',spaceList{i}, '_DATA');
+    dirname = strcat(spaceList{i}, '_DATA_IROS_EXP');
     fnames = dir(dirname);
     numfids = length(fnames);
     for index=3:3 + (total_subjects-1)
@@ -56,6 +57,72 @@ for i=1:length(spaceList)
             traj_DISAMB(cellfun(@isempty, traj_DISAMB)) = []; l_DISAMB = length(traj_DISAMB);
             if l_DISAMB == 120
                 l_DISAMB = 119; traj_DISAMB(end) = [];
+            end
+            
+        end
+        if ~strcmp(intent_type, 'conf')
+            continue
+        end
+        
+        
+        if i < 3
+            trans_nd = size(traj_POT, 1);
+        elseif i==3
+            trans_nd = 2;
+        elseif i == 4
+            trans_nd = 3;
+        end
+        if i < 4
+            l_traj = 0.0;
+            for traj_i=1:size(traj_POT, 2) - 1
+               l_traj = l_traj + norm(traj_POT(1:trans_nd, traj_i+1) - traj_POT(1:trans_nd, traj_i));
+            end
+            trajectory_length(k, 1, i) = l_traj;
+
+            l_traj = 0.0;
+            for traj_i=1:size(traj_ENT, 2) - 1
+               l_traj = l_traj + norm(traj_ENT(1:trans_nd, traj_i+1) - traj_ENT(1:trans_nd, traj_i));
+            end
+            trajectory_length(k, 2, i) = l_traj;
+
+            l_traj = 0.0;
+            for traj_i=1:size(traj_KL, 2) - 1
+               l_traj = l_traj + norm(traj_KL(1:trans_nd, traj_i+1) - traj_KL(1:trans_nd, traj_i));
+            end
+            trajectory_length(k, 3, i) = l_traj;
+
+            l_traj = 0.0;
+            for traj_i=1:size(traj_DISAMB, 2) - 1
+               l_traj = l_traj + norm(traj_DISAMB(1:trans_nd, traj_i+1) - traj_DISAMB(1:trans_nd, traj_i));
+            end
+            trajectory_length(k, 4, i) = l_traj;
+        else
+            l_traj = 0.0;
+            for traj_i=1:length(traj_POT)-1
+                x_next = traj_POT{i+1}(1:3, 4);
+                x_curr = traj_POT{i}(1:3, 4);
+                l_traj = l_traj + norm(x_next - x_curr);
+            end
+            
+            l_traj = 0.0;
+            for traj_i=1:length(traj_ENT)-1
+                x_next = traj_ENT{i+1}(1:3, 4);
+                x_curr = traj_ENT{i}(1:3, 4);
+                l_traj = l_traj + norm(x_next - x_curr);
+            end
+            
+            l_traj = 0.0;
+            for traj_i=1:length(traj_POT)-1
+                x_next = traj_POT{i+1}(1:3, 4);
+                x_curr = traj_POT{i}(1:3, 4);
+                l_traj = l_traj + norm(x_next - x_curr);
+            end
+            
+            l_traj = 0.0;
+            for traj_i=1:length(traj_POT)-1
+                x_next = traj_POT{i+1}(1:3, 4);
+                x_curr = traj_POT{i}(1:3, 4);
+                l_traj = l_traj + norm(x_next - x_curr);
             end
             
         end
@@ -119,7 +186,7 @@ for i=1:length(spaceList)
         percentage_alpha(k, 4, i) = sum((curr_goal_DISAMB == random_goal_index).*alpha_DISAMB > 0.0)/length(alpha_DISAMB);
         %% number of goals in each trial
         ng_array(k, i) = ng;
-        intent_type_array{k, i} = intent_type;
+        intent_type_array(k, i) = intent_type_dict(intent_type);
         %% trajectory time
         %store trial time
         trajectory_time(k, 1, i) = l_POT*delta_t;

@@ -37,13 +37,12 @@ elseif strcmp(intent_type, 'dft')
         end
         [w, ~] = AxisAng3(uh(4:6)); % %normalize rotational velocity. takes care of 0 velocities internally. 
         uh(4:6) = w; %1 rad/s along w axis. 
-
-
         %generate autonomy
-        ur = generate_autonomy(xg_T(:,:,curr_goal_index), curr_x); %autonomy command in full 2D space
-        alpha = alpha_from_confidence(pgs_project(curr_goal_index, i)); %linear belnding param
-        alpha = 0.0;
-        blend_vel = (1-alpha)*uh + alpha*ur; %blended vel
+%         ur = generate_autonomy(xg_T(:,:,curr_goal_index), curr_x); %autonomy command in full 2D space
+%         alpha = alpha_from_confidence(pgs_project(curr_goal_index, i)); %linear belnding param
+%         alpha = 0.0;
+%         blend_vel = (1-alpha)*uh + alpha*ur; %blended vel
+        blend_vel = uh;
         pgs_project(:, i+1) = compute_p_of_g_dft_SE3(uh, curr_x, pgs_project(:, i));
         curr_x = sim_kinematics_SE3(curr_x, blend_vel);
     end
@@ -60,7 +59,6 @@ elseif strcmp(intent_type, 'bayes')
         for jj=1:length(zero_dim) %mode conditioned humna policy
             uh(zero_dim(jj)) = 0; %zero out the components of the uh that are not accessible via the current control mode
         end
-        
         %normalize in SE3
         if norm(uh(1:3)) > 0.2
             uh(1:3) = 0.2*(uh(1:3)./(norm(uh(1:3)) + realmin)); %normalize translational velocity
@@ -69,10 +67,11 @@ elseif strcmp(intent_type, 'bayes')
         uh(4:6) = w; %1 rad/s along w axis. 
 
         %generate autonomy
-        ur = generate_autonomy(xg_T(:,:,curr_goal_index), curr_x); %autonomy command in full 2D space
-        alpha = alpha_from_confidence(pgs_project(curr_goal_index, i)); %linear belnding param
-        alpha = 0.0;
-        blend_vel = (1-alpha)*uh + alpha*ur; %blended vel
+%         ur = generate_autonomy(xg_T(:,:,curr_goal_index), curr_x); %autonomy command in full 2D space
+%         alpha = alpha_from_confidence(pgs_project(curr_goal_index, i)); %linear belnding param
+%         alpha = 0.0;
+%         blend_vel = (1-alpha)*uh + alpha*ur; %blended vel
+        blend_vel = uh;
         pgs_project(:, i+1) = compute_bayes_SE3(uh, curr_x, pgs_project(:, i));
         curr_x = sim_kinematics_SE3(curr_x, blend_vel);
     end
@@ -87,12 +86,20 @@ function uh = generate_model_uh(gT, rT) % %goal 4 by4 (gT), robot 4 by 4.
     global nd kappa;
     uh = zeros(nd,1);
     mu_T = gT(1:3, 4) - rT(1:3, 4); 
-    uh(1:3) = randvonMisesFisherm(nd-3, 1, kappa, mu_T); 
+    if ~any(mu_T)
+        uh(1:3) = zeros(nd-3, 1);
+    else
+        uh(1:3) = randvonMisesFisherm(nd-3, 1, kappa, mu_T); 
+    end
     
     Rg = gT(1:3,1:3);  Rr = rT(1:3, 1:3);
     Rdiff = Rg*(Rr^-1); %with respect world frame, amount to turn toward goal. 
     mu_R = MatrixLog3(Rdiff); %unnormalized
-    uh(4:6) = randvonMisesFisherm(nd-3, 1, 2*kappa, mu_R);
+    if ~any(mu_R)
+        uh(4:6) = zeros(nd-3, 1);
+    else
+        uh(4:6) = randvonMisesFisherm(nd-3, 1, 2*kappa, mu_R); %more concentrated dispoersion for rotation component
+    end
 %     uh(4:6) = MatrixLog3(Rdiff); %unnormalized
 %     uh = uh + normrnd(0, 0.01, nd, 1);
 end

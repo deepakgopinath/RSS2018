@@ -12,8 +12,8 @@ if strcmp(intent_type, 'conf')
     for jj=1:length(zero_dim) %mode conditioned humna policy
         uh(zero_dim(jj)) = 0; %zero out the components of the uh that are not accessible via the current control mode
     end
-    if norm(uh) > 0.2
-        uh = 0.2*(uh./(norm(uh) + realmin));
+    if norm(uh(1:2)) > 0.2
+        uh(1:2) = 0.2*(uh(1:2)./(norm(uh(1:2)) + realmin));
     end
     pg = compute_conf_SE2(uh, curr_x);
 elseif strcmp(intent_type, 'dft')
@@ -28,15 +28,15 @@ elseif strcmp(intent_type, 'dft')
         for jj=1:length(zero_dim) %mode conditioned humna policy
             uh(zero_dim(jj)) = 0; %zero out the components of the uh that are not accessible via the current control mode
         end
-        if norm(uh) > 0.2
-            uh = 0.2*(uh./(norm(uh) + realmin));
+        if norm(uh(1:2)) > 0.2
+            uh(1:2) = 0.2*(uh(1:2)./(norm(uh(1:2)) + realmin));
         end
         %generate autonomy
-        ur = generate_autonomy(curr_goal_index, curr_x); %autonomy command in full 2D space
-        alpha = alpha_from_confidence(pgs_project(curr_goal_index, i)); %linear belnding param
-        alpha = 0.0;
+%         ur = generate_autonomy(curr_goal_index, curr_x); %autonomy command in full 2D space
+%         alpha = alpha_from_confidence(pgs_project(curr_goal_index, i)); %linear belnding param
+%         alpha = 0.0;
         
-        blend_vel = (1-alpha)*uh + alpha*ur; %blended vel
+        blend_vel = uh; %blended vel
         pgs_project(:, i+1) = compute_p_of_g_dft_SE2(uh, curr_x, pgs_project(:, i));
         curr_x = sim_kinematics_SE2(curr_x, blend_vel);
     end
@@ -57,10 +57,10 @@ elseif strcmp(intent_type, 'bayes')
             uh = 0.2*(uh./(norm(uh) + realmin));
         end
         %generate autonomy
-        ur = generate_autonomy(curr_goal_index, curr_x); %autonomy command in full 2D space
-        alpha = alpha_from_confidence(pgs_project(curr_goal_index, i)); %linear belnding param
-        alpha = 0.0;
-        blend_vel = (1-alpha)*uh + alpha*ur; %blended vel
+%         ur = generate_autonomy(curr_goal_index, curr_x); %autonomy command in full 2D space
+%         alpha = alpha_from_confidence(pgs_project(curr_goal_index, i)); %linear belnding param
+%         alpha = 0.0;
+        blend_vel = uh; %blended vel
         pgs_project(:, i+1) = compute_bayes_SE2(uh, curr_x, pgs_project(:, i));
         curr_x = sim_kinematics_SE2(curr_x, blend_vel);
     end
@@ -84,7 +84,12 @@ function uh = generate_model_uh(xg, xr) %full unnomralized uh
     global nd kappa;
     uh = [0,0,0]'; %initialize with zero
     mu = xg(1:2) - xr(1:2);
-    uh(1:2) = randvonMisesFisherm(nd-1, 1, kappa, mu);
+    if ~any(mu)
+        uh(1:2) = zeros(nd-1, 1);
+    else
+        uh(1:2) = randvonMisesFisherm(nd-1, 1, kappa, mu);
+    end
+%     uh(1:2) = randvonMisesFisherm(nd-1, 1, kappa, mu);
 %     uh(1:2) = 0.2*(uh(1:2)./(abs(uh(1:2)) + realmin)); %make the dimensions at max. for translational velocity
     %create rotational component
     uh(3) = generate_rotation(xg(3), xr(3)); %essentially determines whether to tuen clockwise or anti-clockwise

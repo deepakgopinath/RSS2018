@@ -1,7 +1,7 @@
 function [ posterior ] = compute_bayes_R2( uh, xr, prior )
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
-    global ng
+    global ng;
     ll = likelihood_func(uh, xr);
     prior = prior + 0.01*rand(ng, 1); %to avoid collapse of posterior. 
     prior = prior/sum(prior);
@@ -10,7 +10,7 @@ function [ posterior ] = compute_bayes_R2( uh, xr, prior )
 end
 
 function likelihood = likelihood_func(uh, xr)
-    global ng xg;
+    global ng xg kappa;
     likelihood = zeros(ng, 1);
     if norm(uh)~=0
         uh = uh/norm(uh);
@@ -22,6 +22,7 @@ function likelihood = likelihood_func(uh, xr)
         dir_vec = xg(:, i) - xr; %vector joining the robot position and the goal_x. 
         dir_vec = dir_vec/norm(dir_vec); %as long as xr is not xg, this would be nonzero;
         likelihood(i) = p_of_u_given_g(uh, dir_vec);
+%         likelihood(i) = vonMisesFisherPdf(uh, dir_vec, kappa);
     end
 end
 

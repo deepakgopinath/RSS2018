@@ -1,12 +1,12 @@
 % clear all; close all; clc;
 %% 
-%workspace limits
+%workspace limit
 xrange = [-0.5, 0.5];
 yrange = [-0.5, 0.5];
 zrange = [-0.5, 0.5];
 
 %global variables. 
-global num_modes cm ng nd xg xr sig delta_t conf_thresh conf_max alpha_max sparsity_factor amp_sparsity_factor kappa projection_time;
+global num_modes cm ng nd xg xr sig delta_t conf_thresh conf_max alpha_max num_samples sparsity_factor amp_sparsity_factor kappa projection_time;
 
 %workspace params.
 % ng = 3; %num of goals
@@ -27,7 +27,7 @@ xr = [rand(1,1)*range(xrange) + xrange(1); rand(1,1)*range(yrange) + yrange(1); 
 xr_true = xr;
 
 %human parameters
-sparsity_factor = rand/4;
+sparsity_factor = rand/8;
 amp_sparsity_factor = rand/8; % how often the amplitude wiull be less that maximum. 
 kappa = 20.0; % concentration paarameter for vonMisesFisher distribution
 fprintf('The sparsity and amp factor are %f, %f\n', sparsity_factor, amp_sparsity_factor);
@@ -37,7 +37,7 @@ sig = 0.01; %For Fisher information
 %% Projection paramaters
 projection_time = 4;
 delta_t = 0.1; %For compute projections. 
-
+num_samples = 5;
 %% simulation params
 mode_comp_timesteps = 10; %time step gap between optimal mode computation. delta_t*mode_comp_timesteps is the time in seconds
 exit_threshold = 0.02;
@@ -404,7 +404,11 @@ end
 function uh = generate_full_uh(xg, xr) %full unnomralized uh
     global nd sparsity_factor kappa;
     mu = xg - xr;
-    uh = randvonMisesFisherm(nd, 1, kappa, mu);
+    if ~any(mu)
+        uh = zeros(nd, 1);
+    else
+        uh = randvonMisesFisherm(nd, 1, kappa, mu);
+    end
     %add sparsity
     if rand < sparsity_factor
         uh = zeros(nd, 1);

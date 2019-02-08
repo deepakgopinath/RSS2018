@@ -6,7 +6,7 @@ xrange = [-0.5, 0.5];
 yrange = [-0.5, 0.5];
 th_range = [0, 2*pi]; %counter clockwise rotation with 0 as x-axis aligned with left-right directions of the plane. 
 
-global num_modes cm ng nd xg xr sig delta_t conf_thresh conf_max alpha_max sparsity_factor amp_sparsity_factor kappa projection_time;
+global num_modes cm ng nd xg xr sig delta_t conf_thresh conf_max alpha_max sparsity_factor num_samples amp_sparsity_factor kappa projection_time;
 max_ng = 6;
 ng = datasample(3:max_ng, 1); %spawn random number of goals. Maximum number is 6. At least 
 nd = 3; %num of dimensions. by definition SE2
@@ -21,7 +21,7 @@ xr = [rand(1,1)*range(xrange) + xrange(1); rand(1,1)*range(yrange) + yrange(1); 
 xr_true = xr;
 
 %human parameters
-sparsity_factor = rand/4.0;
+sparsity_factor = rand/8;
 amp_sparsity_factor = rand/8; % how often the amplitude wiull be less that maximum. 
 kappa = 20.0; % concentration paarameter for vonMisesFisher distribution
 fprintf('The sparsity and amp factor are %f, %f\n', sparsity_factor, amp_sparsity_factor);
@@ -31,7 +31,7 @@ sig = 0.01; %For Fisher information
 %% Projection paramaters
 projection_time = 4;
 delta_t = 0.1; %For compute projections. 
-
+num_samples = 5;
 %% simulation params
 mode_comp_timesteps = 10; %time step gap between optimal mode computation. delta_t*mode_comp_timesteps is the time in seconds
 exit_threshold = 0.02;
@@ -115,8 +115,8 @@ for i=1:total_time_steps-1
         uh(zero_dim(jj)) = 0;
     end
 %     uh = 0.2*(uh./(abs(uh) + realmin));
-    if norm(uh) > 0.2
-        uh = 0.2*(uh./(norm(uh) + realmin));
+    if norm(uh(1:2)) > 0.2
+        uh(1:2) = 0.2*(uh(1:2)./(norm(uh(1:2)) + realmin));
     end
     if rand < amp_sparsity_factor
         uh = rand*uh;
@@ -186,8 +186,8 @@ for i=1:total_time_steps-1
         uh(zero_dim(jj)) = 0;
     end
 %     uh = 0.2*(uh./(abs(uh) + realmin));
-    if norm(uh) > 0.2
-        uh = 0.2*(uh./(norm(uh) + realmin));
+    if norm(uh(1:2)) > 0.2
+        uh(1:2) = 0.2*(uh(1:2)./(norm(uh(1:2)) + realmin));
     end
     if rand < amp_sparsity_factor
         uh = rand*uh;
@@ -252,8 +252,8 @@ for i=1:total_time_steps-1
         uh(zero_dim(jj)) = 0;
     end
 %     uh = 0.2*(uh./(abs(uh) + realmin));
-    if norm(uh) > 0.2
-        uh = 0.2*(uh./(norm(uh) + realmin));
+    if norm(uh(1:2)) > 0.2
+        uh(1:2) = 0.2*(uh(1:2)./(norm(uh(1:2)) + realmin));
     end
     if rand < amp_sparsity_factor
         uh = rand*uh;
@@ -375,8 +375,8 @@ for i=1:total_time_steps-1
         uh(zero_dim(jj)) = 0;
     end
 %     uh = 0.2*(uh./(abs(uh) + realmin));
-    if norm(uh) > 0.2
-        uh = 0.2*(uh./(norm(uh) + realmin));
+    if norm(uh(1:2)) > 0.2
+        uh(1:2) = 0.2*(uh(1:2)./(norm(uh(1:2)) + realmin));
     end
     if rand < amp_sparsity_factor
         uh = rand*uh;
@@ -449,7 +449,11 @@ function uh = generate_full_uh(xg, xr) %full unnomralized uh
     uh =  zeros(nd, 1); %initialize with zero
 %   uh(1:2) = xg(1:2) - xr(1:2);
     mu = xg(1:2) - xr(1:2);
-    uh(1:2) = randvonMisesFisherm(nd-1, 1, kappa, mu);
+    if ~any(mu)
+        uh(1:2) = zeros(nd-1, 1);
+    else
+        uh(1:2) = randvonMisesFisherm(nd-1, 1, kappa, mu);
+    end
     %create rotational component
     uh(3) = generate_rotation(xg(3), xr(3)); %essentially determines whether to tuen clockwise or anti-clockwise
     %incorporate accidental wrong direction rotation?
