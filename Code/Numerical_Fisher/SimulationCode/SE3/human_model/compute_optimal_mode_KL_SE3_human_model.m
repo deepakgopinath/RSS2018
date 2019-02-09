@@ -19,6 +19,9 @@ for i=1:length(cm)
         EID_AR(i) = EID_AR(i) + (1/ng)*expected_projected_kl;
     end
 end
+if any(imag(EID_AR))
+    disp(EID_AR);
+end
 best_mode = compute_best_mode(EID_AR);
 end
 
