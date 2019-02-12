@@ -1,5 +1,5 @@
 clear all; close all; clc;
-%% REACHING TASK (5) WITH JOYSTICK (5) HOME(3). SCRIPT TO GENERATE AND DISTRIBUTE ALL POSSIBLE (GOAL, HOME, STARTING MODE) COMBO. 
+%% REACHING TASK (5) WITH JOYSTICK (4) HOME(3). SCRIPT TO GENERATE AND DISTRIBUTE ALL POSSIBLE (GOAL, HOME, STARTING MODE) COMBO. 
 
 tpi = 8; %num trails for each interface
 num_sub = 32;
@@ -21,12 +21,12 @@ combi_list_rj = reshape(combi_list_rj, tpi, num_sub);
 % 
 % combi_list_rj = randperm(total_combinations_rj, total_trials_rj)';
 % combi_list_rj = reshape(combi_list_rj, tpi, num_sub);
-%% REACH TASK (5) WITH HA (7) HOME(3). SCRIPT TO GENERATE AND DISTRIBUTE ALL POSSIBLE (GOAL, HOME, STARTING MODE) COMBO.
+%% REACH TASK (5) WITH HA (6) HOME(3). SCRIPT TO GENERATE AND DISTRIBUTE ALL POSSIBLE (GOAL, HOME, STARTING MODE) COMBO.
 tpi = 8; %num trails for each interface
 % num_sub = 8;
 total_trials_rha = num_sub*tpi;
 num_goal_r = 5; %for reaching
-num_modes_ha = 6; %for joystick
+num_modes_ha = 6; %for headarray
 num_home = 3;
 total_combinations_rha = num_goal_r*num_modes_ha*num_home; %1:total_combinations have a unique map between the index and the (goal, home, starting mode) tuple.
 g_h_sm_combinations_rha = allcomb(1:num_goal_r, 1:num_home, 1:num_modes_ha);
