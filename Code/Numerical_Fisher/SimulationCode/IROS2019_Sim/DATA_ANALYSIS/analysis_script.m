@@ -50,8 +50,8 @@ for i=1:length(spaceList) %R2, R3, SE2, SE3
     x = []; cond = {}; maxx = zeros(length(condList), 1);
     for j=1:length(condList)
         fprintf('THE COND IS %s\n', condList{j});
-%         col = data(before_timeout_trials(:,j,i) == 1, j); %only those trials that did not timeout. 
-        col = data(:, j);
+        col = data(before_timeout_trials(:,j,i) == 1, j); %only those trials that did not timeout. 
+%         col = data(:, j);
         col(col == -999) = [];
         maxx(j) = max(col(:));
         x = [x; col(:)]; cond = cat(1, cond, cellstr(repmat(condList{j}, length(col), 1 )));
@@ -72,7 +72,7 @@ for i=1:length(spaceList) %R2, R3, SE2, SE3
     axis([xlim    0  ceil(max(yt)*1.2)]); hold on;
 %     plot(xt([1 3]), [1 1]*max(yt)*1.1, '-k',  [0.9, 1,1.1]*mean(xt([1 3])), [1,1,1]*max(yt)*1.15, '*k')
     for j=1:length(pvalues)
-        if pvalues(j) < 0.001
+        if pvalues(j) < 0.001   
             xtl = c(j, 1); xth = c(j, 2); yval = max(maxx(xtl), maxx(xth));
             plot([xtl, xth], [1 1]*yval*(1.02 + j*0.04), '-k', [mean([xtl, xth]) - 0.07, mean([xtl, xth]), mean([xtl, xth]) + 0.07], [1,1,1]*yval*(1.04 + j*0.04), '*k');
         elseif pvalues(j) < 0.05
@@ -129,6 +129,7 @@ bins = 25;
 
 %% Amount of time assistance is present when inference is correct and task is completed. 
 bins = 25;
+figure;
 for i=1:length(spaceList)
     data = percentage_alpha(:, :, i);
     fprintf('*****************\n');
@@ -137,8 +138,8 @@ for i=1:length(spaceList)
      x = []; cond = {}; maxx = zeros(length(condList), 1);
     for j=1:length(condList)
         fprintf('THE COND IS %s\n', condList{j});
-%         col = data(before_timeout_trials(:,j,i) == 1, j); %only those trials that did not timeout.
-        col = data(:, j);
+        col = data(before_timeout_trials(:,j,i) == 1, j); %only those trials that did not timeout.
+%         col = data(:, j);
         col(col == -999) = [];
         maxx(j) = max(col(:));
         x = [x; col(:)]; cond = cat(1, cond, cellstr(repmat(condList{j}, length(col), 1 )));
@@ -193,8 +194,8 @@ for i=1:length(spaceList)
     x = []; cond = {}; maxx = zeros(length(condList), 1);
     for j=1:length(condList)
         fprintf('THE COND IS %s\n', condList{j});
-%         col = data(before_timeout_trials(:,j,i) == 1, j);
-        col = data(:, j);
+        col = data(before_timeout_trials(:,j,i) == 1, j);
+%         col = data(:, j);
         col(col == -999) = [];
         x = [x; col(:)]; cond = cat(1, cond, cellstr(repmat(condList{j}, length(col), 1 )));
         maxx(j) = max(col(:));
@@ -237,8 +238,8 @@ for i=1:length(spaceList)
      x = []; cond = {}; maxx = zeros(length(condList), 1);
     for j=1:length(condList)
         fprintf('THE COND IS %s\n', condList{j});
-%         col = data(before_timeout_trials(:,j,i) == 1, j); %only those trials that did not timeout.
-        col = data(:, j);
+        col = data(before_timeout_trials(:,j,i) == 1, j); %only those trials that did not timeout.
+%         col = data(:, j);
         col(col == -999) = [];
         x = [x; col(:)]; cond = cat(1, cond, cellstr(repmat(condList{j}, length(col), 1 )));
         maxx(j) = max(col(:));

@@ -58,7 +58,7 @@ for ii=1:N
    tic;
    fprintf('SE2 sim run %d\n', ii);
    SimulateTraj_SE2_With_Blending;
-   filename = strcat('SE2_DATA/RUN_3_DATASE2_', num2str(ii), '.mat');
+   filename = strcat('SE2_DATA/RUN_5_DATASE2_', num2str(ii), '.mat');
    save(filename, 'ng', 'nd', 'cm', 'num_modes', 'xg', 'xr_true', 'intent_type', 'random_goal_index');
    for jj=1:length(vars)
         for kk=1:length(types)
@@ -78,7 +78,7 @@ end
 N= 800;
 vars = {'alpha_', 'curr_goal_', 'optimal_modes_', 'pgs_', 'traj_', 'uh_', 'ur_', 'blend_vel_'};
 types = {'POT', 'ENT', 'KL', 'DISAMB'};
-for ii=143:N
+for ii=1:N
     tic;
     %define global variables
    fprintf('SE3 sim run %d\n', ii);
