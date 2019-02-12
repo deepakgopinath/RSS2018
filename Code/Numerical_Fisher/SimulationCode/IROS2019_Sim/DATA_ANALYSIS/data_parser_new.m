@@ -8,7 +8,7 @@ cm_options_per_space{2} = {{1,2,3}, {[1,2], 3}};
 cm_options_per_space{3} = {{1,2,3}, {[1,2], 3}};
 cm_options_per_space{4} = {{1,2,3,4,5,6}, {[1,2,3], [4,5,6]}, {[1,2],[1,3],[4,5],6}, {[1,2],[1,3],[4,5],[4,6]}};
 delta_t = 0.1;
-total_subjects = 4000;
+total_subjects = 800;
 
 %% types of data to be looked at
 
@@ -72,35 +72,42 @@ for i=1:length(spaceList)
         
         if i < 3
             trans_nd = size(traj_POT, 1);
+            straight_line_dist = norm(xg(:, random_goal_index) - traj_KL(:, 1));
         elseif i==3
             trans_nd = 2;
+            straight_line_dist = norm(xg(1:2, random_goal_index) - traj_KL(1:2, 1));
         elseif i == 4
             trans_nd = 3;
+            straight_line_dist = norm(xg_T(1:3, 4, random_goal_index) - traj_KL{1}(1:3, 4));
         end
         if i < 4
             l_traj = 0.0;
             for traj_i=1:size(traj_POT, 2) - 1
                l_traj = l_traj + norm(traj_POT(1:trans_nd, traj_i+1) - traj_POT(1:trans_nd, traj_i));
             end
-            trajectory_length(k, 1, i) = l_traj;
+            trajectory_length(k, 1, i) = straight_line_dist/l_traj;
 
             l_traj = 0.0;
             for traj_i=1:size(traj_ENT, 2) - 1
                l_traj = l_traj + norm(traj_ENT(1:trans_nd, traj_i+1) - traj_ENT(1:trans_nd, traj_i));
             end
-            trajectory_length(k, 2, i) = l_traj;
+            trajectory_length(k, 2, i) = straight_line_dist/l_traj;
+            if l_traj == 0
+                disp(l_traj);
+                trajectory_length(k, 2, i) = -999;
+            end
 
             l_traj = 0.0;
             for traj_i=1:size(traj_KL, 2) - 1
                l_traj = l_traj + norm(traj_KL(1:trans_nd, traj_i+1) - traj_KL(1:trans_nd, traj_i));
             end
-            trajectory_length(k, 3, i) = l_traj;
+            trajectory_length(k, 3, i) = straight_line_dist/l_traj;
 
             l_traj = 0.0;
             for traj_i=1:size(traj_DISAMB, 2) - 1
                l_traj = l_traj + norm(traj_DISAMB(1:trans_nd, traj_i+1) - traj_DISAMB(1:trans_nd, traj_i));
             end
-            trajectory_length(k, 4, i) = l_traj;
+            trajectory_length(k, 4, i) = straight_line_dist/l_traj;
         else
             l_traj = 0.0;
             for traj_i=1:length(traj_POT)-1
@@ -108,7 +115,7 @@ for i=1:length(spaceList)
                 x_curr = traj_POT{i}(1:3, 4);
                 l_traj = l_traj + norm(x_next - x_curr);
             end
-            trajectory_length(k, 1, i) = l_traj;
+            trajectory_length(k, 1, i) = straight_line_dist/l_traj;
             
             l_traj = 0.0;
             for traj_i=1:length(traj_ENT)-1
@@ -116,7 +123,7 @@ for i=1:length(spaceList)
                 x_curr = traj_ENT{i}(1:3, 4);
                 l_traj = l_traj + norm(x_next - x_curr);
             end
-            trajectory_length(k, 2, i) = l_traj;
+            trajectory_length(k, 2, i) = straight_line_dist/l_traj;
             
             l_traj = 0.0;
             for traj_i=1:length(traj_KL)-1
@@ -124,7 +131,7 @@ for i=1:length(spaceList)
                 x_curr = traj_KL{i}(1:3, 4);
                 l_traj = l_traj + norm(x_next - x_curr);
             end
-            trajectory_length(k, 3, i) = l_traj;
+            trajectory_length(k, 3, i) = straight_line_dist/l_traj;
             
             l_traj = 0.0;
             for traj_i=1:length(traj_DISAMB)-1
@@ -132,7 +139,7 @@ for i=1:length(spaceList)
                 x_curr = traj_DISAMB{i}(1:3, 4);
                 l_traj = l_traj + norm(x_next - x_curr);
             end
-            trajectory_length(k, 4, i) = l_traj;
+            trajectory_length(k, 4, i) = straight_line_dist/l_traj;
         end
         
         %%
