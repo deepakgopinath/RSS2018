@@ -5,6 +5,7 @@ before_timeout_trials = ~(trajectory_time == 11.9); %all trials that did not tim
 title_list = {'R^2', 'R^3', 'SE(2)', 'SE(3)'};
 bins = 20;
 sps = cell(4,1);
+%%
 % for i=1:length(spaceList)
 %     data = trajectory_time(:, :, i);
 %     fprintf('*****************\n');
@@ -50,8 +51,8 @@ for i=1:length(spaceList) %R2, R3, SE2, SE3
     x = []; cond = {}; maxx = zeros(length(condList), 1);
     for j=1:length(condList)
         fprintf('THE COND IS %s\n', condList{j});
-        col = data(before_timeout_trials(:,j,i) == 1, j); %only those trials that did not timeout. 
-%         col = data(:, j);
+%         col = data(before_timeout_trials(:,j,i) == 1, j); %only those trials that did not timeout. 
+        col = data(:, j);
         col(col == -999) = [];
         maxx(j) = max(col(:));
         x = [x; col(:)]; cond = cat(1, cond, cellstr(repmat(condList{j}, length(col), 1 )));
@@ -138,8 +139,8 @@ for i=1:length(spaceList)
      x = []; cond = {}; maxx = zeros(length(condList), 1);
     for j=1:length(condList)
         fprintf('THE COND IS %s\n', condList{j});
-        col = data(before_timeout_trials(:,j,i) == 1, j); %only those trials that did not timeout.
-%         col = data(:, j);
+%         col = data(before_timeout_trials(:,j,i) == 1, j); %only those trials that did not timeout.
+        col = data(:, j);
         col(col == -999) = [];
         maxx(j) = max(col(:));
         x = [x; col(:)]; cond = cat(1, cond, cellstr(repmat(condList{j}, length(col), 1 )));
@@ -194,8 +195,8 @@ for i=1:length(spaceList)
     x = []; cond = {}; maxx = zeros(length(condList), 1);
     for j=1:length(condList)
         fprintf('THE COND IS %s\n', condList{j});
-        col = data(before_timeout_trials(:,j,i) == 1, j);
-%         col = data(:, j);
+%         col = data(before_timeout_trials(:,j,i) == 1, j);
+        col = data(:, j);
         col(col == -999) = [];
         x = [x; col(:)]; cond = cat(1, cond, cellstr(repmat(condList{j}, length(col), 1 )));
         maxx(j) = max(col(:));
@@ -228,7 +229,7 @@ for i=1:length(spaceList)
     end
 end
 %% Correct inference of goal when task is completed. 
-
+figure;
 bins = 25;
 for i=1:length(spaceList)
     data = percentage_correct_inference(:, :, i);
@@ -238,8 +239,8 @@ for i=1:length(spaceList)
      x = []; cond = {}; maxx = zeros(length(condList), 1);
     for j=1:length(condList)
         fprintf('THE COND IS %s\n', condList{j});
-        col = data(before_timeout_trials(:,j,i) == 1, j); %only those trials that did not timeout.
-%         col = data(:, j);
+%         col = data(before_timeout_trials(:,j,i) == 1, j); %only those trials that did not timeout.
+        col = data(:, j);
         col(col == -999) = [];
         x = [x; col(:)]; cond = cat(1, cond, cellstr(repmat(condList{j}, length(col), 1 )));
         maxx(j) = max(col(:));
