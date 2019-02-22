@@ -1,4 +1,4 @@
-\begin{thebibliography}{26}
+\begin{thebibliography}{23}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -18,11 +18,6 @@ Chris~L. Baker, Joshua~B. Tenenbaum, and Rebecca~R. Saxe.
 \newblock Goal inference as inverse planning.
 \newblock In \emph{\textit{Proceedings of the Cognitive Science Society}},
   2007.
-
-\bibitem[Baker et~al.(2009)Baker, Saxe, and Tenenbaum]{baker2009action}
-Chris~L. Baker, Rebecca~R. Saxe, and Joshua~B. Tenenbaum.
-\newblock Action understanding as inverse planning.
-\newblock \emph{\textit{Cognition}}, 113\penalty0 (3):\penalty0 329--349, 2009.
 
 \bibitem[Calli et~al.(2015)Calli, Singh, Walsman, Srinivasa, Abbeel, and
   Dollar]{calli2015ycb}
@@ -84,11 +79,6 @@ Mitchell~P LaPlante et~al.
   prevalence, payment, need, and trends.
 \newblock \emph{\textit{Advance Data from Vital and Health Statistics}}, 1992.
 
-\bibitem[Miller and Murphey(2013)]{miller2013trajectory}
-Lauren~M. Miller and Todd~D. Murphey.
-\newblock Trajectory optimization for continuous ergodic exploration.
-\newblock In \emph{\textit{American Control Conference (ACC)}}, 2013.
-
 \bibitem[Miller et~al.(2016)Miller, Silverman, MacIver, and
   Murphey]{miller2016ergodic}
 Lauren~M. Miller, Yonatan Silverman, Malcolm~A. MacIver, and Todd~D. Murphey.
@@ -126,19 +116,12 @@ Patrick~M Pilarski, Michael~R Dawson, Thomas Degris, Jason~P Carey, and
 \newblock In \emph{Biomedical Robotics and Biomechatronics (BioRob), 2012 4th
   IEEE RAS \& EMBS International Conference on}, pages 296--302. IEEE, 2012.
 
-\bibitem[Sadigh et~al.(2016{\natexlab{a}})Sadigh, Sastry, Seshia, and
+\bibitem[Sadigh et~al.(2016)Sadigh, Sastry, Seshia, and
   Dragan]{sadigh2016information}
 Dorsa Sadigh, S~Shankar Sastry, Sanjit~A Seshia, and Anca Dragan.
 \newblock Information gathering actions over human internal state.
 \newblock In \emph{\textit{Proceedings of the IEEE/RSJ International Conference
-  on Intelligent Robots and Systems (IROS)}}, pages 66--73. IEEE,
-  2016{\natexlab{a}}.
-
-\bibitem[Sadigh et~al.(2016{\natexlab{b}})Sadigh, Sastry, Seshia, and
-  Dragan]{sadigh2016planning}
-Dorsa Sadigh, Shankar Sastry, Sanjit~A Seshia, and Anca~D Dragan.
-\newblock Planning for autonomous cars that leverage effects on human actions.
-\newblock In \emph{\textit{Robotics: Science and Systems}}, 2016{\natexlab{b}}.
+  on Intelligent Robots and Systems (IROS)}}, pages 66--73. IEEE, 2016.
 
 \bibitem[Sch{\"o}ner(2008)]{schoner2008dynamical}
 Gregor Sch{\"o}ner.
