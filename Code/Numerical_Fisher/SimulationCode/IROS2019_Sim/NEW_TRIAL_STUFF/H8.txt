@@ -1,0 +1,35 @@
+Tasks 	 Inter 	 Assis 	 Goal 	 Home 	 InitM
+p		 j		 pot		 3		 3		 0
+p		 j		 pot		 2		 2		 0
+p		 j		 pot		 1		 2		 1
+p		 j		 pot		 4		 2		 1
+p		 j		 kld		 1		 1		 1
+p		 j		 kld		 1		 1		 2
+p		 j		 kld		 1		 1		 0
+p		 j		 kld		 1		 1		 0
+p		 h		 pot		 4		 1		 2
+p		 h		 pot		 3		 2		 1
+p		 h		 pot		 1		 1		 0
+p		 h		 pot		 2		 1		 2
+p		 h		 kld		 1		 2		 0
+p		 h		 kld		 1		 1		 1
+p		 h		 kld		 4		 2		 0
+p		 h		 kld		 3		 1		 5
+################################
+################################
+r		 j		 pot		 5		 1		 0
+r		 j		 pot		 5		 2		 3
+r		 j		 pot		 4		 2		 3
+r		 j		 pot		 2		 1		 2
+r		 j		 kld		 3		 1		 1
+r		 j		 kld		 2		 1		 3
+r		 j		 kld		 5		 1		 1
+r		 j		 kld		 3		 3		 2
+r		 h		 pot		 5		 2		 3
+r		 h		 pot		 5		 3		 4
+r		 h		 pot		 3		 1		 1
+r		 h		 pot		 3		 1		 5
+r		 h		 kld		 1		 3		 3
+r		 h		 kld		 2		 3		 1
+r		 h		 kld		 2		 2		 0
+r		 h		 kld		 1		 2		 5

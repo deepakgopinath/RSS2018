@@ -46,14 +46,15 @@ end
 %% CREATE WITHOUT (1) AND ONDEMAND (2) COMBINATION WITH 3+5 RATIO.
 % FOR EACH SUBJECT THERE WILL BE 4 (3+5) COMBINATION. 4 COMES FROM EACH
 % TASK/INTERFACE COMBINATION. 
-condition_list = [1,1,1,2,2,2,2,2]';
+condition_list = [1,1,1,1,2,2,2,2]';
 
 condition_order_subs = cell(tps, num_sub);
 condition_order_list = zeros(tps, num_sub);
 for i=1:num_sub
     for j=1:length(assis)*length(interfaces)
-        cdl = condition_list(randperm(length(condition_list)), 1);
-        cdl = cdl(randperm(length(cdl)), 1);
+%         cdl = condition_list(randperm(length(condition_list)), 1);
+%         cdl = cdl(randperm(length(cdl)), 1);
+        cdl = condition_list(:, 1);
         condition_order_list((j-1)*trials + 1:j*trials ,i) = cdl;
     end
 end
