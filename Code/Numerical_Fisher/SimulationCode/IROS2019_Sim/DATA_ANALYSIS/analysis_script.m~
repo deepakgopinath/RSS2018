@@ -260,7 +260,6 @@ for i=1:length(spaceList)
     xt = get(sps{i}, 'XTick');
     yt = get(sps{i}, 'YTick');
     axis([xlim    0  ceil(max(yt)*1.3)]); hold on;
-    axis([xlim    0  1.5]); hold on;
 %     plot(xt([1 3]), [1 1]*max(yt)*1.1, '-k',  [0.9, 1,1.1]*mean(xt([1 3])), [1,1,1]*max(yt)*1.15, '*k')
 %     for j=1:length(pvalues)
 %         if pvalues(j) < 0.001
@@ -275,12 +274,12 @@ for i=1:length(spaceList)
 %         end
 %     end
     for j=1:length(pvalues)
-        if pvalues(j) < 0.001   
+        if pvalues(j) < 0.001
             xtl = c(j, 1); xth = c(j, 2); yval = max(maxx(xtl), maxx(xth));
-            plot([xtl, xth], [1 1]*yval*(1.02 + j*0.04), '-k', [mean([xtl, xth]) - 0.1, mean([xtl, xth]), mean([xtl, xth]) + 0.1], [1,1,1]*yval*(1.04 + j*0.04), '*k');
+            plot([xtl, xth], [1 1]*yval*(1.02 + j*0.04), '-k', [mean([xtl, xth]) - 0.07, mean([xtl, xth]), mean([xtl, xth]) + 0.07], [1,1,1]*yval*(1.04 + j*0.04), '*k');
         elseif pvalues(j) < 0.05
             xtl = c(j, 1); xth = c(j, 2); yval = max(maxx(xtl), maxx(xth));
-            plot([xtl, xth], [1 1]*yval*(1.02 + j*0.04), '-k', [mean([xtl, xth]) - 0.035, mean([xtl, xth]) + 0.035], [1,1]*yval*(1.04+ j*0.04), '*k');
+            plot([xtl, xth], [1 1]*yval*(1.02 + j*0.04), '-k', [mean([xtl, xth]) - 0.035, mean([xtl, xth]) + 0.02], [1,1]*yval*(1.04+ j*0.04), '*k');
         elseif pvalues(j) < 0.01
             xtl = c(j, 1); xth = c(j, 2); yval = max(maxx(xtl), maxx(xth));
             plot([xtl, xth], [1 1]*yval*(1.02 + j*0.04), '-k', mean([xtl, xth]), yval*(1.04 + j*0.04), '*k');

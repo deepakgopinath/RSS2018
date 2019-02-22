@@ -1,14 +1,14 @@
 clear all; close all; clc;
 %%
 spaceList = {'R22', 'R33', 'SE2', 'SE3'}; %R2, R3, SE2, SE3
-condList = {'POT', 'ENT', 'KL', 'DISAMB'};
+condList = {'GRD', 'ENT', 'KL', 'HEU'};
 cm_options_per_space = cell(4, 1);
 cm_options_per_space{1} = {{1,2}};
 cm_options_per_space{2} = {{1,2,3}, {[1,2], 3}};
 cm_options_per_space{3} = {{1,2,3}, {[1,2], 3}};
 cm_options_per_space{4} = {{1,2,3,4,5,6}, {[1,2,3], [4,5,6]}, {[1,2],[1,3],[4,5],6}, {[1,2],[1,3],[4,5],[4,6]}};
 delta_t = 0.1;
-total_subjects = 800;
+total_subjects = 8000;
 
 %% types of data to be looked at
 
