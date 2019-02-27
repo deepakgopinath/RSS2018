@@ -1,0 +1,16 @@
+\BOOKMARK [1][-]{section.1}{INTRODUCTION}{}% 1
+\BOOKMARK [1][-]{section.2}{RELATED WORK}{}% 2
+\BOOKMARK [1][-]{section.3}{MATHEMATICAL FRAMEWORK}{}% 3
+\BOOKMARK [2][-]{subsection.3.1}{Entropy and Mutual Information}{section.3}% 4
+\BOOKMARK [2][-]{subsection.3.2}{Transfer Entropy}{section.3}% 5
+\BOOKMARK [2][-]{subsection.3.3}{Estimation from Data}{section.3}% 6
+\BOOKMARK [1][-]{section.4}{HUMAN-ROBOT INTERACTON IN SHARED AUTONOMY}{}% 7
+\BOOKMARK [2][-]{subsection.4.1}{Shared Control}{section.4}% 8
+\BOOKMARK [2][-]{subsection.4.2}{Components of Shared-Control System}{section.4}% 9
+\BOOKMARK [2][-]{subsection.4.3}{Argument for Information Theoretic Approaches}{section.4}% 10
+\BOOKMARK [1][-]{section.5}{EXPERIMENTAL EVALUATION}{}% 11
+\BOOKMARK [2][-]{subsection.5.1}{Hardware, Tasks and Protocol}{section.5}% 12
+\BOOKMARK [2][-]{subsection.5.2}{Data Analysis}{section.5}% 13
+\BOOKMARK [1][-]{section.6}{RESULTS}{}% 14
+\BOOKMARK [1][-]{section.7}{DISCUSSION}{}% 15
+\BOOKMARK [1][-]{section.8}{CONCLUSION}{}% 16

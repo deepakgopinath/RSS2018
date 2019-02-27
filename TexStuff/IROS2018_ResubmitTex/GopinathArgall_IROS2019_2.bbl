@@ -1,17 +1,9 @@
-\begin{thebibliography}{23}
+\begin{thebibliography}{19}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
-
-\bibitem[Atanasov et~al.(2014)Atanasov, Le~Ny, Daniilidis, and
-  Pappas]{atanasov2014information}
-Nikolay Atanasov, Jerome Le~Ny, Kostas Daniilidis, and George~J. Pappas.
-\newblock Information acquisition with sensing robots: Algorithms and error
-  bounds.
-\newblock In \emph{\textit{Proceedings of the IEEE International Conference on
-  Robotics and Automation (ICRA)}}, 2014.
 
 \bibitem[Baker et~al.(2007)Baker, Tenenbaum, and Saxe]{baker2007goal}
 Chris~L. Baker, Joshua~B. Tenenbaum, and Rebecca~R. Saxe.
@@ -102,20 +94,6 @@ Anusha Nagabandi, Gregory Kahn, Ronald~S Fearing, and Sergey Levine.
   with model-free fine-tuning.
 \newblock \emph{arXiv preprint arXiv:1708.02596}, 2017.
 
-\bibitem[Omitted(Under {R}eview)]{gopinath2017disamb}
-Authors Omitted.
-\newblock Disambiguation of human intent through control space selection.
-\newblock \emph{\textit{Autonomous Robots}}, Under {R}eview.
-
-\bibitem[Pilarski et~al.(2012)Pilarski, Dawson, Degris, Carey, and
-  Sutton]{pilarski2012dynamic}
-Patrick~M Pilarski, Michael~R Dawson, Thomas Degris, Jason~P Carey, and
-  Richard~S Sutton.
-\newblock Dynamic switching and real-time machine learning for improved human
-  control of assistive biomedical robots.
-\newblock In \emph{Biomedical Robotics and Biomechatronics (BioRob), 2012 4th
-  IEEE RAS \& EMBS International Conference on}, pages 296--302. IEEE, 2012.
-
 \bibitem[Sadigh et~al.(2016)Sadigh, Sastry, Seshia, and
   Dragan]{sadigh2016information}
 Dorsa Sadigh, S~Shankar Sastry, Sanjit~A Seshia, and Anca Dragan.
@@ -154,14 +132,5 @@ Simon Tong and Daphne Koller.
 \newblock Active learning for parameter estimation in {B}ayesian networks.
 \newblock In \emph{Advances in neural information processing systems}, pages
   647--653, 2001.
-
-\bibitem[Wang et~al.(2013)Wang, M{\"u}lling, Deisenroth, Ben~Amor, Vogt,
-  Sch{\"o}lkopf, and Peters]{wang2013probabilistic}
-Zhikun Wang, Katharina M{\"u}lling, Marc~Peter Deisenroth, Heni Ben~Amor, David
-  Vogt, Bernhard Sch{\"o}lkopf, and Jan Peters.
-\newblock Probabilistic movement modeling for intention inference in
-  human--robot interaction.
-\newblock \emph{\textit{The International Journal of Robotics Research}},
-  32\penalty0 (7):\penalty0 841--858, 2013.
 
 \end{thebibliography}

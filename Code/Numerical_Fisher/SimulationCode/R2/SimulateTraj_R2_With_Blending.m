@@ -114,7 +114,7 @@ for i=1:total_time_steps-1
     uh = generate_full_uh(random_goal, xr); %noisy uh. Change gaussian sigma in the generate_full_uh accordingly. 
     zero_dim = setdiff(1:nd,current_optimal_mode_POT); %zero out the nonavailable control modes. 
     for jj=1:length(zero_dim)
-        uh(zero_dim(jj)) = 0;
+        uh(zero_dim(jj)) = 0;   
     end
     %normalize
     if norm(uh) > 0.2

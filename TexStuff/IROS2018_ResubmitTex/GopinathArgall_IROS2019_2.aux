@@ -28,7 +28,6 @@
 \citation{baker2007goal}
 \citation{taha2011pomdp}
 \citation{herlant2016assistive}
-\citation{pilarski2012dynamic}
 \citation{calli2015ycb}
 \@writefile{toc}{\contentsline {section}{\numberline {II}Related Work}{2}{section.2}}
 \newlabel{sec:related_work}{{II}{2}{Related Work}{section.2}{}}
@@ -53,7 +52,6 @@
 \citation{dragan2013policy}
 \citation{dragan2012formalizing}
 \citation{schoner2008dynamical}
-\citation{gopinath2017disamb}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-D}}Entropy Disambiguation Metric}{4}{subsection.4.4}}
 \newlabel{sssec:ent}{{\unhbox \voidb@x \hbox {IV-D}}{4}{Entropy Disambiguation Metric}{subsection.4.4}{}}
 \newlabel{eq:ent}{{8}{4}{Entropy Disambiguation Metric}{equation.4.8}{}}
@@ -77,20 +75,22 @@
 \newlabel{ssec:shared-control}{{\unhbox \voidb@x \hbox {VI-A}}{5}{Shared Control}{subsection.6.1}{}}
 \newlabel{sssec:autonomy}{{\unhbox \voidb@x \hbox {VI-A}1}{5}{Robot Autonomy}{subsubsection.6.1.1}{}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {VI-A}1}Robot Autonomy}{5}{subsubsection.6.1.1}}
-\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Randomized Factors for Each Simulation Trial}}{5}{table.1}}
-\newlabel{tbl:manip}{{I}{5}{Randomized Factors for Each Simulation Trial}{table.1}{}}
 \newlabel{sssec:blending}{{\unhbox \voidb@x \hbox {VI-A}2}{5}{Blending Paradigm}{subsubsection.6.1.2}{}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {VI-A}2}Blending Paradigm}{5}{subsubsection.6.1.2}}
+\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Randomized Factors for Each Simulation Trial}}{5}{table.1}}
+\newlabel{tbl:manip}{{I}{5}{Randomized Factors for Each Simulation Trial}{table.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Predefined control space partition sets for each of the simulation spaces. The numbers in the control mode sets indicate the dimensions. }}{5}{table.2}}
+\newlabel{tbl:cmp}{{II}{5}{Predefined control space partition sets for each of the simulation spaces. The numbers in the control mode sets indicate the dimensions}{table.2}{}}
 \newlabel{sssec:baseline}{{\unhbox \voidb@x \hbox {VI-A}3}{5}{Maximum Potential Mode Switch Assistance}{subsubsection.6.1.3}{}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {VI-A}3}Maximum Potential Mode Switch Assistance}{5}{subsubsection.6.1.3}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {VI-B}}Point Robot Simulation Setup}{5}{subsection.6.2}}
 \newlabel{ssec:sim}{{\unhbox \voidb@x \hbox {VI-B}}{5}{Point Robot Simulation Setup}{subsection.6.2}{}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {VI-B}1}Robot Workspace}{5}{subsubsection.6.2.1}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {VI-B}2}Mode Switch Schemes}{5}{subsubsection.6.2.2}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {VI-B}3}$\boldsymbol  {u}_r$ and $\boldsymbol  {u}_h$}{5}{subsubsection.6.2.3}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {VI-B}4}Metrics}{5}{subsubsection.6.2.4}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {VI-B}3}$\boldsymbol  {u}_r$ and $\boldsymbol  {u}_h^{sim}$}{5}{subsubsection.6.2.3}}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Initial onset of assistance. Group differences between mode switch assistance schemes (GRD, ENT, KL, HEU), in four operational spaces $\mathbb  {R}^2$, $\mathbb  {R}^3$, $\mathbb  {SE}(2)$ and $\mathbb  {SE}(3)$. Box plots show the median and the quartiles.}}{6}{figure.1}}
 \newlabel{fig:initial_alpha}{{1}{6}{Initial onset of assistance. Group differences between mode switch assistance schemes (GRD, ENT, KL, HEU), in four operational spaces $\mathbb {R}^2$, $\mathbb {R}^3$, $\mathbb {SE}(2)$ and $\mathbb {SE}(3)$. Box plots show the median and the quartiles}{figure.1}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {VI-B}4}Metrics}{6}{subsubsection.6.2.4}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {VI-B}5}Simulation Protocol}{6}{subsubsection.6.2.5}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {VI-C}}Robotic Arm Simulation Setup}{6}{subsection.6.3}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Total amount of assistance. Group differences between mode switch assistance schemes (GRD, ENT, KL, HEU), in four operational spaces $\mathbb  {R}^2$, $\mathbb  {R}^3$, $\mathbb  {SE}(2)$ and $\mathbb  {SE}(3)$. Box plots show the median and the quartiles.}}{6}{figure.2}}
@@ -99,41 +99,36 @@
 \newlabel{sec:results}{{VII}{6}{Results}{section.7}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {VII-A}}Point Robot Simulation}{6}{subsection.7.1}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {VII-A}1}Initial Onset of Assistance}{6}{figure.3}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {VII-A}2}Amount of Total Assistance}{6}{subsubsection.7.1.2}}
-\citation{nagabandi2017neural}
-\citation{wang2013probabilistic}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Inference Accuracy. Group differences between mode switch assistance schemes (GRD, ENT, KL, HEU), in four operational spaces $\mathbb  {R}^2$, $\mathbb  {R}^3$, $\mathbb  {SE}(2)$ and $\mathbb  {SE}(3)$. Box plots show the median and the quartiles.}}{7}{figure.3}}
 \newlabel{fig:correct_inference}{{3}{7}{Inference Accuracy. Group differences between mode switch assistance schemes (GRD, ENT, KL, HEU), in four operational spaces $\mathbb {R}^2$, $\mathbb {R}^3$, $\mathbb {SE}(2)$ and $\mathbb {SE}(3)$. Box plots show the median and the quartiles}{figure.3}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {VII-A}2}Amount of Total Assistance}{7}{subsubsection.7.1.2}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {VII-A}3}Inference Accuracy}{7}{subsubsection.7.1.3}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {VII-B}}Robotic Arm Simulation}{7}{subsection.7.2}}
-\@writefile{toc}{\contentsline {section}{\numberline {VIII}Discussion}{7}{section.8}}
-\newlabel{sec:discussions}{{VIII}{7}{Discussion}{section.8}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Results with the simulated 6-DoF robotic arm. Top Left: Fraction of total time for which assistance towards the intended goal was engaged. Top Right: Accuracy of intent inference procedure measured in fraction of total trial time. Bottom: Onset of initial assistance as a fraction of total trial time. Statistical significance was computed using the Wilcoxon Rank-Sum test. }}{7}{figure.4}}
 \newlabel{fig:mico_results}{{4}{7}{Results with the simulated 6-DoF robotic arm. Top Left: Fraction of total time for which assistance towards the intended goal was engaged. Top Right: Accuracy of intent inference procedure measured in fraction of total trial time. Bottom: Onset of initial assistance as a fraction of total trial time. Statistical significance was computed using the Wilcoxon Rank-Sum test}{figure.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {VIII}Discussion}{7}{section.8}}
+\newlabel{sec:discussions}{{VIII}{7}{Discussion}{section.8}{}}
+\citation{nagabandi2017neural}
 \bibstyle{plainnat}
 \bibdata{references}
-\bibcite{atanasov2014information}{{1}{2014}{{Atanasov et~al.}}{{Atanasov, Le~Ny, Daniilidis, and Pappas}}}
-\bibcite{baker2007goal}{{2}{2007}{{Baker et~al.}}{{Baker, Tenenbaum, and Saxe}}}
-\bibcite{calli2015ycb}{{3}{2015}{{Calli et~al.}}{{Calli, Singh, Walsman, Srinivasa, Abbeel, and Dollar}}}
-\bibcite{croft2003estimating}{{4}{2003}{{Croft}}{{}}}
-\bibcite{dragan2012formalizing}{{5}{2012}{{Dragan and Srinivasa}}{{}}}
-\bibcite{dragan2013policy}{{6}{2013}{{Dragan and Srinivasa}}{{}}}
-\bibcite{gopinath2017mode}{{7}{2017}{{Gopinath and Argall}}{{}}}
-\bibcite{herlant2016assistive}{{8}{2016}{{Herlant et~al.}}{{Herlant, Holladay, and Srinivasa}}}
-\bibcite{khatib1986real}{{9}{1986}{{Khatib}}{{}}}
-\bibcite{kim2012autonomy}{{10}{2012}{{Kim et~al.}}{{Kim, Hazlett-Knudsen, Culver-Godfrey, Rucks, Cunningham, Portee, Bricout, Wang, and Behal}}}
-\bibcite{laplante1992assistive}{{11}{1992}{{LaPlante et~al.}}{{}}}
-\bibcite{miller2016ergodic}{{12}{2016}{{Miller et~al.}}{{Miller, Silverman, MacIver, and Murphey}}}
-\bibcite{muelling2017autonomy}{{13}{2017}{{Muelling et~al.}}{{Muelling, Venkatraman, Valois, Downey, Weiss, Javdani, Hebert, Schwartz, Collinger, and Bagnell}}}
-\bibcite{nagabandi2017neural}{{14}{2017}{{Nagabandi et~al.}}{{Nagabandi, Kahn, Fearing, and Levine}}}
-\bibcite{gopinath2017disamb}{{15}{Under {R}eview}{{Omitted}}{{}}}
-\bibcite{pilarski2012dynamic}{{16}{2012}{{Pilarski et~al.}}{{Pilarski, Dawson, Degris, Carey, and Sutton}}}
-\bibcite{sadigh2016information}{{17}{2016}{{Sadigh et~al.}}{{Sadigh, Sastry, Seshia, and Dragan}}}
-\bibcite{schoner2008dynamical}{{18}{2008}{{Sch{\"o}ner}}{{}}}
+\bibcite{baker2007goal}{{1}{2007}{{Baker et~al.}}{{Baker, Tenenbaum, and Saxe}}}
+\bibcite{calli2015ycb}{{2}{2015}{{Calli et~al.}}{{Calli, Singh, Walsman, Srinivasa, Abbeel, and Dollar}}}
+\bibcite{croft2003estimating}{{3}{2003}{{Croft}}{{}}}
+\bibcite{dragan2012formalizing}{{4}{2012}{{Dragan and Srinivasa}}{{}}}
+\bibcite{dragan2013policy}{{5}{2013}{{Dragan and Srinivasa}}{{}}}
+\bibcite{gopinath2017mode}{{6}{2017}{{Gopinath and Argall}}{{}}}
+\bibcite{herlant2016assistive}{{7}{2016}{{Herlant et~al.}}{{Herlant, Holladay, and Srinivasa}}}
+\bibcite{khatib1986real}{{8}{1986}{{Khatib}}{{}}}
+\bibcite{kim2012autonomy}{{9}{2012}{{Kim et~al.}}{{Kim, Hazlett-Knudsen, Culver-Godfrey, Rucks, Cunningham, Portee, Bricout, Wang, and Behal}}}
+\bibcite{laplante1992assistive}{{10}{1992}{{LaPlante et~al.}}{{}}}
+\bibcite{miller2016ergodic}{{11}{2016}{{Miller et~al.}}{{Miller, Silverman, MacIver, and Murphey}}}
+\bibcite{muelling2017autonomy}{{12}{2017}{{Muelling et~al.}}{{Muelling, Venkatraman, Valois, Downey, Weiss, Javdani, Hebert, Schwartz, Collinger, and Bagnell}}}
+\bibcite{nagabandi2017neural}{{13}{2017}{{Nagabandi et~al.}}{{Nagabandi, Kahn, Fearing, and Levine}}}
+\bibcite{sadigh2016information}{{14}{2016}{{Sadigh et~al.}}{{Sadigh, Sastry, Seshia, and Dragan}}}
+\bibcite{schoner2008dynamical}{{15}{2008}{{Sch{\"o}ner}}{{}}}
+\bibcite{simpson2008tooth}{{16}{2008}{{Simpson et~al.}}{{Simpson, Broughton, Gauthier, and Prochazka}}}
+\bibcite{taha2011pomdp}{{17}{2011}{{Taha et~al.}}{{Taha, Mir{\'o}, and Dissanayake}}}
+\bibcite{tomasello2007shared}{{18}{2007}{{Tomasello and Carpenter}}{{}}}
+\bibcite{tong2001active}{{19}{2001}{{Tong and Koller}}{{}}}
 \@writefile{toc}{\contentsline {section}{\numberline {IX}Conclusion}{8}{section.9}}
 \newlabel{sec:conclusions}{{IX}{8}{Conclusion}{section.9}{}}
-\bibcite{simpson2008tooth}{{19}{2008}{{Simpson et~al.}}{{Simpson, Broughton, Gauthier, and Prochazka}}}
-\bibcite{taha2011pomdp}{{20}{2011}{{Taha et~al.}}{{Taha, Mir{\'o}, and Dissanayake}}}
-\bibcite{tomasello2007shared}{{21}{2007}{{Tomasello and Carpenter}}{{}}}
-\bibcite{tong2001active}{{22}{2001}{{Tong and Koller}}{{}}}
-\bibcite{wang2013probabilistic}{{23}{2013}{{Wang et~al.}}{{Wang, M{\"u}lling, Deisenroth, Ben~Amor, Vogt, Sch{\"o}lkopf, and Peters}}}
