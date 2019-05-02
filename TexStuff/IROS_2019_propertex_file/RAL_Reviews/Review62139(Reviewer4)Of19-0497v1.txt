@@ -1,0 +1,52 @@
+This paper is an extension from the reference [21] by adding two
+additional user intent disambiguation algorithms, which utilize entropy
+and KL divergence, and compares them to a baseline algorithm (greedy)
+and an inversed legibility algorithm (heuristic). The major
+contributions of this paper is introducing the concept of information
+to the intention inference and tested its feasibility using simulation
+tests.
+
+
+The paper is well divided into sections and each section briefly but
+accurately writes down how the authors designed the algorithms and
+prepared the shared control system using a pin robot and a 6-DoF robot
+arm simulation. Sentences are written clearly and easy to understand.
+One unclear issue is the presence of Dynamic Neural Field (DNF)
+approaches. Because the KL and Entropy algorithm utilizes the intent
+inference algorithms of heuristic, Bayesian, and dynamic neural field
+approaches. The other two algorithms were applied in this paper, but
+the usage of the DNS approach is not explicitly written.
+
+
+Through this paper, most of terms are salient but I suggest changing
+one of those terms to improve the readability. For me, Total Amount of
+Assistance, read as the quantity while the value is the ratio between
+the assistance time to the total trial time in each trial. It depends
+on authors, but 'Assistance Rate' or 'Temporal Ratio of Assistance'
+could be candidates. I have the similar suggestion to the Y-axis labels
+in Figure 4. Also, the terms used in the text and the labels in the
+figure are not matched well that might induce low readability.
+
+
+My major concern in this paper is the unclear selection of test
+condition in the second experiment. The authors suggested two user
+intention disambiguation algorithms of ENT and KL, and ENT was always
+superior to KL in all metrics except for the onset time in R^3 and
+SE(2) and the total assistance in SE(2). The metrics to which ENT was
+superior to, the significance levels of them were high with p < 0.001.
+For SE(6) space, ENT was always superior to KL. 
+
+
+For the rigid experiment design, it is natural to compare the four
+methods in the robot-arm simulation as the authors did in the
+point-robot simulation because the actual autonomy is changed. If the
+authors intended to emphasize the quality of enhanced intention
+inference of the suggested methods, KL and ENT should be compared to
+GRD or ENT should be compared to GRD at least because it showed better
+performance. 
+
+
+Overall, the proposed method seems working with the point-robot
+simulations but it is unclear to convince readers for its feasibility
+to the 6DoF robotic arm. Therefore I cannot put this paper's
+contribution as high.

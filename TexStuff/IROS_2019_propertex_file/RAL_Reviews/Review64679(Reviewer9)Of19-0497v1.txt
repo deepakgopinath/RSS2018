@@ -1,0 +1,66 @@
+In this paper an information-based approach for human intent inference,
+based on the characterisation of control modes, is proposed.
+Furthermore, a control mode switching is proposed as a form of robot
+assistance to the human that maximally disambiguates the intent. Two
+methods are used to perform this: entropy and Kullback-Leibler (KL)
+divergence.
+
+Overall, the paper is interesting and gives a thorough evaluation of
+extensive simulation results which seem to be quite promising. 
+However, the paper is not well structured and clear. I often had
+difficulty understanding the content.
+
+It seems that the approach is specialised for a specific task, i.e. for
+a reaching task where goals are discrete. The authors claim that this
+type of task is the most common which seems to be an overstatement.
+There are many tasks in robot assistance or HRI that may benefit from
+assistance, e.g. obstacle avoidance, trajectory tracking, force
+tracking, etc. The authors are encouraged to discuss how does the
+proposed approach generalise to these tasks.
+
+The list of insights in the introduction rather seem to be assumptions.
+Is there a previous work on which you base your insights?
+
+Related work rather lists some scarce examples instead of being a
+structured summation of the most important works related to this paper.
+There are many approaches for intent inference found in the literature,
+see the works of e.g. Anca Dragan. Also, the related work should be
+linked to the present work in a meaningful way.
+
+It is unnecessary to devote the whole section to mathematical notation.
+It should only be a paragraph in the introduction. It is highly
+advisable to rather give a problem setting, with accompanying figure of
+the task considered where the notation is usefully presented.
+
+What is the difference between intent disambiguation and intent
+inference? Is the first understanding in which control mode is the
+system currently and the second is to which goal the operator intends
+to approach?
+
+Please list all the assumptions you impose on the problem in one place,
+e.g. that the human doesn't change the goal, that at any given time
+only one control mode can be activated, etc. Mentioning assumptions "on
+the fly" is not suitable.
+
+Can you explain what would happen with the proposed approach if there
+is an obstacle to a goal?
+
+Where are the results for the dynamic neural field approach?  A
+multitude of different approaches is proposed which is exceptionally
+confusing and it is very hard to follow what is relevant in this paper.
+Or to rephrase, how disambiguation, inference, and assistance concepts
+participate in the evaluation?
+
+The simulation environment, task, and the complete evaluation setup
+need to be thoroughly explained. Since the actual user study is
+missing, it is very important to describe in detail (with equations)
+how is the human simulated.
+
+Simulation video would be advisable.
+
+Minor comments:
+- In introduction: when different types of low-dimensional interfaces
+are listed, appropriate citations should follow.
+- Please provide a concrete example for control modes before the
+approach is proposed. The explanation at the end of III. B. is not
+sufficiently clear.
