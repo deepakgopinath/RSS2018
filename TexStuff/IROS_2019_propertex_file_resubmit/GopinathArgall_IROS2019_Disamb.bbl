@@ -1,0 +1,132 @@
+\begin{thebibliography}{10}
+\providecommand{\url}[1]{#1}
+\csname url@rmstyle\endcsname
+\providecommand{\newblock}{\relax}
+\providecommand{\bibinfo}[2]{#2}
+\providecommand\BIBentrySTDinterwordspacing{\spaceskip=0pt\relax}
+\providecommand\BIBentryALTinterwordstretchfactor{4}
+\providecommand\BIBentryALTinterwordspacing{\spaceskip=\fontdimen2\font plus
+\BIBentryALTinterwordstretchfactor\fontdimen3\font minus
+  \fontdimen4\font\relax}
+\providecommand\BIBforeignlanguage[2]{{%
+\expandafter\ifx\csname l@#1\endcsname\relax
+\typeout{** WARNING: IEEEtran.bst: No hyphenation pattern has been}%
+\typeout{** loaded for the language `#1'. Using the pattern for}%
+\typeout{** the default language instead.}%
+\else
+\language=\csname l@#1\endcsname
+\fi
+#2}}
+
+\bibitem{laplante1992assistive}
+M.~P. LaPlante \emph{et~al.}, ``Assistive technology devices and home
+  accessibility features: prevalence, payment, need, and trends.''
+  \emph{\textit{Advance Data from Vital and Health Statistics}}, 1992.
+
+\bibitem{simpson2008tooth}
+T.~Simpson, C.~Broughton, M.~J. Gauthier, and A.~Prochazka, ``Tooth-click
+  control of a hands-free computer interface,'' \emph{\textit{IEEE Transactions
+  on Biomedical Engineering}}, vol.~55, no.~8, pp. 2050--2056, 2008.
+
+\bibitem{croft2003estimating}
+D.~Croft, ``Estimating intent for human-robot interaction,'' in \emph{IEEE
+  International Conference on Advanced Robotics}.\hskip 1em plus 0.5em minus
+  0.4em\relax Citeseer, 2003, pp. 810--815.
+
+\bibitem{tomasello2007shared}
+M.~Tomasello and M.~Carpenter, ``Shared intentionality,''
+  \emph{\textit{Developmental Science}}, vol.~10, no.~1, pp. 121--125, 2007.
+
+\bibitem{sadigh2016information}
+D.~Sadigh, S.~S. Sastry, S.~A. Seshia, and A.~Dragan, ``Information gathering
+  actions over human internal state,'' in \emph{\textit{Proceedings of the
+  IEEE/RSJ International Conference on Intelligent Robots and Systems
+  (IROS)}}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE, 2016, pp. 66--73.
+
+\bibitem{tong2001active}
+S.~Tong and D.~Koller, ``Active learning for parameter estimation in {B}ayesian
+  networks,'' in \emph{Advances in Neural Information Processing Systems},
+  2001, pp. 647--653.
+
+\bibitem{atanasov2014information}
+N.~Atanasov, J.~Le~Ny, K.~Daniilidis, and G.~J. Pappas, ``Information
+  acquisition with sensing robots: Algorithms and error bounds,'' in
+  \emph{\textit{Proceedings of the IEEE International Conference on Robotics
+  and Automation (ICRA)}}, 2014.
+
+\bibitem{miller2016ergodic}
+L.~M. Miller, Y.~Silverman, M.~A. MacIver, and T.~D. Murphey, ``Ergodic
+  exploration of distributed information,'' \emph{\textit{IEEE Transactions on
+  Robotics}}, vol.~32, no.~1, pp. 36--52, 2016.
+
+\bibitem{baker2007goal}
+C.~L. Baker, J.~B. Tenenbaum, and R.~R. Saxe, ``Goal inference as inverse
+  planning,'' in \emph{\textit{Proceedings of the Cognitive Science Society}},
+  2007.
+
+\bibitem{taha2011pomdp}
+T.~Taha, J.~V. Mir{\'o}, and G.~Dissanayake, ``A {POMDP} framework for
+  modelling human interaction with assistive robots,'' in
+  \emph{\textit{Proceedings of the IEEE International Conference on Robotics
+  and Automation (ICRA)}}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE, 2011,
+  pp. 544--549.
+
+\bibitem{herlant2016assistive}
+L.~V. Herlant, R.~M. Holladay, and S.~S. Srinivasa, ``Assistive teleoperation
+  of robot arms via automatic time-optimal mode switching,'' in
+  \emph{\textit{Proceedings of the ACM/IEEE International Conference on
+  Human-Robot Interaction (HRI)}}, 2016.
+
+\bibitem{pilarski2012dynamic}
+P.~M. Pilarski, M.~R. Dawson, T.~Degris, J.~P. Carey, and R.~S. Sutton,
+  ``Dynamic switching and real-time machine learning for improved human control
+  of assistive biomedical robots,'' in \emph{2012 4th IEEE RAS \& EMBS
+  International Conference on Biomedical Robotics and Biomechatronics
+  (BioRob)}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE, 2012, pp. 296--302.
+
+\bibitem{calli2015ycb}
+B.~Calli, A.~Singh, A.~Walsman, S.~Srinivasa, P.~Abbeel, and A.~M. Dollar,
+  ``The {YCB} object and model set: Towards common benchmarks for manipulation
+  research,'' in \emph{2015 International Conference on Advanced Robotics
+  (ICAR)}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE, 2015, pp. 510--517.
+
+\bibitem{hula2015monte}
+A.~Hula, P.~R. Montague, and P.~Dayan, ``Monte carlo planning method estimates
+  planning horizons during interactive social exchange,'' \emph{PLoS
+  Computational Biology}, vol.~11, no.~6, p. e1004254, 2015.
+
+\bibitem{mardia1975statistics}
+K.~V. Mardia, ``Statistics of directional data,'' \emph{Journal of the Royal
+  Statistical Society: Series B (Methodological)}, vol.~37, no.~3, pp.
+  349--371, 1975.
+
+\bibitem{gopinath2017human}
+D.~Gopinath, S.~Jain, and B.~D. Argall, ``Human-in-the-loop optimization of
+  shared autonomy in assistive robotics,'' \emph{\textit{IEEE Robotics and
+  Automation Letters}}, vol.~2, no.~1, pp. 247--254, 2017.
+
+\bibitem{dragan2012formalizing}
+A.~D. Dragan and S.~S. Srinivasa, \emph{Formalizing assistive
+  teleoperation}.\hskip 1em plus 0.5em minus 0.4em\relax MIT Press, 2012.
+
+\bibitem{schoner2008dynamical}
+G.~Sch{\"o}ner, ``Dynamical systems approaches to cognition,''
+  \emph{\textit{Cambridge Handbook of Computational Cognitive Modeling}}, pp.
+  101--126, 2008.
+
+\bibitem{muelling2017autonomy}
+K.~Muelling, A.~Venkatraman, J.-S. Valois, J.~E. Downey, J.~Weiss, S.~Javdani,
+  M.~Hebert, A.~B. Schwartz, J.~L. Collinger, and J.~A. Bagnell, ``Autonomy
+  infused teleoperation with application to brain computer interface controlled
+  manipulation,'' \emph{\textit{Autonomous Robots}}, pp. 1--22, 2017.
+
+\bibitem{khatib1986real}
+O.~Khatib, ``Real-time obstacle avoidance for manipulators and mobile robots,''
+  \emph{\textit{The International Journal of Robotics Research}}, vol.~5,
+  no.~1, pp. 90--98, 1986.
+
+\bibitem{gopinath2017mode}
+D.~Gopinath and B.~Argall, ``Mode switch assistance to maximize human intent
+  disambiguation,'' in \emph{\textit{Robotics: Science and Systems}}, 2017.
+
+\end{thebibliography}

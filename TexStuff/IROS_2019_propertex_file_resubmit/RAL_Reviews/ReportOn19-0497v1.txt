@@ -1,0 +1,12 @@
+All reviewers agreed that topic is interesting and relevant to the
+readership of IEEE RA-L. They also agreed that the work has some
+novelty and appreciated its engineering complexity. However, all
+reviewers think that the contribution of this work is questionable and
+not clear at all. Both R3 and R9 claim that the paper is hard to
+understand and suffers from lack of details to convince readers. R4
+also has a number of questions and comments on experiment 2. I agree
+with R9 that authors need to improve the overall structure of the paper
+and related works, and more discussion is required in order to validate
+their approach. R4 also has a similar concern that it is not clear
+about its feasibility of 6DoF robot arm. I refer the authors to the
+detailed reviews for more information. 

@@ -1,0 +1,691 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2345678901234567890123456789012345678901234567890123456789012345678901234567890
+%        1         2         3         4         5         6         7         8
+
+\documentclass[letterpaper, 10 pt, conference]{ieeeconf}  % Comment this line out if you need a4paper
+
+%\documentclass[a4paper, 10pt, conference]{ieeeconf}      % Use this line for a4 paper
+
+\IEEEoverridecommandlockouts                              % This command is only needed if 
+                                                          % you want to use the \thanks command
+
+\overrideIEEEmargins                                      % Needed to meet printer requirements.
+
+%In case you encounter the following error:
+%Error 1010 The PDF file may be corrupt (unable to open PDF file) OR
+%Error 1000 An error occurred while parsing a contents stream. Unable to analyze the PDF file.
+%This is a known problem with pdfLaTeX conversion filter. The file cannot be opened with acrobat reader
+%Please use one of the alternatives below to circumvent this error by uncommenting one or the other
+%\pdfobjcompresslevel=0
+%\pdfminorversion=4
+
+% See the \addtolength command later in the file to balance the column lengths
+% on the last page of the document
+
+% The following packages can be found on http:\\www.ctan.org
+\usepackage{graphics} % for pdf, bitmapped graphics files
+\usepackage{epsfig} % for postscript graphics files
+\usepackage{mathptmx} % assumes new font selection scheme installed
+\usepackage{times} % assumes new font selection scheme installed
+\usepackage{amsmath} % assumes amsmath package installed
+\usepackage{amssymb}  % assumes amsmath package installed
+\usepackage{graphicx}
+\usepackage{amssymb}
+%\usepackage{xcolor}
+\usepackage[xcolor=yellow]{changes}
+\colorlet{Changes@Color}{orange}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb,latexsym,float,epsfig,subfigure}
+\usepackage{mathtools, bbm}
+\usepackage{amsmath} % assumes amsmath package installed
+\usepackage{amssymb}  % assumes amsmath package installed
+\usepackage{lipsum}
+\usepackage{dsfont}
+\usepackage[export]{adjustbox}
+\usepackage[normalem]{ulem} % underline
+\usepackage{wrapfig}
+\usepackage{multirow}
+\usepackage{balance}
+\usepackage{color}
+\usepackage{url}
+\usepackage{microtype}
+\usepackage{algorithm, algorithmic}
+\usepackage{breqn}
+\usepackage[bottom]{footmisc}
+
+
+%\usepackage{times}
+%% numbers option provides compact numerical references in the text. 
+%\usepackage{changes}
+%\usepackage[numbers]{natbib}
+%\usepackage{multicol}
+%\usepackage{tabularx}
+%\usepackage[bookmarks=true]{hyperref}
+%\usepackage{graphics} % for pdf, bitmapped graphics files
+%\usepackage{graphicx}
+%\usepackage[numbers]{natbib}
+%\usepackage{multicol}
+%\usepackage[bookmarks=true]{hyperref}
+%\usepackage{amsmath,amssymb,latexsym,float,epsfig,subfigure}
+%
+%\usepackage{amsmath} % assumes amsmath package installed  % assumes amsmath package installed
+%\usepackage{mathtools, bbm}
+%\usepackage{lipsum}
+%\usepackage[export]{adjustbox}
+%\usepackage[normalem]{ulem} % underline
+%\usepackage{wrapfig}
+%\usepackage{multirow}
+%\usepackage{balance}
+%\usepackage{color}
+%\usepackage{url}
+%\usepackage{booktabs}
+%\usepackage{pifont}
+%\usepackage{algorithm, algorithmic}
+\newcommand{\argmax}{\arg\!\max}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+
+\title{\LARGE \bf
+Information-Theoretic Characterization of Control Modes for\\ Intent Disambiguation
+}
+
+
+\author{Deepak Gopinath$^{1}$ and Brenna D. Argall$^{2}$% <-this % stops a space
+\thanks{This material is based upon work supported by the National Science Foundation under Grant CNS 1544741. Any opinions, findings and conclusions or
+	recommendations expressed in this material are those of the authors and do
+	not necessarily reflect the views of the aforementioned institutions. 
+}% <-this % stops a space
+\thanks{$^{1}$Deepak Gopinath is with the Department of Mechanical Engineering, Northwestern University, Evanston, IL, USA and Shirley Ryan AbilityLab, Chicago, IL, USA
+        {\tt\small deepak.gopinath@u.northwestern.edu}}%
+\thanks{$^{2}$Brenna D. Argall is with the Departments of Mechanical Engineering ,Computer Science, Physical Medicine and Rehabilitation, Northwestern University, Chicago, IL and Shirley Ryan AbilityLab, Chicago, IL.
+        {\tt\small brenna.argall@northwestern.edu}}%
+}
+
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+\pagestyle{empty}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{abstract}
+The effectiveness of assistive robots is closely related to their ability to infer the user's needs and intentions \textit{unambiguously} and provide appropriate assistance quickly and accurately. In this paper, we propose a mode selection paradigm that enhances the autonomy's intent inference capabilities by exploiting the fact that how the human operates the robot and reveals his/her intent is intrinsically conditioned on the control mode in operation. We formulate this as a problem of intent disambiguation in information-theoretic terms.  We propose two different methods for enhancing intent inference via improved disambiguation using the information-theoretic concepts of \textit{entropy} and \added{\textit{Kullback-Leibler} (KL) divergence}. In our system, the autonomy maintains a probability distribution over goals (beliefs) and we characterize the disambiguation capabilities of the different control modes/dimensions utilizing a model-based approach to compute the average information gain and content. 
+%The proposed algorithms characterize the disambiguation capabilities of the \added{different control modes?} system through the forward projection of probability distributions over goals, utilizing an intent inference scheme and a kinematics model, and computing the average information gain and content. 
+Previous work has shown that the success of a disambiguation algorithm depends on a variety of factors and parameters. 
+%To thoroughly investigate the impact of these various components, 
+We present results from an extensive simulation-based study for both a point robot and physics-based simulation of a six degrees-of-freedom (DoF) robotic arm. Our results indicate that, compared to a baseline, the proposed disambiguation algorithms do enhance intent inference via faster intent disambiguation, which in turn allows autonomy assistance to step in earlier during task execution. We also find that goal inference is more accurate and the total amount of time assistance is engaged is higher.
+\end{abstract}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{INTRODUCTION}
+Assistive machines such as robotic arms and smart wheelchairs have the potential to transform the lives of people with motor impairments~\cite{laplante1992assistive}. These machines can promote independence, enhance quality of lives, extend the mobility and manipulation capabilities of individuals, and revolutionize the way people interact with society. 
+%They can also help , thereby helping motor-impaired people perform activities of daily living in a more effective manner. 
+
+An assistive robotic machine is typically controlled using an interface such as a joystick, a switch-based head array\footnote{\added{Adaptive Switch Laboratories:} \url{http://www.asl-inc.com}} or a sip-and-puff\footnote{\added{Therafin Corporation} \url{ http://www.therafin.com}}. These interfaces are low-dimensional, low-bandwidth and occasionally discrete. For this reason, at any given point in time during task execution they can only operate in a subset of the entire control space. These subsets are referred to as \textit{control modes}~\cite{simpson2008tooth}. To schedule and execute switches between control modes can be both mentally and physically demanding, and might be alleviated in part by the introduction of robotics autonomy. \added{The ability of such autonomy-endowed machines to infer the users' needs and intentions, also known as \textit{intent inference,} is often a bottleneck for providing appropriate assistance accurately, confidently and quickly.} Due to the dimensionality mismatch between high-dimensional robots and low-dimensional interfaces, the user is constrained to produce control commands that likely do not express their true underlying intent unambiguously. That is, the control interfaces act like filters that restrict the amount of information regarding the user's intent that is passed through to the autonomy. 
+%Furthermore, sparsity and noise in the control commands make the inference process even harder prompting the need for robust intent inference formalisms. 
+
+In the context of \added{performing activities of daily living using assistive robotic manipulators}, the first step of a task is often to \textit{reach} towards discrete objects in the environment, \added{for example, picking up food, reaching for door knobs, tabletop manipulation \textit{et cetera}}\footnote{\url{https://www.youtube.com/watch?v=r3yWmf8blz0}}. Therefore in this domain, \textit{intent inference} can be cast as a problem of maintaining and updating the probability distributions over all possible goals (\added{also known as \textit{belief}}) in the workspace upon receiving fresh evidence from the human actions and environment. In Bayesian terminology, maintaining and updating the belief is the \textit{recursive Bayesian filtering} problem. Intent inference algorithms typically rely on various task-relevant features such as the robot and goal positions, human control commands and biometric measures~\cite{croft2003estimating} as their evidence variables. However, due to reasons of user adoption and cost, our system matches the interfaces available on typical commercial assistive machines (such as powered wheelchairs) and so infers intent exclusively based on the information contained in the constrained control commands issued to the assistive machine. 
+
+Our system is inspired by the following \added{observations}:
+\begin{itemize}
+	\item \added{At any given time, the policy followed by the human while controlling the robotic arm is conditioned on the current active mode. As a result, the belief update that depends on the human policy implicitly depends on the active control mode. }
+	\item Utilizing a model-based approach to project the beliefs over goals forward in time, the autonomy can \textit{counterfactually} reason about the information gain and content for different control modes. 
+	\item Using this information-theoretic characterization of control modes, the autonomy can choose the control mode with the highest intent disambiguation capability \textit{for} the human.
+	\item Having the human provide control input within these information-rich control modes can likely improve the accuracy of intent inference. This, in turn, allows the autonomy to step in and \textit{assist the human achieve their desired goal earlier}. 
+\end{itemize}
+%Our insight is that, at any given time, there is a specific set of control modes that are more informative \textit{for} the autonomy than others. Therefore, by having the human provide control input within these information-rich modes, the possibility of inferring the human's intent accurately and unambiguously is increased. \added{Talk about this specifically in terms of how mode selection can improve intent inference. }
+
+%Having the autonomy to step in earlier and provide accurate assistance is important, because when the intent inference mechanism infers the incorrect goal (or is simply too slow), the user and autonomy often end up competing instead of collaborating and can decrease user satisfaction and result in significantly worse performance. 
+%than either the human or autonomy would produce on their own. 
+
+We formalize this as a problem of intent disambiguation within the framework of information theory. In this paper, we address how to enhance the accuracy of intent inference by characterizing control modes according to their information content and proposing a mode switch assistance paradigm that selects the control mode in which a user-initiated motion will \textit{maximally disambiguate} their intent. Specifically, we make use of the information-theoretic notions of entropy and Kullback-Leibler (KL) divergence to characterize and quantify the information content---with respect to intent disambiguation---of each control mode. 
+
+%Our insight is that the information contained in control commands issued by the human when operating in certain control modes will be more useful \textit{for} the robot to perform intent inference more accurately. This in turn, will clarify the human's underlying intent unambiguously and help the robot to appropriately select the necessary kinds of assistance more effectively. In this paper, we formulate the problem of intent disambiguation in information-theoretic terms. Specifically, we rely on information theoretic notions of \textit{entropy} and \textit{Kullback-Leibler divergence} (KL divergence) to characterize and quantify the intent disambiguation capabilities of a control mode. We utilize this characterization of control modes to develop a mode switch assistance paradigm that selects the control mode in which a user-initiated motion will \textit{maximally disambiguate} their intent. 
+%The disambiguation system will likely elicit more \textit{intent expressive} commands from the user by placing the user control in certain control modes.
+
+In Section~\ref{sec:related_work} we present an overview of relevant research. Sections~\ref{sec:disamb} and \ref{sec:inference} introduces our set theoretic treatment of control modes, followed by intent disambiguation and intent inference respectively. The study design and experimental methods are discussed in Section~\ref{sec:ed} followed, by results in Section~\ref{sec:results}. Discussion and conclusions are presented in Sections~\ref{sec:discussions} and~\ref{sec:conclusions} respectively.  
+
+
+\section{Related Work}\label{sec:related_work}
+This section presents an overview of related works in information acquisition in robotics, intent inference in human-robot interaction and robot assistance for modal control. 
+%
+%Shared-autonomy in assistive machines aims to reduce the human's physical and cognitive burden during task execution without having the user completely cede manual control~\citep{philips2007adaptive, demeester2008user}. Some of the common shared-autonomy approaches include (a) hierarchical paradigms in which the higher level goals are entrusted with the user and the autonomy generates low-level control~\citep{kim2012autonomy}, (b) control allocation in distinct partitions of the control space~\citep{driessen2005collaborative} and (c) blending user controls and robot autonomy commands~\citep{muelling2017autonomy}. 
+
+%Information theoretic approaches are widely utilized in the field of machine learning and robotics for optimal experiment design, for efficient data collection processes and for informing search strategies. 
+Robot assistance schemes that seek to elicit more informative cues \textit{from} the human to clarify the underlying intent can be thought of as an information acquisition problem. Intent acquisition can leverage the underlying synergies and shared intentionality~\cite{tomasello2007shared} of human-robot teams and can be an active process in which the robot performs actions 
+%(for example, selecting a control mode or executing a robot motion) 
+that will nudge the human to reveal her/his intent more clearly~\cite{sadigh2016information}. Information-theoretic metrics such as KL divergence can be utilized to identify regions of the sample space that will maximize information gain~\cite{tong2001active} and subsequently guide the data sampling process. 
+Sensing robots that are designed for automated exploration and data acquisition tasks can benefit from exploring more information-rich regions in the environment~\cite{atanasov2014information}. 
+If the spatial distribution of information density is known \textit{a priori}, information maximization can be accomplished by maximizing the ergodicity of the robot's trajectory with respect to the underlying information density~\cite{miller2016ergodic}. 
+
+%For an assistive machine to provide appropriate kinds of assistance accurately and at the right time, it needs to have a good estimate of the human's underlying intent.
+Intent inference algorithms play a vital role in the success of an assistive system. Intent inference and recognition can be classified into two broad categories: heuristic approaches and model-based approaches. Heuristic approaches are often simpler and computationally light-weight and seek to find direct mappings between various task relevant features (such as motion cues) and the human's underlying intention~\cite{baker2007goal}. On the other hand, in model-based approaches the system maintains a model of how a human maps states to control actions. The model can either be learned from data or can be hand-designed based on domain knowledge. \added{For example, the human can be modeled as a rational agent within a Partially Observable Markov Decision Process (POMDP) such that the uncertainty is over user's goal~\cite{taha2011pomdp} framework. The autonomy can then use these models to either take a \textit{predict-then-act}~\cite{dragan2013policy} approach or generate robot control commands that will \textit{minimize the expected user cost}~\cite{javdani2015shared} so that assistance is effective even in cases where the goal uncertainty is very high. The intent disambiguation algorithm presented in this paper can be stacked on top of any parametric intent inference scheme as a mechanism to further improve the accuracy of the inference scheme}.
+
+When there is a mismatch between the dimensionality of the problem and the control interface users have to continuously shift their focus from the task at hand to the choice of control mode during task execution, thereby resulting in a higher cognitive load. Various mode switching assistance paradigms have been proposed to alleviate task effort. For example, an automatic time-optimal mode switch assistance has been proposed which has shown to significantly improve user satisfaction~\cite{herlant2016assistive}. In the area of myoelectric prosthetics, dynamic switching approaches that learn the most effective control option during task execution using temporal difference and reinforcement learning have also been proposed~\cite{pilarski2012dynamic}. 
+
+
+%%\section{Mathematical Notation}\label{sec:math}
+%%This section describes the mathematical notation used in our intent disambiguation algorithm that computes a control mode that maximally disambiguates between the various goals.
+%%We develop this algorithm specifically for robotic manipulation scenarios in which the user is controlling a robotic arm to reach for and interact with various discrete objects in the environment.
+%%
+%%% Section~\ref{ssec:notation} outlines the mathematical notation used in this paper. Section~\ref{ssec:set_modes} presents a set-theoretic treatment of control modes and Section~\ref{ssec:disamb} describes the disambiguation algorithm. The mathematical details of the intent inference paradigms are outlined in detail in Section~\ref{ssec:inference}.
+%%\subsection{Probability Distribution Over Goals}\label{ssec:notation}
+%%In assistive robotic manipulation, intent inference is most commonly the process of estimating the user's intended goal out of a set of discrete objects in the environment~\cite{calli2015ycb}. The set of all candidate goals is denoted by $\mathcal{G}$ with $n_g = \vert\mathcal{G}\vert$.
+%%% and let $g^i$ refer to the $i^{th}$ goal with $i \in [1,2,\dots, n_g]$. 
+%%% At any time $t$, the likelihood of goal $g$ being the desired goal follows a categorical probability distribution whose sample space is $\mathcal{G}$. 
+%%% That is, 
+%%% \begin{equation*}
+%%% g \sim \textbf{Cat}(n_g | \boldsymbol{p}(t)) = \prod_{i=1}^{n_g}p^{i}(t)^{[g = g^i]}
+%%% \end{equation*}
+%%%where, $[g = g^i]$ is the Iverson bracket and evaluates to 1 if $g = g^i$, 0 otherwise. 
+%%At time $t$ the random variable $g^t \in \mathcal{G}$ denotes the user's intended goal and $b_{g^t}$ denotes the belief over the goals. 
+%%% The probability $b_{g^t}$  also represents the robot's \textit{confidence} that goal $g$ is the human's intended goal at time $t$. 
+%%%$\boldsymbol{p}(t)$ denotes the probability distribution over goals such that $\boldsymbol{p}(t) = [p_{g_1}^t, p_{g_2}^t,\dots, p_{g_{n_g}}^t)]^{T}$ where $p_{g_i}^t$ denotes the probability associated with goal $g_i$ at time $t$. 
+%%
+%%\subsection{Set Theoretic Treatment of Control Modes}\label{ssec:set_modes}
+%%%
+%%%The limitations of the control interfaces necessitate the control space $\mathcal{K}$ to be partitioned into control modes. Let $\mathcal{M}$ denote the set of all control modes with $n_m = \vert\mathcal{M}\vert$. Additionally, let $m^i$ refer to the $i^{th}$ control mode where $i \in [1,2,\dots,n_m]$. Each control mode $m^i$ is a subset of $\mathcal{K}$ such that $\bigcup\limits_{i=1}^{n_m} m^i$ spans all of the controllable dimensions.\footnote{Note that a dimension $k \in \mathcal{K}$ can be an element of multiple control modes.} Let $\boldsymbol{e}^i$ be the standard basis vectors that denote the unit velocity vector along the $i^{th}$ control dimension.\footnote{For the rotational control dimensions, the velocity is specified with respect to the end-effector of the robotic frame.} Furthermore, the user can only operate in one of the $n_m$ control modes at any given time $t$. Therefore, the user can only access smaller subsets of $\mathbb{R}^{n_k}$ via the control interface with $\mathcal{U}_{m^i}$ denoting the subset of $\mathbb{R}^{n_k}$ accessible from control mode $m^i$. Figure 1 represents this in a pictorial fashion for a robot residing in $\mathbb{R}^2$. 
+%%The low dimensionality of the control interfaces necessitates the control space to be partitioned into control modes.
+%%Let $\mathcal{K}$ be the set of all controllable dimensions of the robot and $k^i$ represent the $i^{th}$ control dimension where $i \in [1,2,\dots,n_k]$ with $n_k = \vert\mathcal{K}\vert$. The number of controllable dimensions ($n_k$) depends on the robotic platform; for example, a 2D point robot that operates in $\mathbb{R}^2$ has $n_k = 2$ whereas $n_k =6$ for a 6-DoF robotic manipulator. 
+%%%Lastly, let $\boldsymbol{u_h} \in \mathbb{R}^{n_k}$ denotes the human control command issued via the control interface and $\boldsymbol{u_r} \in \mathbb{R}^{n_k}$ denote the robot autonomy command.
+%%
+%%Let $\mathcal{M}$ denote the set of all control modes with $n_m = \vert\mathcal{M}\vert$. Additionally, let $m^i$ refer to the $i^{th}$ control mode where $i \in [1,2,\dots,n_m]$. Each control mode $m^i$ is a subset of $\mathcal{K}$ such that $\bigcup\limits_{i=1}^{n_m} m^i = \mathcal{K}$. The cardinality of each mode $m \in \mathcal{M}$, denoted by $\vert m \vert$, indicates the number of dimensions that can be controlled when operating in $m$\footnote{Note that a dimension $k \in \mathcal{K}$ can be an element of multiple control modes and so it is possible that $m^i \cap m^j \neq \emptyset$.}. Furthermore, the user can only operate in one of the $n_m$ control modes at any given time $t$. That is, for each $m \in \mathcal{M}$, the subspace of $\mathbb{R}^{n_k}$ that is accessible corresponds to $\mathbb{R}^{\vert m \vert}$ whose orthonormal basis vectors are given by $\boldsymbol{e}^k \;\; \forall \;\; k \in m$. Maximum velocity limits along each dimension impose further constraints on the set of control commands that are available in each mode. 
+%%% This constrained set of control commands available in mode $m$, denoted by $\mathcal{U}^m$, can be written as 
+%%%\begin{equation*}
+%%%\mathcal{U}^m = \{\boldsymbol{u} | \boldsymbol{u} \in \mathcal{R}^{\vert m \vert} ~ and ~ \norm{\boldsymbol{u}}_{\infty} \leq v_{lim} \} 
+%%%\end{equation*}
+%%%where $v_{lim}$ denotes the maximum velocity along any dimension $k$ and $\norm{\cdot}_{\infty}$ denotes the $L_\infty$ norm. 
+%%%Therefore, the set $\mathcal{U}^m$ corresponds to a hypercube of dimensionality $\vert m \vert$ embedded in $\mathcal{R}^{n_k}$. In other words $\mathcal{U}^m$ is a $\vert m \vert$-cube with edge length equals $2c$. Without loss of generality, the velocity limits can be different for different control dimensions in which case $\mathcal{U}^m$ will correspond to a hypercuboid. Figure 1 represents this in a pictorial fashion for $\mathbb{R}^2$. 
+%%% \begin{figure}[h]
+%%%	\centering
+%%%	\includegraphics[width= 0.8\hsize, height=0.2\vsize]{./figures/R2_ControlModes.eps}
+%%%	\vspace{-0.35cm}
+%%%	\caption{Illustration of 1D and 2D control modes in a two-dimensional control space, $\mathbb{R}^2$. Note that this space can be embedded in a higher dimensional space such as $\mathbb{R}^3$, $\mathbb{SE}(2)$ and $\mathbb{SE}(3)$. The 1D control modes are shown in blue and orange and the 2D control mode is shown as the green shaded area within the red square. The vertex set denotes the maximum magnitude control commands that can be issued when operating in a control mode. }
+%%%	\label{fig:r2_modes}
+%%%\end{figure}
+%%
+%%% The disambiguation formalism developed in Section~\ref{ssec:disamb} is agnostic to the particular form of intent inference. However, the algorithm assumes that $\boldsymbol{p}(t)$ can be forward projected in time by iteratively applying the intent inference algorithm. 
+
+\section{Intent Disambiguation}\label{sec:disamb}
+\added{This section introduces a set-theoretic treatment of control modes and how our autonomy reasons about the intent disambiguation capabilities of different control modes by computing the information gain and content of the belief over goals.} We utilize a model-based approach in which the human is modeled as a rational agent that seeks to take the shortest distance path to the goal. 
+We also describe the various intent inference schemes that we utilize in our experiments, which work in conjunction with our disambiguation algorithm. 
+
+%This section describes our two proposed approaches for intent disambiguation using information theoretic concepts and the different intent inference schemes that work in conjunction with the disambiguation algorithm. 
+
+\subsection{Set Theoretic Treatment of Control Modes}\label{ssec:set_modes}
+%
+%The limitations of the control interfaces necessitate the control space $\mathcal{K}$ to be partitioned into control modes. Let $\mathcal{M}$ denote the set of all control modes with $n_m = \vert\mathcal{M}\vert$. Additionally, let $m^i$ refer to the $i^{th}$ control mode where $i \in [1,2,\dots,n_m]$. Each control mode $m^i$ is a subset of $\mathcal{K}$ such that $\bigcup\limits_{i=1}^{n_m} m^i$ spans all of the controllable dimensions.\footnote{Note that a dimension $k \in \mathcal{K}$ can be an element of multiple control modes.} Let $\boldsymbol{e}^i$ be the standard basis vectors that denote the unit velocity vector along the $i^{th}$ control dimension.\footnote{For the rotational control dimensions, the velocity is specified with respect to the end-effector of the robotic frame.} Furthermore, the user can only operate in one of the $n_m$ control modes at any given time $t$. Therefore, the user can only access smaller subsets of $\mathbb{R}^{n_k}$ via the control interface with $\mathcal{U}_{m^i}$ denoting the subset of $\mathbb{R}^{n_k}$ accessible from control mode $m^i$. Figure 1 represents this in a pictorial fashion for a robot residing in $\mathbb{R}^2$. 
+The low dimensionality of the control interfaces necessitates the control space to be partitioned into control modes.
+Let $\mathcal{K}$ be the set of all controllable dimensions of the robot and $k^i$ represent the $i^{th}$ control dimension where $i \in [1,2,\dots,n_k]$ with $n_k = \vert\mathcal{K}\vert$. The number of controllable dimensions ($n_k$) depends on the robotic platform; for example, a 2D point robot that operates in $\mathbb{R}^2$ has $n_k = 2$ whereas $n_k =6$ for a 6-DoF robotic manipulator. 
+%Lastly, let $\boldsymbol{u_h} \in \mathbb{R}^{n_k}$ denotes the human control command issued via the control interface and $\boldsymbol{u_r} \in \mathbb{R}^{n_k}$ denote the robot autonomy command.
+
+Let $\mathcal{M}$ denote the set of all control modes with $n_m = \vert\mathcal{M}\vert$. Additionally, let $m^i$ refer to the $i^{th}$ control mode where $i \in [1,2,\dots,n_m]$. Each control mode $m^i$ is a subset of $\mathcal{K}$ such that $\bigcup\limits_{i=1}^{n_m} m^i = \mathcal{K}$. The cardinality of each mode $m \in \mathcal{M}$, denoted by $\vert m \vert$, indicates the number of dimensions that can be controlled when operating in $m$\footnote{Note that a dimension $k \in \mathcal{K}$ can be an element of multiple control modes and so it is possible that $m^i \cap m^j \neq \emptyset$.}. Furthermore, the user can only operate in one of the $n_m$ control modes at any given time $t$. That is, for each $m \in \mathcal{M}$, the subspace of $\mathbb{R}^{n_k}$ that is accessible corresponds to $\mathbb{R}^{\vert m \vert}$ whose orthonormal basis vectors are given by $\boldsymbol{e}^k \;\; \forall \;\; k \in m$  \footnote{\added{Table~\ref{tbl:cmp} presents some examples for control space partitions.}}. 
+%Maximum velocity limits along each dimension impose further constraints on the set of control commands that are available in each mode. 
+\subsection{Conditional Recursive Bayesian Belief Update}
+
+In this subsection we show how the recursive Bayesian belief update is explicitly conditioned on the current active control mode and therefore can be leveraged to reason about disambiguation.
+%the disambiguation capabilities. 
+
+In assistive robotic manipulation, intent inference is most commonly the process of estimating the user's intended goal out of a set of discrete objects in the environment~\cite{calli2015ycb}. The set of all candidate goals is denoted by $\mathcal{G}$ with $n_g = \vert\mathcal{G}\vert$.
+At time $t$ the random variable $g^t \in \mathcal{G}$ denotes the user's intended goal and $b_{g^t}$ denotes the belief over the goals. 
+%We treat the unknown goal $g$ as a random variable and  maintain a belief over the goals denoted as $b^t_g$. 
+We only consider a single evidence variable that corresponds to the human control command denoted as $\boldsymbol{u}_h$. The goal probability conditioned on the evidence variable can be written as 
+\begin{equation}\label{eq:belief1}
+	b_{g^t} = p(g^t \;|\; \boldsymbol{u}_h^{0:t}) \propto p(\boldsymbol{u}_h^t\;|\;g^t,\boldsymbol{u}_h^{0:t-1})p(g^t|\boldsymbol{u}_h^{0:t-1}) \;\;\;\;\;.
+\end{equation}
+Assuming that $(\boldsymbol{u}_h^t \perp \boldsymbol{u}_h^{0:t-1} | g^t)$ (Markovian assumption that the control command at the current timestep is independent of previous timesteps given the current goal) and marginalizing over $g^{t-1}$, Equation~\ref{eq:belief1} becomes
+\begin{equation}\label{eq:belief2}
+	b_{g^t} = p(\boldsymbol{u}_h^t \;|\; g^t) \sum_{g^{t-1} \in \mathcal{G}}^{} p(g^t, g^{t-1} \; | \; \boldsymbol{u}_h^{0:t-1})
+\end{equation}
+We also assume that the conditional transition probability of changing to goal $g^t$ given that the goal is $g^{t-1}$ is independent of the control command history. Equation~\ref{eq:belief2}, therefore, simplifies to
+\begin{equation}\label{eq:recursive_belief}
+	b_{g^t} = p(\boldsymbol{u}_h^t \;|\; g^t) \sum_{g^{t-1} \in \mathcal{G}}^{} p(g^t | g^{t-1}) b_{g^{t-1}}
+\end{equation}
+%\begin{equation} \label{eq:recursive_belief}
+%\begin{split}
+%b^t_g & = p(\boldsymbol{u}_h^t \;|\; g^t) \sum_{g^{t-1} \in \mathcal{G}}^{} p(g^t | g^{t-1})  p(g^{t-1} | \boldsymbol{u}_h^{0:t-1})  \\
+%& = p(\boldsymbol{u}_h^t \;|\; g^t) \sum_{g^{t-1} \in \mathcal{G}}^{} p(g^t | g^{t-1}) b^{t-1}_{g}
+%\end{split}
+%\end{equation}
+Marginalizing over $m$, the control mode variable, the human policy $p(\boldsymbol{u}_h^t \;|\; g^t)$ can be written as 
+\begin{equation} \label{eq:marginal_mode}
+	p(\boldsymbol{u}_h^t \;|\; g^t) = \sum_{m \in \mathcal{M}}^{} p(\boldsymbol{u}_h^t \;|\; g^t, m)p(m)
+\end{equation}
+We can simplify Equation~\ref{eq:marginal_mode} using the critical piece of information that, due to constraint of the control interface, at any given time $t$ only one of the control modes in $\mathcal{M}$ can be active. That is, the probability distribution over modes at any given time $t$ reduces to a delta function. This can be written as
+\begin{equation}\label{eq:mode_prob}
+	p(m) = \begin{cases}
+		1 \;\;\;\; \text{if} \;\; m = m^t \\
+		0 \;\;\;\; \text{otherwise}
+	\end{cases}
+\end{equation}
+%\begin{equation}\label{eq:mode_prob}
+%\begin{split}
+%p(m) & = 1 \;\;\;\; \text{if} \;\; m = m^t \\
+%& = 0 \;\;\;\; \text{otherwise}
+%\end{split}
+%\end{equation}
+Using Equations~\ref{eq:marginal_mode} and \ref{eq:mode_prob} and under the assumption that the user does not change the goal during task execution, Equation~\ref{eq:recursive_belief} can be further simplified as 
+\begin{equation}\label{eq:final_belief}
+	b_{g^t} = \underbrace{p(\boldsymbol{u}_h^t \;|\; g^t, m^t )}_{\substack{\text{human policy} \\ \text{conditioned on mode}}}\;\underbrace{b_{g^{t-1}}}_{\substack{\text{belief at}\\ \text{$t-1$}}}
+\end{equation}
+
+From Equation~\ref{eq:final_belief} we can see that the belief at time $t$ depends on the current mode $m^t$. This is due to the fact that the mode at time $t$ has a direct influence on how the human chooses to operate the robot to accomplish the task. 
+
+\subsection{Algorithm: Information Theoretic Intent Disambiguation}
+
+Our aim is to develop a metric that will capture the ``disambiguation capability'' of a control dimension/mode. 
+From Equation~\ref{eq:final_belief} we can see that the time evolution of the probability distribution is sensitive to the user control command (denoted by $\boldsymbol{u_h}$), and that it will evolve differently as the user controls the robot in different control modes. By utilizing a model-based approach, the autonomy can reason about the time evolution of the belief $b_{g^t}$ for all control modes $m \in \mathcal{M}$ and then select the mode that offers the highest information gain and content. That is, motion within maximally disambiguating control dimensions serves as a mechanism to enhance the accuracy of intent inference. 
+
+The full algorithm is presented in Algorithm~\ref{alg:disamb}. We first perform a model-based projection of the probability distribution over goals (lines 5-9, Section~\ref{ssec:model_based}). We then compute the disambiguation capability $D_m$ of a control mode using information-theoretic measures (lines 10-11) We present two different information-theoretic measures for disambiguation: 1) information content in the projected probability distributions over goal as encoded by the \textit{entropy} of the distribution (Section~\ref{sssec:ent}) and 2) information gain as a result of the time evolution of the belief as encoded by the \textit{KL divergence} between the posterior and the prior distributions (Section~\ref{sssec:kl}). 
+
+\begin{algorithm}[h]
+	\caption{Information-Theoretic Intent Disambiguation}
+	\label{alg:disamb}
+	\begin{algorithmic}[1]
+		\REQUIRE $b_{g^{t_a}}, \boldsymbol{x}_r^{t_a}, \Delta t, t_a < t_b$
+		\FOR{$m \in \mathcal{M}$}
+		\STATE Initialize $D_m = 0$
+		\FOR{$g \in \mathcal{G}$}
+		
+		\STATE Initialize $t = t_a + \Delta t, \boldsymbol{x}_r^{t - \Delta t} = \boldsymbol{x}_r^{t_a}, b_{g^{t - \Delta t}} = b_{g^{t_a}}$
+		\WHILE{$t \leq t_b$}
+		\STATE $\boldsymbol{u}_h^t \sim p(\boldsymbol{u}_h\;|\; g, m)$ 
+		\STATE $b_{g^{t}} \leftarrow \text{BeliefUpdate}(b_{g^{t-\Delta t}}, \boldsymbol{u}_h^t)$
+		\STATE $\boldsymbol{x}_r^{t}\leftarrow \text{SimulateKinematics}(\boldsymbol{x}_r^{t-\Delta t}, \boldsymbol{u}_h^t)$
+		\STATE $t \leftarrow t + \Delta t$
+		\ENDWHILE
+		\STATE $D_m \leftarrow D_m + \frac{1}{n_g} \mathbb{E}_{\boldsymbol{u}_h \sim p(\boldsymbol{u}_h \; | \; g, m)}\Big[ENT(b_{g^{t_b}})\Big]$
+		
+		or
+		
+		\STATE $D_m \leftarrow D_m + \frac{1}{n_g} \mathbb{E}_{\boldsymbol{u}_h \sim p(\boldsymbol{u}_h \; | \; g, m)}\Big[KL(b_{g^{t_b}}||b_{g^{t_a}})\Big]$
+		\ENDFOR
+		\ENDFOR
+	\end{algorithmic}
+\end{algorithm}
+The control mode with highest disambiguation capability $m^*$ is then given by $\argmax_m D_m$. Disambiguation mode $m^*$ is the control mode that system chooses \textit{for} the human to better estimate their intent. Any control command issued by the human when operating in $m^*$ is likely to be more beneficial for the system to determine the human's intended goal. 
+\subsection{Model-based Projection of $b_{g^t}$}\label{ssec:model_based}
+The first step towards the computation of the disambiguation metric $D_m$ for each $m \in \mathcal{M}$ is the forward projection of the probability distribution $b_{g^t}$ from current time $t_a$ to $t_b$ such that $t_a < t_b$. We rely on a model-based approach in which the human policy under the Boltzmann rationality assumption~\cite{hula2015monte} is modeled as a von Mises distribution~\cite{mardia1975statistics}. That is,
+\begin{equation}
+	p(\boldsymbol{u}_h \;| \;g ) = C_p(\kappa)\text{e}^{(\kappa\cdot Q_g(\boldsymbol{u}_h, \boldsymbol{x}_g, \boldsymbol{x_r}))}
+\end{equation}
+where $C_p(\kappa)$ is the normalization constant, $\kappa$ is the concentration parameter, $p$ is the dimensionality of the control space and $Q_g(\boldsymbol{u}_h, \boldsymbol{x}_g, \boldsymbol{x_r})$ is modeled as the cost of taking action $\boldsymbol{u}_h$ towards goal $g$ at robot configuration $\boldsymbol{x}_r$ when acting optimally. We compute this cost as the \textit{agreement} between the human control command $\boldsymbol{u}_h$ and the vector connecting the current robot configuration $\boldsymbol{x}_r$ and the goal configuration $\boldsymbol{x}_g$. The human thus is modeled as attempting the straight line path to the goal. The human policy conditioned on control mode $m$, $p(\boldsymbol{u}_h \;| \;g, m )$, is the projection of $p(\boldsymbol{u}_h \;| \;g )$ onto the subspace $\mathbb{R}^{|m|}$ spanned by the control mode $m$. 
+
+Given this human model for each control mode $m \in \mathcal{M}$, the autonomy adopts a sampling-based approach to estimate the time evolution of belief for all goals $g \in \mathcal{G}$. This model-based projection enables the autonomy to counterfactually reason about how much information gain is likely to happen when users operate the robot towards different goals in each of the control modes. 
+
+%The exact computation of the projected probability distribution will depend on the underlying intent inference computation---for example, whether it depends on the robot position ($\boldsymbol{x_r}$), which can be computed from the human control command (denoted by $\boldsymbol{u}_h$) applied to the robot kinematics model or $\boldsymbol{u}_h$. All parameters and features which affect the computation of $\boldsymbol{p}(t)$ are denoted as $\boldsymbol{\Theta}$. If the inference mechanism depend on the control command, the projected probability distribution at time $t_b$ given by $\boldsymbol{p}(t_b)$ depends on $\boldsymbol{u_h}$.
+%For the purposes of computation of the disambiguation, for each mode $m \in \mathcal{M}$ 
+%For the purposes of computation of the disambiguation metric, in each mode $m \in \mathcal{M}$, we only consider a subset of control commands from $\mathcal{U}^m$, and is denoted by $Vert(\mathcal{U}^m)$. The set $Vert(\mathcal{U}^m)$ is given by
+%\begin{equation*}
+%Vert(\mathcal{U}^m) = \{\boldsymbol{u} \in \mathcal{U}^m ~|~ \boldsymbol{u} = \argmax_{\boldsymbol{u} \in \mathcal{U}^m} \norm{\boldsymbol{u}}_{2}\}
+%\end{equation*}
+%where $\norm{\cdot}_2$ is the Euclidean norm.\footnote{$Vert(\mathcal{U}^m)$ corresponds to the ``vertices'' of the $|m|$-dimensional hypercube that is the space of control commands accessible from mode $m$.} 
+%
+%The probabilities are forward projected for each of the possible control commands available in $Vert(\mathcal{U}^m)$ and a weighted average of the disambiguation metric computations on each of the projected probabilities is used to characterize the control mode $m$ (Algorithm~\ref{alg:disamb}, Lines 3-11). In the following sub-sections we present two different methods to compute the disambiguation metric for a given mode $m$. 
+
+% \begin{figure}[h]
+%	\centering
+%	\includegraphics[width= 1.\hsize, height=0.28\vsize]{./figures/Disamb_Compute.eps}
+%	\vspace{-0.55cm}
+%	\caption{Illustration of computation of $D_m$ in $\mathbb{R}^2$. The goals are shown in red, green and blue and the robot in black. The probability distributions are forward projected for all $\boldsymbol{u_h} \in Vert(\mathcal{U}^m)$. The change in the overall shape of the probability distribution upon evolving from $\boldsymbol{p}(t_a)$ to $\boldsymbol{p}(t_b)$ amounts to the information \textit{gain} and is captured by the \textit{KL divergence}. The entropy of $\boldsymbol{p}(t_b)$ captures the information \textit{content} in the projected distribution.} 
+%	\label{fig:disamb_compute}
+%\end{figure}
+
+\subsection{Entropy Disambiguation Metric}\label{sssec:ent}
+The entropy of a probability distribution captures the average information content of a stochastic source of data. Lower entropy indicates higher certainty in the value of the random variable, and vice-versa. Therefore, in the context of intent disambiguation, the entropy of the projected probability distribution, $b_{g^{t_b}}$, can be used as a measure of how confident the system is in its prediction of human intent. 
+%This implies that entropy can be used a measure of disambiguation. 
+That is, lower the entropy better the disambiguation, due to higher certainty in the human's intended goal. For a discrete random variable $X$ with possible values $\{x_1, x_2,\dots x_n\}$, the Shannon entropy is defined as 
+\begin{equation*}
+	ENT(p(X)) = -\sum_{i = 1}^{n} p(x_i)log_2(p(x_i))
+\end{equation*}
+where $p(X)$ denotes the probability mass function.
+The disambiguation capability of a control mode $m$ is characterized by computing a weighted average of the entropies of projected probability distributions. That is, 
+\begin{equation}\label{eq:ent}
+	D_m = \frac{1}{\vert n_g \vert} \sum_{g \in \mathcal{G}}^{} \mathbb{E}_{\boldsymbol{u}_h \sim p(\boldsymbol{u}_h \; | \; g, m)}\Big[ENT(b_{g^{t_b}})\Big]
+\end{equation}
+
+%\begin{equation*}
+%D_m = \frac{1}{\vert Vert(\mathcal{U}^m) \vert}\sum_{\boldsymbol{u_h} \in Vert(\mathcal{U}^m)}  ENT(\boldsymbol{p}(t_b; \boldsymbol{u_h}))
+%\end{equation*}
+where $b_{g^{t_b}}$ denotes the projected probability distribution at time $t_b$ when the control command used for forward projection is sampled from the mode conditioned human policy $p(\boldsymbol{u}_h \; |\; g, m)$.
+
+\subsection{KL Divergence Disambiguation}\label{sssec:kl}
+Although entropy can capture information \textit{content}, intent disambiguation can likely benefit from the quantification of the information \textit{gain} regarding the human's intended goal as a result of user-initiated motion in a control mode $m$. 
+KL divergence, also known as relative entropy, measures how a probability distribution differs from another distribution. KL divergence is widely used in the context of Bayesian inference to compute the information gain when the prior is updated to the posterior in the light of new evidence. In the context of disambiguation we can treat the projected probability distribution at time $t_b$ as the posterior and the distribution at time $t_a$ to be the prior. KL divergence can be used to characterize the \textit{information gain} regarding the human's intended goal as a result of the application of $\boldsymbol{u_h}$.
+
+For a discrete random variable $X$ with possible values $\{x_1, x_2,\dots x_n\}$ the KL divergence is defined by
+\begin{equation*}
+	KL(P||Q) = -\sum_{i=1}^{n}p(x_i)log_2\frac{q(x_i)}{p(x_i)}
+\end{equation*}
+where $p(X)$ and $q(X)$ are two different probability mass distributions. 
+More specifically, the disambiguation capability of control mode $m$ is computed by averaging the information gain for all projections of probability distributions $b_{g^{t_b}}$.  The disambiguation metric can be computed as 
+
+\begin{equation}\label{eq:kldiv}
+	D_m = \frac{1}{\vert n_g \vert} \sum_{g \in \mathcal{G}}^{} \mathbb{E}_{\boldsymbol{u}_h \sim p(\boldsymbol{u}_h \; | \; g, m)}\Big[KL(b_{g^{t_b}}||b_{g^{t_a}})\Big] \;\;\;\;.
+\end{equation}
+
+
+
+%\begin{algorithm}[t]
+%	\caption{Calculate $\boldsymbol{p}(t_b)$, $D_m$}
+%	\label{alg:disamb}
+%	\begin{algorithmic}[1]
+%		\REQUIRE $\boldsymbol{p}(t_a), \boldsymbol{x}_r(t_a), \Delta t, t_a < t_b, \boldsymbol{\Theta}$
+%		\FOR{$m=1\dots n_m$}
+%		\STATE Initialize $D_m = 0$
+%		
+%		\FOR{$\boldsymbol{u_h} \in Vert(\mathcal{U}^m)$}
+%		\STATE Initialize $t = t_a, \boldsymbol{x_r}(t) = \boldsymbol{x_r}(t_a), \boldsymbol{p}(t) = \boldsymbol{p}(t_a)$
+%		\WHILE{$t \leq t_b$}
+%		\STATE $\boldsymbol{p}(t + \Delta t) \leftarrow \text{UpdateIntent}(\boldsymbol{p}(t), \boldsymbol{u}_h; \boldsymbol{\Theta})$
+%		\STATE $\boldsymbol{x}_r(t + \Delta t) \leftarrow \text{SimulateKinematics}(\boldsymbol{x}_r(t), \boldsymbol{u}_h)$
+%		\STATE $t \leftarrow t + \Delta t$
+%		\ENDWHILE
+%		
+%		\STATE $D_m \leftarrow D_m + \frac{1}{\vert Vert(\mathcal{U}^m) \vert} ENT(\boldsymbol{p}(t_b)) $
+%		
+%		or
+%		
+%		\STATE $D_m \leftarrow D_m + \frac{1}{\vert Vert(\mathcal{U}^m) \vert} KL(\boldsymbol{p}(t_b) \vert\vert \boldsymbol{p}(t_a)) $
+%		
+%		\ENDFOR
+%		\ENDFOR
+%	\end{algorithmic}
+%\end{algorithm}
+
+
+\section{Intent inference}\label{sec:inference}
+%  The disambiguation power of our algorithm is closely linked to the inference power of different choices of inference mechanisms. 
+\added{The exact update rule for the recursive belief update (Algorithm~\ref{alg:disamb}, Line 7) directly impacts the projected probability distributions, $b_g^{t_b}$, and the disambiguation metric, $D_m$.  
+At any given time $t$, the probability distributions over goals encodes the human's underlying intent and the time evolution of the probability distribution \added{i.e., belief update}, depends on the choice of intent inference scheme. Here we present the different belief update schemes (intent inference block in Figure~\ref{fig:sc}) evaluated in our experimental evaluation. }
+% and the various task relevant features and parameters that contribute to it. 
+
+
+%This is because, during the forward projection step, different intent update schemes result in different projections and affects the computation of the disambiguation metric. 
+
+\subsubsection{Heuristic Approaches}
+Heuristic approaches based on \textit{confidence} functions~\cite{gopinath2017human} seek to find direct mappings between instantaneous cues and underlying human intentions. 
+%For every goal $g \in \mathcal{G}$, the system maintains an associated set of confidences denoted by $\mathcal{C}$. 
+%The system designer has the freedom to choose the set of features that will inform the confidence functions.
+For example, a confidence function that captures the ``directedness" of the human control command to a particular goal position can be written as 
+% 
+%For example, a simple proximity-based confidence function used extensively [] in literature is
+%\begin{equation*}
+%c(\boldsymbol{x}_r, \boldsymbol{x}_g) = max\Big(0, 1 - \frac{\norm{\boldsymbol{x}_r - \boldsymbol{x}_g}}{r}\Big)
+%\end{equation*}
+%where $\boldsymbol{x}_r$ is the robot position, $\boldsymbol{x}_g$ is the goal position, $r$ is the radius beyond which the confidence function is always 0 and $\norm{\cdot}$ is an appropriate distance metric. 
+%A slightly more information-rich variant that aims to capture the ``directedness'' of the human control command to a particular goal position is
+%c({\boldsymbol{x}_r^t,\boldsymbol{x}_g^t, \boldsymbol{u}_{h}^t}) =
+\begin{equation*}
+	b_{g^t} =  \boldsymbol{u}_h^t\cdot(\boldsymbol{x}_{g}^t - \boldsymbol{x_r}^t)
+\end{equation*}
+\added{where $\boldsymbol{u}_h^t \sim p(\boldsymbol{u}_h\;|\;g^{intended}, m)$ is the human control command}. These confidence functions rely on instantaneous features and therefore are amnesic and can exhibit chatter behavior~\cite{dragan2012formalizing}. 
+%Using the above-mentioned confidence functions, we have 
+%\begin{equation}
+%	p_g^t = c(\boldsymbol{x}_r^t, \boldsymbol{x}_g^t, \boldsymbol{u}_h^t)
+%\end{equation}
+%where $\boldsymbol{u}_h^t \sim p(\boldsymbol{u}_h\;|\;g, m)$.  
+
+%One of the drawbacks of heuristic approaches is that information contained in the history of states is typically ignored. As a result, the inference is not robust to external noise and can exhibit chatter behavior. 
+
+\subsubsection{Bayesian Approaches}
+Bayesian approaches for intent inference consist of iteratively updating of the belief as new evidence arrives at every time-step. The Bayesian update procedure directly uses Equation~\ref{eq:final_belief} for belief propagation. 
+%\begin{equation*}
+%\underbrace{p(g_t| \boldsymbol{u}^{1:t}_{\boldsymbol{h}}, \boldsymbol{\Theta})}_{posterior} = \eta \underbrace{p(\boldsymbol{u}^{1:t}_{\boldsymbol{h}} | g_t, \boldsymbol{\Theta})}_{likelihood}\underbrace{p(g_{t-1})}_{prior}
+%\end{equation*}
+%where $\eta$ is the normalization factor, $\boldsymbol{u}^{1:t}_{\boldsymbol{h}}$ is the entire history of control commands and $\boldsymbol{\Theta}$ denoted all other task-relevant and environment features that inform the inference process. 
+%The likelihood function is related to how the human teleoperates the robot in order to accomplish a goal and can be either learned from data, or be hand-designed utilizing domain knowledge. Under first-order Markovian assumption the update equation can be simplified by only considering the control command at the current time step $t$. 
+
+%\added{add mode conditioning?}
+
+\subsubsection{Dynamic Neural Field Approaches}
+%Dynamic neural fields are differential equations in time that governs the time evolution of dynamical state variables, with some specific properties such as recurrent interactions between the state variables, robustness to external noise and memory. 
+Dynamic neural fields were originally conceived to explain cortical population neuronal dynamics~\cite{schoner2008dynamical}. 
+%based on the hypothesis that the excitatory and inhibitory neural interactions between local neuronal pools form the basis of cortical information processing
+When applied to the problem of intent inference, the individual goal probabilities are treated as constrained dynamical state variables whose time evolution is determined by a dynamic neural field such that $p^i(t) \in [0, 1]$ and $\Sigma_{1}^{n_g}p^{i}(t) = 1$, where $p^i(t)$ denotes the probability associated with the $i^{th}$ goal at time $t$ and $\textit{\textbf{p}}(t) = [p^1(t), p^2(t),\dots,p^{n_g}(t) ]^{T}$. 
+%Recurrent interactions between the state variables, robustness to external noise and inherent memory make dynamic neural fields an ideal candidate for an intent inference engine. 
+
+% The dynamical system that governs the time evolution of goal probabilities can be generically written as 
+%\begin{equation*}
+%\dot{\boldsymbol{p}}(t) = F(\boldsymbol{p}(t), \boldsymbol{u}_h ; \boldsymbol{\Theta})
+%\end{equation*}
+%where $F$ represents the nonlinear vector field, $\boldsymbol{u}_h$ is the human control input and $\boldsymbol{\Theta}$ represents all other task-relevant features and parameters that affect the time-evolution of the probability distribution. 
+The full specification of the neural field is given by
+\begin{multline}\label{eq:dft}
+	\frac{\partial \textit{\textbf{p}}(t)}{\partial t} = \frac{1}{\tau}\bigg[-\mathbb{I}_{n_g\times n_g}\cdot\textit{\textbf{p}}(t) + \underbrace{\frac{1}{n_g}\cdot\mathds{1}_{n_g}\bigg]}_{\text{rest state}} + \\ \underbrace{\boldsymbol{\lambda}_{n_g\times n_g}\cdot\sigma(\boldsymbol{\xi}(\boldsymbol{u}_h^t;\boldsymbol{\Theta}))}_{\text{excitatory + inhibitory}}
+\end{multline}
+where time-scale parameter $\tau$ determines the memory capacity of the system, $\mathbb{I}_{n_g\times n_g}$ is the identity matrix, $\mathds{1}_{n_g}$ is a vector of dimension $n_g \times 1$ containing all ones, $\boldsymbol{\lambda}$ is the control matrix that controls the excitatory and inhibitory aspects, $\boldsymbol{\xi}$ is a nonlinear function through which human control commands and task features affect the time evolution, $\boldsymbol{\Theta}$ represents all other task-relevant features and parameters, and $\sigma$ is a biased sigmoidal nonlinearity given by $\sigma(\boldsymbol{\xi}) = \frac{1}{1 + e^{-\boldsymbol{\xi}}} - 0.5$. 
+%In the absence of any information or cues, the probability distribution settles to a resting state which is a uniform distribution, that is whenever $\boldsymbol{u}_h = 0$, $\boldsymbol{\xi} = \vec{0}$. 
+%Given the initial probability distribution at time $t_a$, Equation~\ref{eq:dft} can be solved numerically from $t \in [t_a, t_b]$ using a simple Euler algorithm with a fixed time-step $\Delta t$. 
+The design of $\boldsymbol{\xi}$ is informed by what features of the human control input and environment capture the human's underlying intent most effectively. Our implementation relies on the \textit{directedness} of the human control commands towards a goal, the \textit{proximity} to a goal and the \textit{agreement} between the human commands and robot autonomy\footnote{We refer the reader to~\cite{gopinath2018dnf} for a more in-depth evaluation of dynamic neural approach approach for intent inference.}.
+
+\section{Experimental Evaluation}\label{sec:ed}
+We evaluate the efficacy of the proposed disambiguation algorithm on simulated point robots and a simulated robotic manipulator that operates in a \textit{shared control} setting. This section describes the shared-control paradigm used in our experiments and the details of the simulation experiment. 
+%In this section we describe our simulation experiments conducted on simulated point-like robots and a simulated robotic manipulator to evaluate the effectiveness of our disambiguation algorithm. 
+\subsection{Shared Control}\label{ssec:shared-control}
+Shared autonomy in assistive robotics aims to reduce the human's physical and cognitive burden during task execution without having the user to completely cede manual control~\cite{muelling2017autonomy}. 
+%Some common shared-control approaches include (a) hierarchical paradigms in which the choice of a high-level goal is entrusted to the user and the autonomy generates low-level control~\citep{kim2012autonomy} and (b) signal-level paradigms in which the user and robot's control commands are blended together~\citep{muelling2017autonomy}. 
+%Shared control systems often require a good estimate of the human's intent to determine when and how to share control. Therefore, intent inference and disambiguation play a vital role in the seamless operation and success of a shared control system. 
+In our evaluation, control sharing is achieved with a blending-based paradigm, in which the final control command issued to the robot is a weighted linear combination of the user control command and robot autonomy.
+\subsubsection{Robot Autonomy}\label{sssec:autonomy}
+%The autonomous control policy generates control command
+%$\boldsymbol{u}_r \leftarrow f_{r}(\boldsymbol{x})$
+%where $f_{r}(\cdot) \in \mathcal{F}_{r}$, and $\mathcal{F}_{r}$ is the set of all control behaviors corresponding to different tasks. 
+%Specifically, let $\boldsymbol{u}_{r,g}$ be the autonomy command associated with goal $g$. 
+
+The robot autonomy command $\boldsymbol{u}_{r,g^*}$ is generated using a simple potential field, which is defined in all parts of the state space~\cite{khatib1986real}. \added{The potential field worked in conjunction with the intent inference module which generated the goal prediction $g^*$ at every time step. $g^*$ is then associated with a potential field $\gamma_{g^*}$ which treated $g^*$ as an attractor and all the other goals in the scene as repellers.  }
+%That is,
+%\begin{equation*}
+%\dot{\boldsymbol{x}}_r^{attract} = \boldsymbol{x}_{g} - \boldsymbol{x_r}
+%\end{equation*}
+% where $\dot{\boldsymbol{x}}_r$ indicates the velocity of the robot, $\boldsymbol{x}_{g}$ is the location of goal $g$. Each dimension of $\dot{\boldsymbol{x}}_r^{attract}$ can be interpreted as the magnitude of the \textit{attractive pull} towards the goal along that dimension. 
+%The repeller velocity is given by
+%\begin{equation*}
+%\dot{\boldsymbol{x}}_r^{repel} = \sum_{i \in \mathcal{G} \setminus g} \frac{\boldsymbol{x_r} - \boldsymbol{x}_{g^i}}{\mu(\norm{\boldsymbol{x_r} - \boldsymbol{x}_{g^i}}^2)}
+%\end{equation*}
+% $\mu$ controls the magnitude of the repeller velocity.
+%  The autonomy command $\boldsymbol{u}_{r,g}$ is computed as a summation of the attractor and repeller velocities.
+%\begin{equation*}
+%\boldsymbol{u}_{r,g} = \dot{\boldsymbol{x}}_r^{attract} + \dot{\boldsymbol{x}}_r^{repel} 
+%\end{equation*}
+%$\gamma_g$ operates in the full six dimensional Cartesian space, and treats position and orientation as independent potential fields. 
+
+\subsubsection{Control Blending Paradigm}\label{sssec:blending}
+The final control command $\boldsymbol{u}_f$ issued to the robot then is given by
+\begin{equation*}
+	\boldsymbol{u}_f = \alpha\cdot \boldsymbol{u}_{r,g^*} + (1 - \alpha)\cdot \boldsymbol{u}_h
+\end{equation*}
+where $g^*$ is the most confident goal and corresponds to the mode of $b_{g^t}$. 
+The blending parameter, $\alpha$ is a piecewise linear function of the $p(g^*)$.
+and is specified as
+$$
+\alpha = \left\{
+\begin{array}{ll}
+0 & \quad\quad~~~ p(g^*) \leq \rho_1 \\
+\frac{\rho_3}{\rho_2 - \rho_1}\cdot p(g^*) &  \quad \text{if}\quad \rho_1 < p(g^*) \leq \rho_2  \\
+\rho_3 & \quad\quad~~~ p(g^*) > \rho_2 	
+\end{array}
+\right.
+$$
+with $\rho_i \in [0, 1] \;\forall\; i \in [1,2,3]$ and $ \rho_2 > \rho_1$. 
+In our implementation, we empirically set $\rho_1 = \frac{1.05}{n_g}, \rho_2 = \frac{1.1}{n_g}$ and $ \rho_3 = 0.7$.
+\begin{figure}[t!]
+	\centering
+	\includegraphics[width= \hsize, height=0.28\vsize]{./figures/SharedAutonomy.eps}
+	\vspace{-1cm}
+	\caption{\added{Components of a shared autonomy human-machine system. This illustrates how the different components work in tandem as the human and autonomy interact continually to control the robotic arm. The intent disambiguation module is activated upon user request and results in a control mode switch to the maximally disambiguating mode $m^*$. The intent inference block utilizes the different algorithms presented in Section~\ref{sec:inference}. The robot autonomy is generated using a potential field approach described in Section~\ref{sssec:autonomy} and the shared autonomy is implemented via a control blending approach described in Section~\ref{sssec:blending}.} }
+	\label{fig:sc}
+\end{figure}
+
+\subsubsection{Maximum Potential Mode Switch Assistance}\label{sssec:baseline}
+As a baseline for the simulation experiments described in Section~\ref{ssec:sim} we utilize a simple greedy mode switch assistance scheme. At any given time $t$, the system selects the control mode which has the \textit{maximum attractive pull} or \textit{maximum potential} towards the predicted goal. 
+%For each control dimension $k$, the magnitude of the $k^{th}$ dimension of $\dot{\boldsymbol{x}}_r^{attract}$ is a measure of the attractive potential along $k$. 
+The attractive potential of each control mode $m \in \mathcal{M}$ is computed as the total attractive potential of all control dimensions $k \in m$.
+
+\subsection{Point Robot Simulation Setup}\label{ssec:sim}
+\subsubsection{Robot Workspace}
+Our simulations were performed on point robots that reside in $\mathbb{R}^2$, $\mathbb{R}^3$, $\mathbb{SE}(2)$ and $\mathbb{SE}(3)$ spaces. The translational workspace limits were set at $[-0.6m, 0.6m]$ along each translational dimension and the orientation limits were set at $[0, 2\pi]$ along each rotational axis. Table~\ref{tbl:manip} lists all the factors there were manipulated for each trial. 
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|p{3cm}|p{3cm}|}
+		\hline
+		\textbf{Variable} &\textbf{Range}  \\ \hline
+		$n_g$ &  $[2,6]$ \\ \hline
+		$\mathcal{M}$ & Randomly selected from Table~\ref{tbl:cmp} conditioned on the space\\ \hline
+		Intent Inference & [`Confidence', `Bayes', `Dynamic Neural Field'] \\ \hline
+		Initial Robot Position & Randomized within workspace limits \\ \hline
+		Goal Positions & Randomized within workspace limits \\ \hline
+		Intended Goal & Randomly chosen from $\mathcal{G}$ \\ \hline
+	\end{tabular}
+	\vspace{.2cm}
+	\caption{Randomized Factors for Each Simulation Trial} 
+	\label{tbl:manip}
+\end{table}
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|p{1cm}|p{0.5cm}|p{3cm}|}
+		\hline
+		\textbf{Space} & $n_k$ &\textbf{Control Mode Sets}  \\ \hline
+		$\mathbb{R}^2$ & $2$ & $\{[1],[2]\}$ \\ \hline
+		$\mathbb{R}^3$ & $3$ & $\{[1],[2], [3]\}$, $\{[1,2], [3]\}$ \\ \hline
+		$\mathbb{SE}(2)$ & $3$ &  $\{[1],[2],[3]\}$, $\{[1,2], [3]\}$ \\ \hline
+		$\mathbb{SE}(3)$ & $6$ & $\{[1],[2],[3],[4],[5],[6]\}$, $\{[1,2,3],  [4,5,6]\}$, $\{[1,2], [1,3], [4,5], [6]\}$, $\{[1,2], [1,3], [4,5], [4,6]\}$ \\ \hline
+	\end{tabular}
+	\vspace{.2cm}
+	\caption{Predefined control space partition sets for each of the simulation spaces. The numbers in the rightmost column indicate the control dimensions. } 
+	\label{tbl:cmp}
+\end{table}
+
+\subsubsection{Mode Switch Schemes}
+Four different mode switching schemes were activated during each simulation trial, three of which performed intent disambiguation, and one which served as a baseline for comparison. The disambiguation algorithms were entropy disambiguation  metric (Section~\ref{sssec:ent}), KL divergence disambiguation metric (Section~\ref{sssec:kl}) and a heuristic approach developed in a related work~\cite{gopinath2017mode}. We used the mode switching scheme described in Section~\ref{sssec:baseline} as the baseline for comparison. 
+\subsubsection{$\boldsymbol{u}_r$ and $\boldsymbol{u}_h^{sim}$}
+The simulated robot autonomy $\boldsymbol{u}^{sim}_r$ is generated using a repeller-free potential field \added{introduced in Section~\ref{sssec:autonomy}}. For an intended goal $g^{intended}$ and a given control mode $m \in \mathcal{M}$, the simulated human control command denoted by $\boldsymbol{u}^{sim}_h$ is sampled from the mode conditioned policy, $p(\boldsymbol{u}_h\;|\;g^{intended}, m)$ \added{as described in Section~\ref{ssec:model_based}}. 
+%\begin{equation*}
+%\boldsymbol{u}^{sim}_h = \argmax_{\boldsymbol{u_h} \in Vert(\mathcal{U}^m)} \boldsymbol{u_h}\cdot(\boldsymbol{x_g}^{intended} - \boldsymbol{x_r})
+%\end{equation*}
+%where $\boldsymbol{x_g}^{intended}$ is the position of the human's intended goal which is known only to the human and the system tries to infer using the inference mechanism. 
+%This model of simulated human control command assumes that the user issues control commands at all times and always tries to optimize for distance and time. The final control command issued to the point robot was determined by the blending-based shared control scheme described in Section~\ref{sssec:blending}.
+\subsubsection{Metrics}
+The following metrics were used to evaluate the efficacy of the disambiguation algorithm compared to the baseline mode switch assistance:
+\begin{itemize}
+	%	\item \textit{Task Completion Time (s)}: The amount of time for a successful trial to reach the goal. 
+	%	\item \textit{Number of Mode Switches}: This metric refers to the number of times the control mode switch from the current mode to a different mode. 
+	\item \textit{Onset Time}: Earliest time (normalized with respect to individual trial time) at which assistance  was triggered towards the intended goal. This measure captures how \textit{early} the robot was able to infer the correct goal  \textit{and} provide assistance. 
+	\item \textit{\added{Temporal Ratio of Assistance}}: Fraction of the total trial time for which assistance towards the intended goal was present.  
+	\item \textit{Inference Accuracy}: Fraction of the total trial time for which the intent inference mechanism correctly inferred the human's intended goal. This is a measure of overall accuracy of the system. 
+\end{itemize}
+
+\subsubsection{Simulation Protocol}
+8000 simulation runs were performed for each of the scenarios. 
+The maximum trial duration was set at $12s$ or equivalently $120$ time-steps with $\Delta t = 0.1$. The forward projection time was set to be $4$ seconds and the mode switch assistance algorithm was activated once every $10$ time-steps. The trial was ended prematurely if the robot reached within the intended goal as determined by a pre-specified distance threshold. The expectation in Equations~\ref{eq:ent} and \ref{eq:kldiv} was computed by averaging over five samples.  A \textit{dropout} factor was added to the human control command to mimic the signal sparsity exhibited by humans during robot teleoperation\footnote{Point robot simulation code available at \url{https://github.com/deepakgopinath/information_theoretic_intent_disambiguation}}. 
+
+%\begin{figure}[ht!]
+%	\centering
+%	\includegraphics[width= \hsize, height=0.28\vsize]{./figures/SharedAutonomy.eps}
+%	\vspace{-0.35cm}
+%	\caption{\added{Components of a shared autonomy human-machine system. This illustrates how the different components work in tandem as the human and autonomy interact continually to control the robotic arm. The intent disambiguation module is activated upon user request and results in a control mode switch to the maximally disambiguating mode $m^*$.}} 
+%	\label{fig:sc}
+%\end{figure}
+% \begin{figure}[h!]
+%	\centering
+%	\includegraphics[width= \hsize, height=0.25\vsize]{./figures/WS_SIM.eps}
+%	\vspace{-0.35cm}
+%	\caption{Example of point robot simulation in $\mathbb{R}^2$. The goals are represented in black, the initial robot position in red and the human's intended goal in magenta. The different colored trajectories correspond to different mode switching schemes. Greedy (Black), Entropy (Red), KL Divergence (Blue) and Heuristic (Green).} 
+%	\label{fig:ws_sim}
+%\end{figure}
+\begin{figure}[t!]
+	\centering
+	\includegraphics[width= 1.01\hsize, height=0.35\vsize, center]{./figures/onset_time.eps}
+	\vspace{-0.75cm}
+	\caption{Initial onset of assistance. Group differences between mode switch assistance schemes (GRD, ENT, KL, HEU), in four operational spaces $\mathbb{R}^2$, $\mathbb{R}^3$, $\mathbb{SE}(2)$ and $\mathbb{SE}(3)$. Box plots show the median and the quartiles.} 
+	\label{fig:initial_alpha}
+\end{figure}
+
+\subsection{Robotic Arm	 Simulation Setup}
+We also evaluated our system in a physics-based simulation of a 6-DoF robotic arm (MICO robot from Kinova Robotics). Although the end effector of the robot lives in $\mathbb{SE}(3)$, the physical constraints of the robot make the kinematics highly nonlinear compared to a point robot in $\mathbb{SE}(3)$. 
+
+We evaluated the system on two reaching tasks: 1) Four goals with same orientation and 2) five goals with different orientations. Two mode switching schemes were tested: KL divergence disambiguation and the maximum potential mode switching. During each trial, the mode switching algorithm was activated every $5s$ and the maximum trial duration was set at $40s$. The robot autonomy was generated using a potential field as described in Section~\ref{sssec:autonomy} and the control interface mapping was 1D and discrete (similar to that of a headarray). A total of 128 trials were collected for each task.
+% This sparsity factor captured the \textit{idle time} users have during task execution when teleoperating a robot and was randomly set between 20\% and 80\% as informed by the analysis of teleoperation data from previous experiments conducted in our lab. 
+
+\section{Results}\label{sec:results}
+
+In this section we present results from our simulation studies conducted on a simulated 6-DoF robotic arm and point robots in $\mathbb{R}^2$, $\mathbb{R}^3$, $\mathbb{SE}(2)$ and $\mathbb{SE}(3)$. 
+\subsection{Point Robot Simulation}
+\begin{figure}[t]
+	\centering
+	\includegraphics[width= 1.1\hsize, height=0.42\vsize, center]{./figures/temporal_ratio_of_assistance.eps}
+	\vspace{-0.8cm}
+	\caption{Temporal ratio of assistance. Group differences between mode switch assistance schemes (GRD, ENT, KL, HEU), in four operational spaces $\mathbb{R}^2$, $\mathbb{R}^3$, $\mathbb{SE}(2)$ and $\mathbb{SE}(3)$. Box plots show the median and the quartiles.} 
+	\label{fig:total_assistance}
+\end{figure}
+One way ANOVA was performed using Kruskal-Wallis procedure to test for group effects between the four mode switch schemes: greedy (GRD), entropy (ENT), KL-Divergence (KL) and heuristic (HEU). Post-hoc analysis between groups was conducted using a multiple comparison test that used Tukey's HSD criterion. All analysis was performed in MATLAB. In all the data plots, (*) indicates $p < 0.05$, (**) indicates $p < 0.01$ and (***) indicates $p < 0.001$.
+\subsubsection{Onset Time}
+\begin{figure}[t!]
+	\centering
+	\includegraphics[width= 1.1\hsize, height=0.45\vsize, center]{./figures/correct_inference.eps}
+	\vspace{-0.75cm}
+	\caption{Inference Accuracy. Group differences between mode switch assistance schemes (GRD, ENT, KL, HEU), in four operational spaces $\mathbb{R}^2$, $\mathbb{R}^3$, $\mathbb{SE}(2)$ and $\mathbb{SE}(3)$. Box plots show the median and the quartiles.} 
+	\label{fig:correct_inference}
+\end{figure}
+
+The Kruskal-Wallis test reveals that the group ranks are different for simulations in all operational spaces. Post-hoc analysis also reveals statistically significant differences between the baseline mode switch assistance scheme and at least one of the disambiguation schemes for all operational spaces (Figure~\ref{fig:initial_alpha}). This shows that when the disambiguation scheme is used, the autonomy is able to provide assistance \textit{earlier} during task execution. This implies that with disambiguation the system is able to elicit more informative control commands from the user and narrow down its prediction to the correct goal quicker during task execution. As a result, the confidence in the prediction becomes higher and the robot assistance is triggered earlier during a trial. 
+
+\subsubsection{\added{Temporal Ratio of Assistance}}
+%\vspace*{-0.7cm}
+
+For all operational spaces, Figure~\ref{fig:total_assistance} shows a statistically significant increase in the total amount of assistance when disambiguation schemes are active compared to the baseline.
+The shared control paradigm used in our setup is designed in such a way that the robot assistance gets triggered when the confidence associated with the goal prediction crosses a predefined threshold. These results indicate that with disambiguation the system is able to maintain the confidence in its prediction of the correct goal above the threshold for a longer duration during the trial, resulting in greater overall assistance during the task.
+%\subsection{Number of Mode Switches}
+%\begin{figure}[h]
+%	\centering
+%	\includegraphics[width= 1.\hsize, height=0.53\vsize]{./figures/num_mode.eps}
+%	\vspace{-0.35cm}
+%	\caption{Group differences for total amount of assistance for different simulation scenarios. Box plots show the median and the quartiles.} 
+%	\label{fig:num_mode}
+%\end{figure}
+%The results in Figure~\ref{fig:num_mode} shows that the number of mode switches is significantly lower for the disambiguation paradigms. Furthermore, for all simulation scenarios except $\mathbb{R}^2$, using KL divergence based disambiguation resulted in the lowest number of mode switches. 
+
+\subsubsection{Inference Accuracy}
+
+As shown in Figure~\ref{fig:correct_inference}, for all operational spaces, the accuracy of intent inference is higher for at least one disambiguation scheme compared to the baseline. This is likely because of the fact that robot operation in disambiguating modes results in higher information gain regarding the underlying intent thereby helping the system to perform accurate intent inference.
+\begin{figure}[t]
+	\centering
+	\includegraphics[width= 1.\hsize, height=0.24\vsize, center]{./figures/mico_sim_new.eps}
+	\vspace{-0.5cm}
+	\caption{Results with the simulated 6-DoF robotic arm. Top Left: Fraction of total time for which assistance towards the intended goal was engaged. Top Right: Accuracy of intent inference procedure measured in fraction of total trial time. Bottom: Onset of initial assistance as a fraction of total trial time. Statistical significance was computed using the Wilcoxon Rank-Sum test. } 
+	\label{fig:mico_results}
+\end{figure}
+\subsection{Robotic Arm Simulation}
+Figure~\ref{fig:mico_results} reveals that for the simulations conducted on a simulated robotic arm, the onset of initial assistance towards the correct goal is earlier compared to that of the baseline ($p < 0.05$). Similarly, the accuracy of the intent inference procedure is higher when disambiguation algorithm is deployed, although not statistically significant. However, the temporal ratio of assistance provided by the autonomy is comparable between the mode-switching schemes. These results indicate that even with a low-dimensional and discrete control interface that exhibits signal dropouts, robot operation in control modes selected by the disambiguation algorithm helps the autonomy to elicit more intent-revealing control commands thereby helping the system predict the intended goal more accurately and provide assistance earlier. 
+\section{Discussion}\label{sec:discussions}
+
+The effectiveness of an assistive machine in a shared control setting is closely related to its ability to infer the user's intent accurately and unambiguously. Accurate goal inference can improve the trust in human-robot interaction. On the other hand, incorrect goal inference can likely lead to suboptimal user experience and result in poor task performance. Our results indicate that disambiguation helps to enhance the accuracy of the intent inference and leads to an increase in the overall assistance provided to the user. \added{Our algorithm can be used for any human-robot system that utilizes a parametric intent inference system. The disambiguation algorithm can be used to rank order any discrete parameter set accordingly to their ability to better disambiguate intent. }
+
+Another factor that is crucial for the success of a shared control system, especially for safety-critical applications, is \textit{when} during task execution the assistance gets activated. For example, in the shared control of complex systems that exhibit highly nonlinear and unstable dynamics typically the role of autonomy is to maintain stability and safety. In such situations, if the user operation leads to the destabilization of the system, failure to intervene earlier during task execution can lead to catastrophic results. From our simulation results, we can see that intent disambiguation enhances the inference capabilities of the system and helps the autonomy to provide assistance earlier.
+The utility value of a mode-switching scheme can vary during the time course of task execution. For instance, in the beginning stages of task execution when the intent is unclear, disambiguation algorithms are likely to be more useful. That is, a more optimal strategy might be one which is adaptive and chooses different schemes depending on the context. This could possibly be cast within a control theoretic framework as a mode-scheduling problem in which the question of \textit{when} to deploy \textit{which} mode-switching paradigm can be tackled.
+
+Disambiguation algorithms can benefit from high fidelity models of robot kinematics and user teleoperation that can be learned from data using machine learning techniques such as deep neural networks. Furthermore, parallel computation on GPU can also be leveraged for more accurate estimation of the expectation in Equations~\ref{eq:ent} and \ref{eq:kldiv}. 
+%Lastly, the disambiguation algorithm can be customized to specific users using real-time learning algorithms that capture individual teleoperation characteristics.
+
+%Future work. More detailed analysis of data to expose the interactions between factors. Intent inference schemes that are amnesic might benefit from disambiguation schemes that capture informatoin gain as well as content to offset the lack of information in the probability distributions themselves. These simulated experiments have shed light on the efficacy of these systems. Full fledged human study will be done. Treating this as a mode-scheduling problem?
+%Explore second order metrics to capture rate of change of information. Fisher information. 
+
+%\vspace{-0.4cm}
+\section{Conclusion}\label{sec:conclusions}
+ In this paper, we proposed a mode selection
+paradigm that enhances the autonomy's intent inference capabilities by exploiting the fact that how the human operates the robot is intrinsically conditioned on the control mode in operation. We introduced two different methods for intent disambiguation using the information-theoretic concepts of entropy and KL divergence. We also present results from an extensive simulation-based study for point robots and a physics-based simulation of a robotic arm. Results from the study indicate that, compared to the baseline, the proposed disambiguation algorithms facilitated faster intent disambiguation which in turn allowed the autonomy to assist earlier during task execution. Goal inference was more accurate and the total amount of assistance engaged was also higher. In our future work, we plan to perform an in-depth analysis of the data to expose the interactions between various factors. Furthermore, as informed by the simulation results, we plan to evaluate our system with an extensive user study. 
+
+%\section*{Acknowledgments}
+%Funding source omitted for review. 
+
+\balance	
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+
+
+
+
+\end{document}

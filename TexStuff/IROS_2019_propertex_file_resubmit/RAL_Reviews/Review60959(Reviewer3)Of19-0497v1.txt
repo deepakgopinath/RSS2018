@@ -1,0 +1,38 @@
+The manuscript introduces a model selection framework to define the
+control balance between the robotic assistance and human input in
+reaching tasks. Information theory and probabilistic approaches are
+used to describe the mathematical framework of human-robot interactive
+control. The results are demonstrated in simulation. It is shown that
+performance is improved when intention disambiguation is used.
+
+
+Major:
+
+- It was hard for me to fully understand the paper. I think this will
+be the case for many readers who are not familiar with the topic and
+mathematical concepts used by the authors. Probably, it is better to
+have a longer version of the paper to be submitted to a more
+theoretical venue.
+- I think it is better to define certain terms such as "belief over
+goals" and "intention disambiguation/inference" in the introduction.
+Probably, more specific robotics example will be helpful.
+- As I understand Algorithm 1 explains how intentions are obtained,
+however it does not explain how this intentions are embedded in the
+robot assistive controller. I think it is good to include the assistive
+control part to Algorithm 1 or to present an algorithmic description of
+how Algorithm 1 combines with the robot control
+- Simulation methods are not described with sufficient details. It is
+hard to reproduce this. Could you add equations for human and robot
+control behaviour (u_h and u_r)? Adding detailed equations and
+parameters to Appendix and supplementary material will be helpful.
+- I would like to see time domain plots for R^2 simulation (human/robot
+position/forces and intention metrics)
+- I am not sure if it is valid to do statistical analysis of simulated
+data
+
+
+Minor:
+- Add equation references to Algorithm 1
+- Figures 2, 3 and 4 too small font-size to read
+- "KL" is not explained in the abstract
+- check for typos: "autonomYS intent inference "

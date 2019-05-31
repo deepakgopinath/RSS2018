@@ -1,0 +1,61 @@
+This is BibTeX, Version 0.99d (TeX Live 2013/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: GopinathArgall_IROS2019_Disamb_Resubmit.aux
+The style file: IEEEtran.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Database file #1: references.bib
+Repeated entry---line 117 of file references.bib
+ : @inproceedings{pilarski2012dynamic
+ :                                   ,
+I'm skipping whatever remains of this entry
+-- IEEEtran.bst version 1.11 (2003/04/02) by Michael Shell.
+-- http://www.ctan.org/tex-archive/macros/latex/contrib/supported/IEEEtran/
+-- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
+
+Done.
+You've used 24 entries,
+            3975 wiz_defined-function locations,
+            933 strings with 12113 characters,
+and the built_in function-call counts, 17900 in all, are:
+= -- 1414
+> -- 425
+< -- 146
++ -- 229
+- -- 73
+* -- 846
+:= -- 2665
+add.period$ -- 53
+call.type$ -- 24
+change.case$ -- 23
+chr.to.int$ -- 339
+cite$ -- 24
+duplicate$ -- 1310
+empty$ -- 1523
+format.name$ -- 93
+if$ -- 4146
+int.to.chr$ -- 0
+int.to.str$ -- 24
+missing$ -- 224
+newline$ -- 92
+num.names$ -- 24
+pop$ -- 531
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 2
+skip$ -- 1414
+stack$ -- 0
+substring$ -- 829
+swap$ -- 1034
+text.length$ -- 33
+text.prefix$ -- 0
+top$ -- 5
+type$ -- 0
+warning$ -- 0
+while$ -- 85
+width$ -- 26
+write$ -- 243
+(There was 1 error message)

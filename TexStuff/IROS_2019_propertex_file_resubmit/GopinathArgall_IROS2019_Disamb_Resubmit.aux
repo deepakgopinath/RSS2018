@@ -1,0 +1,149 @@
+\relax 
+\citation{laplante1992assistive}
+\citation{simpson2008tooth}
+\citation{croft2003estimating}
+\providecommand \oddpage@label [2]{}
+\@writefile{loc}{\contentsline {subsection}{Added: \truncate {.3\textwidth }{\textit  {Kullback-Leibler} (KL) divergence}}{1}}
+\@writefile{toc}{\contentsline {section}{\numberline {I}INTRODUCTION}{1}}
+\@writefile{loc}{\contentsline {subsection}{Added: \truncate {.3\textwidth }{Adaptive Switch Laboratories:}}{1}}
+\@writefile{loc}{\contentsline {subsection}{Added: \truncate {.3\textwidth }{Therafin Corporation}}{1}}
+\@writefile{loc}{\contentsline {subsection}{Added: \truncate {.3\textwidth }{The ability of such autonomy-endowed machines to infer the users' needs and intentions, also known as \textit  {intent inference,} is often a bottleneck for providing appropriate assistance accurately, confidently and quickly.}}{1}}
+\@writefile{loc}{\contentsline {subsection}{Added: \truncate {.3\textwidth }{performing activities of daily living using assistive robotic manipulators}}{1}}
+\@writefile{loc}{\contentsline {subsection}{Added: \truncate {.3\textwidth }{for example, picking up food, reaching for door knobs, tabletop manipulation \textit  {et cetera}}}{1}}
+\@writefile{loc}{\contentsline {subsection}{Added: \truncate {.3\textwidth }{also known as \textit  {belief}}}{1}}
+\@writefile{loc}{\contentsline {subsection}{Added: \truncate {.3\textwidth }{observations}}{1}}
+\@writefile{loc}{\contentsline {subsection}{Added: \truncate {.3\textwidth }{At any given time, the policy followed by the human while controlling the robotic arm is conditioned on the current active mode. As a result, the belief update that depends on the human policy implicitly depends on the active control mode. }}{1}}
+\citation{tomasello2007shared}
+\citation{sadigh2016information}
+\citation{tong2001active}
+\citation{atanasov2014information}
+\citation{miller2016ergodic}
+\citation{baker2007goal}
+\citation{taha2011pomdp}
+\citation{dragan2013policy}
+\citation{javdani2015shared}
+\citation{herlant2016assistive}
+\citation{pilarski2012dynamic}
+\@writefile{toc}{\contentsline {section}{\numberline {II}Related Work}{2}}
+\newlabel{sec:related_work}{{II}{2}}
+\@writefile{loc}{\contentsline {subsection}{Added: \truncate {.3\textwidth }{For example, the human can be modeled as a rational agent within a Partially Observable Markov Decision Process (POMDP) such that the uncertainty is over user's goal\nobreakspace  {}\cite  {taha2011pomdp} framework. The autonomy can then use these models to either take a \textit  {predict-then-act}\nobreakspace  {}\cite  {dragan2013policy} approach or generate robot control commands that will \textit  {minimize the expected user cost}\nobreakspace  {}\cite  {javdani2015shared} so that assistance is effective even in cases where the goal uncertainty is very high. The intent disambiguation algorithm presented in this paper can be stacked on top of any parametric intent inference scheme as a mechanism to further improve the accuracy of the inference scheme}}{2}}
+\@writefile{toc}{\contentsline {section}{\numberline {III}Intent Disambiguation}{2}}
+\newlabel{sec:disamb}{{III}{2}}
+\@writefile{loc}{\contentsline {subsection}{Added: \truncate {.3\textwidth }{This section introduces a set-theoretic treatment of control modes and how our autonomy reasons about the intent disambiguation capabilities of different control modes by computing the information gain and content of the belief over goals.}}{2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {III-A}Set Theoretic Treatment of Control Modes}{2}}
+\newlabel{ssec:set_modes}{{III-A}{2}}
+\citation{calli2015ycb}
+\citation{hula2015monte}
+\citation{mardia1975statistics}
+\@writefile{toc}{\contentsline {subsection}{\numberline {III-B}Conditional Recursive Bayesian Belief Update}{3}}
+\newlabel{eq:belief1}{{1}{3}}
+\newlabel{eq:belief2}{{2}{3}}
+\newlabel{eq:recursive_belief}{{3}{3}}
+\newlabel{eq:marginal_mode}{{4}{3}}
+\newlabel{eq:mode_prob}{{5}{3}}
+\newlabel{eq:final_belief}{{6}{3}}
+\@writefile{loc}{\contentsline {subsection}{Added: \truncate {.3\textwidth }{Table\nobreakspace  {}II\hbox {} presents some examples for control space partitions.}}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {III-C}Algorithm: Information Theoretic Intent Disambiguation}{3}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Information-Theoretic Intent Disambiguation}}{3}}
+\newlabel{alg:disamb}{{1}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {III-D}Model-based Projection of $b_{g^t}$}{3}}
+\newlabel{ssec:model_based}{{III-D}{3}}
+\citation{gopinath2017human}
+\citation{dragan2012formalizing}
+\citation{schoner2008dynamical}
+\@writefile{toc}{\contentsline {subsection}{\numberline {III-E}Entropy Disambiguation Metric}{4}}
+\newlabel{sssec:ent}{{III-E}{4}}
+\newlabel{eq:ent}{{8}{4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {III-F}KL Divergence Disambiguation}{4}}
+\newlabel{sssec:kl}{{III-F}{4}}
+\newlabel{eq:kldiv}{{9}{4}}
+\@writefile{toc}{\contentsline {section}{\numberline {IV}Intent inference}{4}}
+\newlabel{sec:inference}{{IV}{4}}
+\@writefile{loc}{\contentsline {subsection}{Added: \truncate {.3\textwidth }{i.e., belief update}}{4}}
+\@writefile{loc}{\contentsline {subsection}{Added: \truncate {.3\textwidth }{The exact update rule for the recursive belief update (Algorithm\nobreakspace  {}1\hbox {}, Line 7) directly impacts the projected probability distributions, $b_g^{t_b}$, and the disambiguation metric, $D_m$. At any given time $t$, the probability distributions over goals encodes the human's underlying intent and the time evolution of the probability distribution \added {i.e., belief update}, depends on the choice of intent inference scheme. Here we present the different belief update schemes (intent inference block in Figure\nobreakspace  {}1\hbox {}) evaluated in our experimental evaluation. }}{4}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {IV-.1}Heuristic Approaches}{4}}
+\@writefile{loc}{\contentsline {subsection}{Added: \truncate {.3\textwidth }{where $\boldsymbol  {u}_h^t \sim p(\boldsymbol  {u}_h\tmspace  +\thickmuskip {.2777em}|\tmspace  +\thickmuskip {.2777em}g^{intended}, m)$ is the human control command}}{4}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {IV-.2}Bayesian Approaches}{4}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {IV-.3}Dynamic Neural Field Approaches}{4}}
+\citation{gopinath2018dnf}
+\citation{muelling2017autonomy}
+\citation{khatib1986real}
+\citation{gopinath2017mode}
+\newlabel{eq:dft}{{10}{5}}
+\@writefile{toc}{\contentsline {section}{\numberline {V}Experimental Evaluation}{5}}
+\newlabel{sec:ed}{{V}{5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {V-A}Shared Control}{5}}
+\newlabel{ssec:shared-control}{{V-A}{5}}
+\newlabel{sssec:autonomy}{{V-A.1}{5}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {V-A.1}Robot Autonomy}{5}}
+\@writefile{loc}{\contentsline {subsection}{Added: \truncate {.3\textwidth }{The potential field worked in conjunction with the intent inference module which generated the goal prediction $g^*$ at every time step. $g^*$ is then associated with a potential field $\gamma _{g^*}$ which treated $g^*$ as an attractor and all the other goals in the scene as repellers. }}{5}}
+\newlabel{sssec:blending}{{V-A.2}{5}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {V-A.2}Control Blending Paradigm}{5}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces \added {Components of a shared autonomy human-machine system. This illustrates how the different components work in tandem as the human and autonomy interact continually to control the robotic arm. The intent disambiguation module is activated upon user request and results in a control mode switch to the maximally disambiguating mode $m^*$. The intent inference block utilizes the different algorithms presented in Section\nobreakspace  {}IV\hbox {}. The robot autonomy is generated using a potential field approach described in Section\nobreakspace  {}V-A.1\hbox {} and the shared autonomy is implemented via a control blending approach described in Section\nobreakspace  {}V-A.2\hbox {}.} }}{5}}
+\@writefile{loc}{\contentsline {subsection}{Added: \truncate {.3\textwidth }{Components of a shared autonomy human-machine system. This illustrates how the different components work in tandem as the human and autonomy interact continually to control the robotic arm. The intent disambiguation module is activated upon user request and results in a control mode switch to the maximally disambiguating mode $m^*$. The intent inference block utilizes the different algorithms presented in Section\nobreakspace  {}IV\hbox {}. The robot autonomy is generated using a potential field approach described in Section\nobreakspace  {}V-A.1\hbox {} and the shared autonomy is implemented via a control blending approach described in Section\nobreakspace  {}V-A.2\hbox {}.}}{5}}
+\newlabel{fig:sc}{{1}{5}}
+\newlabel{sssec:baseline}{{V-A.3}{5}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {V-A.3}Maximum Potential Mode Switch Assistance}{5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {V-B}Point Robot Simulation Setup}{5}}
+\newlabel{ssec:sim}{{V-B}{5}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {V-B.1}Robot Workspace}{5}}
+\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Randomized Factors for Each Simulation Trial}}{5}}
+\newlabel{tbl:manip}{{I}{5}}
+\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Predefined control space partition sets for each of the simulation spaces. The numbers in the rightmost column indicate the control dimensions. }}{6}}
+\newlabel{tbl:cmp}{{II}{6}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {V-B.2}Mode Switch Schemes}{6}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {V-B.3}$\boldsymbol  {u}_r$ and $\boldsymbol  {u}_h^{sim}$}{6}}
+\@writefile{loc}{\contentsline {subsection}{Added: \truncate {.3\textwidth }{introduced in Section\nobreakspace  {}V-A.1\hbox {}}}{6}}
+\@writefile{loc}{\contentsline {subsection}{Added: \truncate {.3\textwidth }{as described in Section\nobreakspace  {}III-D\hbox {}}}{6}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {V-B.4}Metrics}{6}}
+\@writefile{loc}{\contentsline {subsection}{Added: \truncate {.3\textwidth }{Temporal Ratio of Assistance}}{6}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {V-B.5}Simulation Protocol}{6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Initial onset of assistance. Group differences between mode switch assistance schemes (GRD, ENT, KL, HEU), in four operational spaces $\mathbb  {R}^2$, $\mathbb  {R}^3$, $\mathbb  {SE}(2)$ and $\mathbb  {SE}(3)$. Box plots show the median and the quartiles.}}{6}}
+\newlabel{fig:initial_alpha}{{2}{6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {V-C}Robotic Arm Simulation Setup}{6}}
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Results}{6}}
+\newlabel{sec:results}{{VI}{6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {VI-A}Point Robot Simulation}{6}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {VI-A.1}Onset Time}{6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Temporal ratio of assistance. Group differences between mode switch assistance schemes (GRD, ENT, KL, HEU), in four operational spaces $\mathbb  {R}^2$, $\mathbb  {R}^3$, $\mathbb  {SE}(2)$ and $\mathbb  {SE}(3)$. Box plots show the median and the quartiles.}}{7}}
+\newlabel{fig:total_assistance}{{3}{7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Inference Accuracy. Group differences between mode switch assistance schemes (GRD, ENT, KL, HEU), in four operational spaces $\mathbb  {R}^2$, $\mathbb  {R}^3$, $\mathbb  {SE}(2)$ and $\mathbb  {SE}(3)$. Box plots show the median and the quartiles.}}{7}}
+\newlabel{fig:correct_inference}{{4}{7}}
+\@writefile{loc}{\contentsline {subsection}{Added: \truncate {.3\textwidth }{Temporal Ratio of Assistance}}{7}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {VI-A.2}\added {Temporal Ratio of Assistance}}{7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Results with the simulated 6-DoF robotic arm. Top Left: Fraction of total time for which assistance towards the intended goal was engaged. Top Right: Accuracy of intent inference procedure measured in fraction of total trial time. Bottom: Onset of initial assistance as a fraction of total trial time. Statistical significance was computed using the Wilcoxon Rank-Sum test. }}{7}}
+\newlabel{fig:mico_results}{{5}{7}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {VI-A.3}Inference Accuracy}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {VI-B}Robotic Arm Simulation}{7}}
+\@writefile{toc}{\contentsline {section}{\numberline {VII}Discussion}{7}}
+\newlabel{sec:discussions}{{VII}{7}}
+\bibstyle{IEEEtran}
+\bibdata{references}
+\bibcite{laplante1992assistive}{1}
+\bibcite{simpson2008tooth}{2}
+\bibcite{croft2003estimating}{3}
+\bibcite{tomasello2007shared}{4}
+\bibcite{sadigh2016information}{5}
+\bibcite{tong2001active}{6}
+\bibcite{atanasov2014information}{7}
+\bibcite{miller2016ergodic}{8}
+\bibcite{baker2007goal}{9}
+\bibcite{taha2011pomdp}{10}
+\bibcite{dragan2013policy}{11}
+\bibcite{javdani2015shared}{12}
+\bibcite{herlant2016assistive}{13}
+\bibcite{pilarski2012dynamic}{14}
+\bibcite{calli2015ycb}{15}
+\bibcite{hula2015monte}{16}
+\bibcite{mardia1975statistics}{17}
+\bibcite{gopinath2017human}{18}
+\bibcite{dragan2012formalizing}{19}
+\bibcite{schoner2008dynamical}{20}
+\bibcite{gopinath2018dnf}{21}
+\bibcite{muelling2017autonomy}{22}
+\bibcite{khatib1986real}{23}
+\bibcite{gopinath2017mode}{24}
+\@writefile{loc}{\contentsline {subsection}{Added: \truncate {.3\textwidth }{Our algorithm can be used for any human-robot system that utilizes a parametric intent inference system. The disambiguation algorithm can be used to rank order any discrete parameter set accordingly to their ability to better disambiguate intent. }}{8}}
+\@writefile{toc}{\contentsline {section}{\numberline {VIII}Conclusion}{8}}
+\newlabel{sec:conclusions}{{VIII}{8}}
+\@writefile{toc}{\contentsline {section}{References}{8}}

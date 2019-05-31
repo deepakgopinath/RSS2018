@@ -1,0 +1,287 @@
+MetaReview.
+
+All reviewers agreed that topic is interesting and relevant to the
+readership of IEEE RA-L. They also agreed that the work has some
+novelty and appreciated its engineering complexity. 
+However, all
+reviewers think that the contribution of this work is questionable and
+not clear at all. 
+
+Both R3 and R9 claim that the paper is hard to
+understand and suffers from lack of details to convince readers. 
+
+How come R$ found it super lucid? The comments were all related to style. Tha math is super basic as well. 
+
+R4
+also has a number of questions and comments on experiment 2. 
+
+Legit concern. Arguments. Could have used a better model for kinematics. The nonlinear kinematics were approximated using a linear model. Could affect the fwd projection. Also ENT and KL were chosen because we have already done work with GRD in another paper. But we aare in the process of extending the study to a full user study in which the 
+
+
+I agree
+with R9 that authors need to improve the overall structure of the paper
+and related works, and more discussion is required in order to validate
+their approach. 
+
+Ok we will add some more related works. However, Anca's work has been mentioned. 
+
+R4 also has a similar concern that it is not clear
+about its feasibility of 6DoF robot arm. 
+
+This is same as the earlier comment on experiment 2. 
+
+I refer the authors to the
+detailed reviews for more information. 
+
+
+Reviewer 3:
+
+The manuscript introduces a model selection (WRONG!!!!!) [MODE SELECTION] framework to define the
+control balance between the robotic assistance and human input in
+reaching tasks. Information theory and probabilistic approaches are
+used to describe the mathematical framework of human-robot interactive
+control. The results are demonstrated in simulation. It is shown that
+performance is improved when intention disambiguation is used.
+
+DId you really understand what was going on? The reviewer has confused mode selection with model selection. 
+Major:
+
+- It was hard for me to fully understand the paper. I think this will
+be the case for many readers who are not familiar with the topic and
+mathematical concepts used by the authors. Probably, it is better to
+have a longer version of the paper to be submitted to a more
+theoretical venue.
+
+Not a valid point. 
+
+- I think it is better to define certain terms such as "belief over
+goals" and "intention disambiguation/inference" in the introduction.
+Probably, more specific robotics example will be helpful.
+
+ok, maybe. We talk about What intent inference is in the beginning. We talk about how autonomy maintains a probability distribution over goals (or beliefs). paragraph 3 page 1, talks about this all. 
+
+- As I understand Algorithm 1 explains how intentions are obtained,
+
+(WRONG!) It is how the disambiguatin mode is obtained. 
+
+however it does not explain how this intentions are embedded in the
+robot assistive controller. 
+
+I don't know what this means? This relates to how the intent inference module uses the intent predictions to determine the shared control level. 
+
+
+I think it is good to include the assistive
+control part to Algorithm 1 or to present an algorithmic description of
+how Algorithm 1 combines with the robot control
+
+This is an indirect effect. The algorithm choose a mode. Then the human moves the robot in that control mode. Then the shared control blending framework will be active. But since the human control commands are more intent experessive in the selected mode, the intent INFERENCE system will be more accurate and as a result the robot asisstance will be higher towards the correct goal. This is how the assistance is improved. 
+
+Could possibly add modify the entire algorithm to incorporate these effects? 
+
+
+- Simulation methods are not described with sufficient details. It is
+hard to reproduce this. Could you add equations for human and robot
+control behaviour (u_h and u_r)? Adding detailed equations and
+parameters to Appendix and supplementary material will be helpful.
+
+Section VI.B.3 could backreference potential field section and human model section. 
+It is already mentioned. Don't know if this read the paper properly. 
+
+There is no room for Appendix. We have provided what the param 
+- I would like to see time domain plots for R^2 simulation (human/robot
+position/forces and intention metrics) What the eff are you talking about? 
+
+
+	- I am not sure if it is valid to do statistical analysis of simulated
+	data? 
+what?!!! The idea of simulation is to sample from the distribution in the most exhaustive manner. In a way it is a proxy to reality. So yes, it is possible to analyze simulated data. 
+
+
+
+Minor:
+- Add equation references to Algorithm 1
+	- Maybe
+- Figures 2, 3 and 4 too small font-size to read
+	-???
+- "KL" is not explained in the abstract
+	ok
+- check for typos: "autonomYS intent inference " 
+	in Conclusion
+
+
+
+
+
+Reviewer 4:
+
+This paper is an extension from the reference [21] by adding two
+additional user intent disambiguation algorithms, which utilize entropy
+and KL divergence, and compares them to a baseline algorithm (greedy)
+and an inversed legibility algorithm (heuristic). The major
+contributions of this paper is introducing the concept of information
+to the intention inference and tested its feasibility using simulation
+tests.
+
+ok.
+
+
+The paper is well divided into sections and each section briefly but
+accurately writes down how the authors designed the algorithms and
+prepared the shared control system using a pin robot and a 6-DoF robot
+arm simulation. Sentences are written clearly and easy to understand.
+
+in contrast to the others. 
+
+One unclear issue is the presence of Dynamic Neural Field (DNF)
+approaches. Because the KL and Entropy algorithm utilizes the intent
+inference algorithms of heuristic, Bayesian, and dynamic neural field
+approaches. The other two algorithms were applied in this paper, but
+the usage of the DNS approach is not explicitly written.
+
+Maybe the author missed out on this. The intent inference algorithm was randomly sampeld from all three possibilities. So it was used in here. 
+
+
+Through this paper, most of terms are salient but I suggest changing
+one of those terms to improve the readability. For me, Total Amount of
+Assistance, read as the quantity while the value is the ratio between
+the assistance time to the total trial time in each trial. It depends
+on authors, but 'Assistance Rate' or 'Temporal Ratio of Assistance'
+could be candidates. 
+
+ok, not bad suggestion. Total amount of time the assistance is active. 
+I have the similar suggestion to the Y-axis labels
+
+in Figure 4. Also, the terms used in the text and the labels in the
+figure are not matched well that might induce low readability.
+
+Ok, will look into. 
+
+My major concern in this paper is the unclear selection of test
+condition in the second experiment. The authors suggested two user
+intention disambiguation algorithms of ENT and KL, and ENT was always
+superior to KL in all metrics except for the onset time in R^3 and
+SE(2) and the total assistance in SE(2). The metrics to which ENT was
+superior to, the significance levels of them were high with p < 0.001.
+For SE(6) space, ENT was always superior to KL. 
+
+
+For the rigid experiment design, it is natural to compare the four
+methods in the robot-arm simulation as the authors did in the
+point-robot simulation because the actual autonomy is changed. If the
+authors intended to emphasize the quality of enhanced intention
+inference of the suggested methods, KL and ENT should be compared to
+GRD or ENT should be compared to GRD at least because it showed better
+performance. 
+
+Here is the big problem. This guy wants us to do simulations for 6DOf by comparing it to GRD. Which means we have to run this experiment again with GRD as a possible way to do intent disambiguation. This means running the whole experiment again, which is time. What do we do. Can we argue that this was already done before as in the works? 
+
+Overall, the proposed method seems working with the point-robot
+simulations but it is unclear to convince readers for its feasibility
+to the 6DoF robotic arm. Therefore I cannot put this paper's
+contribution as high.
+
+Ok...
+
+
+
+
+
+
+
+Reviewer 9:
+In this paper an information-based approach for human intent inference,
+based on the characterisation of control modes, is proposed.
+Furthermore, a control mode switching is proposed as a form of robot
+assistance to the human that maximally disambiguates the intent. Two
+methods are used to perform this: entropy and Kullback-Leibler (KL)
+divergence.
+
+Ok. 
+
+Overall, the paper is interesting and gives a thorough evaluation of
+extensive simulation results which seem to be quite promising. 
+
+ok
+
+However, the paper is not well structured and clear. I often had
+difficulty understanding the content.
+
+Interesting... I wonder why the previous person understood it? 
+
+
+It seems that the approach is specialised for a specific task, i.e. for
+a reaching task where goals are discrete. The authors claim that this
+type of task is the most common which seems to be an overstatement.
+
+It is not just for a reaching task. It is for takss where the goals are discrete. It could mean dsiam iguating between grasp poses. ADL tasks primarily consisting of reaching for objects to manipulate them. Feeding, grooming, opening a door knob, pick a book. Refer to videos. 
+
+There are many tasks in robot assistance or HRI that may benefit from
+assistance, e.g. obstacle avoidance, trajectory tracking, force
+tracking, etc. The authors are encouraged to discuss how does the
+proposed approach generalise to these tasks.
+
+We are talking about enhancing intent inference. That is the primarily goal. The inferred intent could be used for many purposes. True that there are different types of robot assistance, but we are not trying to solve all those problems at once. We are focused on improving the intent inference capabilities of an autonomous system. 
+
+The list of insights in the introduction rather seem to be assumptions.
+Is there a previous work on which you base your insights?
+
+These are insights. Insights are stuff that we generate after we give it considerable thought. 
+
+Related work rather lists some scarce examples instead of being a
+structured summation of the most important works related to this paper.
+There are many approaches for intent inference found in the literature,
+see the works of e.g. Anca Dragan. Also, the related work should be
+linked to the present work in a meaningful way. 
+
+We can maybe modify it a little bit. The work referred to by the reviewer Go fuck yourself. 
+
+It is unnecessary to devote the whole section to mathematical notation.
+It should only be a paragraph in the introduction. It is highly
+advisable to rather give a problem setting, with accompanying figure of
+the task considered where the notation is usefully presented
+
+Easy reference. One stop shopping. This is a matter of style. 
+
+What is the difference between intent disambiguation and intent
+inference? Is the first understanding in which control mode is the
+system currently and the second is to which goal the operator intends
+to approach?
+
+Ok we can maybe clarify this even more. control mode sleection is way to help autonomy accurately predict the intent by enhacning intent disambiguation. 
+
+Please list all the assumptions you impose on the problem in one place,
+e.g. that the human doesn't change the goal, that at any given time
+only one control mode can be activated, etc. Mentioning assumptions "on
+the fly" is not suitable.
+
+WE
+
+Can you explain what would happen with the proposed approach if there
+is an obstacle to a goal?
+
+The human is in the loop. The pfield
+
+Where are the results for the dynamic neural field approach?  A
+multitude of different approaches is proposed which is exceptionally
+confusing and it is very hard to follow what is relevant in this paper.
+Or to rephrase, how disambiguation, inference, and assistance concepts
+participate in the evaluation?
+
+A multitude of approaches are used because we want the simulations to be as exhaustive as possible. 
+
+
+The simulation environment, task, and the complete evaluation setup
+need to be thoroughly explained. Since the actual user study is
+missing, it is very important to describe in detail (with equations)
+how is the human simulated.
+
+Simulation video would be advisable.
+
+Maybe
+
+Minor comments:
+- In introduction: when different types of low-dimensional interfaces
+are listed, appropriate citations should follow.
+- Please provide a concrete example for control modes before the
+approach is proposed. The explanation at the end of III. B. is not
+sufficiently clear.
