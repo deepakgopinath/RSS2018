@@ -8,7 +8,7 @@ cm_options_per_space{2} = {{1,2,3}, {[1,2], 3}};
 cm_options_per_space{3} = {{1,2,3}, {[1,2], 3}};
 cm_options_per_space{4} = {{1,2,3,4,5,6}, {[1,2,3], [4,5,6]}, {[1,2],[1,3],[4,5],6}, {[1,2],[1,3],[4,5],[4,6]}};
 delta_t = 0.1;
-total_subjects = 8000;
+total_subjects = 2400;
 
 %% types of data to be looked at
 

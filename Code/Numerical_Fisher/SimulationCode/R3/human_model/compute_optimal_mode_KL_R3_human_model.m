@@ -16,7 +16,8 @@ for i=1:length(cm)
             projected_kl(k) = compute_projected_kl_R3_human_model(curr_mode, curr_goal, intent_type, xr_T, pg);
         end
         expected_projected_kl = mean(projected_kl);
-        EID_AR(i) = EID_AR(i) + (1/ng)*expected_projected_kl;
+%         EID_AR(i) = EID_AR(i) + (1/ng)*expected_projected_kl;
+        EID_AR(i) = EID_AR(i) + pg(j)*expected_projected_kl;
     end
 end
 best_mode = compute_best_mode(EID_AR);

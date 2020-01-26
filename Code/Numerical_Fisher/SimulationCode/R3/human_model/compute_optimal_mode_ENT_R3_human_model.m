@@ -16,7 +16,8 @@ for i=1:length(cm)
             projected_ent(k) = compute_projected_entropy_R3_human_model(curr_mode, curr_goal, intent_type, xr_T, pg);
         end
         expected_projected_entropy = mean(projected_ent);
-        EID_AR(i) = EID_AR(i) + (1/ng)*expected_projected_entropy;
+%         EID_AR(i) = EID_AR(i) + (1/ng)*expected_projected_entropy;
+        EID_AR(i) = EID_AR(i) + pg(j)*expected_projected_entropy;
     end
 end
 best_mode = compute_best_mode(EID_AR);

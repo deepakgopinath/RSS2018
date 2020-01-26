@@ -50,7 +50,7 @@ conf_max = (1.1/ng);
 alpha_max = 0.7;
 
 %% PLOT GOALS AND CURRENT ROBOT POSITION. 
-% % 
+% 
 % figure;
 % scatter(xg(1,1:ng), xg(2,1:ng), 180, 'k', 'filled'); grid on; hold on;
 % scatter(xr(1), xr(2), 140, 'r', 'filled');
@@ -70,7 +70,7 @@ random_goal = xg(:, random_goal_index);
 %% SAMPLE AN INTENT INFERENCE MECHANISM FOR THE CURRENT SIMULATION
 intent_types = {'dft', 'conf', 'bayes'};
 intent_type = intent_types{datasample(1:length(intent_types), 1)}; % or conf or bayes
-% intent_type = 'bayes';
+% intent_type = 'dft';
 
 %% %% USING MAX POTENTIAL AS BASE LINE
 %variables to hold simulation data for MAX POTENTIAL
@@ -397,13 +397,14 @@ for i=1:total_time_steps-1
 end
 
 %% PLOT TRAJECTORIES
-hold on; 
+% hold on; 
 % scatter(traj_POT(1, :)', traj_POT(2, :)', 'k', 'filled');
 % scatter(traj_ENT(1, :)', traj_ENT(2, :)', 'r', 'filled');
 % scatter(traj_KL(1, :)', traj_KL(2, :)', 'b', 'filled');
-% scatter(traj_FI(1, :)', traj_FI(2, :)', 'b', 'filled');
+% % scatter(traj_FI(1, :)', traj_FI(2, :)', 'b', 'filled');
 % scatter(traj_DISAMB(1, :)', traj_DISAMB(2, :)', 'g', 'filled');
-
+% scatter(xr_true(1), xr_true(2), 180, 'r', 'filled');
+% scatter(random_goal(1), random_goal(2), 180, 'g', 'filled');
 %% PLOT PROBABILITIES AND THE DISAMB MODES. 
 % plot_script;
 % plot_goal_match;

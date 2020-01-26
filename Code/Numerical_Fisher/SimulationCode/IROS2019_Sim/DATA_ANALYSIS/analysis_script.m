@@ -1,8 +1,9 @@
 %%
-% data_parser_new;
+data_parser_new;
 before_timeout_trials = ~(trajectory_time == 11.9); %all trials that did not time out. 
 %% Trajectory Time Analysis. Almost Normal Distribution. Therefore use ANOVA. 
 title_list = {'R^2', 'R^3', 'SE(2)', 'SE(3)'};
+title_list = {'R^3'};
 bins = 20;
 sps = cell(4,1);
 %%
